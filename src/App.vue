@@ -1,32 +1,35 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <app-navigation></app-navigation>
+    <router-view />
   </div>
 </template>
 
+<script>
+import AppNavigation from "./components/AppNavigation";
+export default {
+  name: "App",
+  components: {
+    AppNavigation,
+  },
+};
+</script>
+
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap");
+
+body {
+  background-image: url("https://demos.creative-tim.com/blk-design-system/assets/img/dots.png");
+  background-size: contain;
+  background-color: #171941;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  font-family: "Cairo", sans-serif;
+  height: 100%;
+  width: 100%;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+a {
+  text-decoration: none;
 }
 </style>
