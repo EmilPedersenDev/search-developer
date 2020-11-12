@@ -148,8 +148,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$primary: #11998e;
-$secondary: #38ef7d;
+@import "@/assets/scss/colors.scss";
 
 .input-group {
   width: 100%;
@@ -158,10 +157,9 @@ $secondary: #38ef7d;
   height: 3em;
   width: 90%;
 
-  border: 0.0625em solid #00f2c3;
+  border: 0.0625em solid $primary;
   border-radius: 0.25em;
   color: #fff;
-  // width: 100%;
   box-sizing: border-box;
   padding-left: 1em;
   font-size: 1em;
@@ -179,7 +177,7 @@ $secondary: #38ef7d;
     background-color 0.3s ease-in-out;
 
   &:focus {
-    border-color: #00f2c3;
+    border-color: $primary;
     outline: none;
   }
 
@@ -199,7 +197,7 @@ button {
   padding: 10px;
   background: transparent;
   color: #fff;
-  border: 0.0625em solid #00f2c3;
+  border: 0.0625em solid $primary;
   border-radius: 0.25em;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -214,10 +212,16 @@ button {
 .focus-group {
   .st-input,
   button {
-    border-color: #e14eca !important;
+    border-color: $secondary !important;
     &:hover:not(.st-input) {
-      background: #e14eca;
+      background: $secondary;
     }
+  }
+  .st-input {
+    border-bottom-left-radius: 0;
+  }
+  button {
+    border-bottom-right-radius: 0;
   }
 }
 </style>

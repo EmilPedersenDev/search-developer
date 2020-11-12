@@ -66,6 +66,18 @@
   }
 }
 
+.developer-search-dropdown-transition-enter-active {
+  transition: opacity 0.5s;
+}
+
+.developer-search-dropdown-transition-leave-active {
+  transition: opacity 0.5s;
+}
+.developer-search-dropdown-transition-enter,
+.developer-search-dropdown-transition-leave-to {
+  opacity: 0;
+}
+
 @keyframes a {
   0% {
     transform: translateX(-10px);
