@@ -35,6 +35,9 @@ export default {
   data() {
     return {};
   },
+  mounted() {
+    console.log("Mounted");
+  },
   components: {
     SearchDeveloper,
     LandingInfoText,
