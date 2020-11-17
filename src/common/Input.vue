@@ -73,7 +73,7 @@ $gray: #9b9b9b;
     font-family: inherit;
     width: 100%;
     border: 0;
-    border-bottom: 2px solid $white;
+    border-bottom: 1px solid $white;
     outline: 0;
     font-size: 1rem;
     color: #fff;
@@ -85,9 +85,9 @@ $gray: #9b9b9b;
     }
 
     &:placeholder-shown ~ .input-label {
-      font-size: 1.3rem;
+      font-size: 14px;
       cursor: text;
-      top: 20px;
+      top: 30px;
     }
   }
 
@@ -96,7 +96,7 @@ $gray: #9b9b9b;
     top: 0;
     display: block;
     transition: 0.2s;
-    font-size: 1rem;
+    font-size: 12px;
     font-weight: 300;
     color: $white;
   }
@@ -107,14 +107,14 @@ $gray: #9b9b9b;
       top: 0;
       display: block;
       transition: 0.2s;
-      font-size: 1rem;
+      font-size: 14px;
       color: $primary;
       font-weight: 700;
     }
 
     padding-bottom: 6px;
     font-weight: 700;
-    border-width: 3px;
+    border-width: 2px;
     border-image: linear-gradient(to right, $primary, $secondary);
     border-image-slice: 1;
   }

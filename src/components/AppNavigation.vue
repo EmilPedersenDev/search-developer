@@ -9,13 +9,17 @@
     <div class="right-nav col-8 col-md-8">
       <ul>
         <li class="no-mobile-view">
-          <router-link :class="classList" to="/services">Our Work</router-link>
-        </li>
-        <li class="no-mobile-view">
           <router-link :class="classList" to="/about">About Us</router-link>
         </li>
         <li class="no-mobile-view">
-          <router-link :class="classList" to="/contact">Contact</router-link>
+          <button
+            type="button"
+            class="btn btn-light"
+            :class="classList"
+            @click="signIn"
+          >
+            Sign in
+          </button>
         </li>
         <li class="no-desktop-view">
           <i
@@ -47,10 +51,15 @@
         </li>
       </ul>
     </div>
+    <sign-in-modal
+      v-if="showSignInModal"
+      :close="onCloseSignInModal"
+    ></sign-in-modal>
   </nav>
 </template>
 
 <script>
+import SignInModal from "./modals/SignInModal";
 export default {
   name: "app-navigation",
   data() {
@@ -58,7 +67,11 @@ export default {
       loaded: false,
       isToggled: false,
       screenHeight: 0,
+      showSignInModal: false,
     };
+  },
+  components: {
+    SignInModal,
   },
   mounted() {
     this.screenHeight = window.innerHeight;
@@ -102,6 +115,12 @@ export default {
     onResize() {
       this.screenHeight = window.innerHeight;
     },
+    signIn() {
+      this.showSignInModal = true;
+    },
+    onCloseSignInModal() {
+      this.showSignInModal = false;
+    },
   },
 };
 </script>
@@ -111,7 +130,7 @@ nav {
   width: 100%;
   display: flex;
   position: relative;
-  z-index: 2;
+  z-index: 3;
 
   .fas {
     width: 20px;
