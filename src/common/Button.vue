@@ -6,55 +6,49 @@
 
 <script>
 export default {
-  name: "d-button",
+  name: 'd-button',
   props: {
     primary: {
       type: Boolean,
-      default: false,
+      default: false
     },
     secondary: {
       type: Boolean,
-      default: false,
+      default: false
     },
     third: {
       type: Boolean,
-      default: false,
+      default: false
     },
     round: {
       type: Boolean,
-      default: false,
+      default: false
     },
     noBorder: {
       type: Boolean,
-      default: false,
+      default: false
     },
     type: {
       type: String,
-      default: "button",
-    },
+      default: 'button'
+    }
   },
   methods: {
     onClick(e) {
-      if (this.type === "submit") return;
-      this.$emit("click", e);
-    },
+      if (this.type === 'submit') return;
+      this.$emit('click', e);
+    }
   },
   computed: {
     classlist() {
-      return [
-        "d-button",
-        this.primary && "primary",
-        this.secondary && "secondary",
-        this.third && "third",
-        this.round && "round",
-        this.noBorder && "no-border",
-      ];
-    },
-  },
+      return ['d-button', this.primary && 'primary', this.secondary && 'secondary', this.third && 'third', this.round && 'round', this.noBorder && 'no-border'];
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/colors.scss';
 .d-button {
   border-radius: 0.4285rem;
   border: none;
@@ -68,12 +62,7 @@ export default {
   }
   &.primary {
     background: #e14eca;
-    background-image: linear-gradient(
-      to bottom left,
-      #e14eca,
-      #ba54f5,
-      #e14eca
-    );
+    background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
     background-size: 210% 210%;
     background-position: 100% 0;
     background-color: #e14eca;
@@ -81,13 +70,17 @@ export default {
     box-shadow: none;
     color: #fff;
   }
+  &.secondary {
+    background: $primary;
+    color: #000;
+  }
   &.round {
     background: transparent;
     border: 1px solid #e14eca;
   }
   &.no-border {
     border: none;
-    color: #e14eca;
+    color: $primary;
     background: transparent;
   }
 }
