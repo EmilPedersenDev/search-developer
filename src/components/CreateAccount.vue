@@ -61,13 +61,14 @@
       </d-input>
     </div>
     <div class="button-wrapper">
-      <d-button type="submit" secondary>Submit</d-button>
+      <d-button type="submit" secondary :disabled="$v.$invalid">Submit</d-button>
     </div>
   </form>
 </template>
 
 <script>
 import { required, minLength, email, sameAs, min } from 'vuelidate/lib/validators';
+import api from '../api/index';
 export default {
   name: 'create-account',
   props: {
@@ -98,7 +99,14 @@ export default {
   },
   methods: {
     submit() {
-      console.log('Model', this.model);
+      api
+        .post('auth/signup', this.model)
+        .then((result) => {
+          console.log('Successful');
+        })
+        .catch((err) => {
+          console.error(err.message);
+        });
     }
   },
   computed: {}

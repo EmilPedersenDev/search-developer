@@ -55,6 +55,9 @@ export default {
   padding: 5px 10px;
   outline: none;
   transition: all 0.15s ease;
+  &:disabled {
+    background: gray !important;
+  }
   &:hover {
     cursor: pointer;
     transform: translateY(-2px);
