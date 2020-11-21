@@ -1,31 +1,17 @@
 <template>
   <div class="search-wrapper">
     <h3>Search developer in <span></span></h3>
-    <d-search-input
-      placeholder="Search"
-      v-model="query"
-      :focus="activate"
-      :blur="deActivate"
-      @input="searchDeveloper"
-    ></d-search-input>
+    <d-search-input placeholder="Search" v-model="query" :focus="activate" :blur="deActivate" @input="searchDeveloper"></d-search-input>
     <transition name="developer-search-dropdown-transition">
-      <div
-        v-if="displayDropdownActive"
-        class="px-md-3 developer-search-dropdown-box"
-      >
+      <div v-if="displayDropdownActive" class="px-md-3 developer-search-dropdown-box">
         <ul>
-          <li
-            v-for="(developer, index) in filteredDevelopers"
-            :key="index"
-            @click.stop="addDeveloper(developer)"
-            tabindex="0"
-          >
+          <li v-for="(developer, index) in filteredDevelopers" :key="index" @click.stop="addDeveloper(developer)" tabindex="0">
             <div class="developer-search-profile">
               <div class="profile-image col-2">
                 <img :src="developer.profileImg" alt="" />
               </div>
               <div class="profile-name col-10">
-                <p>{{ developer.firstName + " " + developer.lastName }}</p>
+                <p>{{ developer.firstName + ' ' + developer.lastName }}</p>
               </div>
             </div>
           </li>
@@ -37,61 +23,61 @@
 </template>
 
 <script>
-import _ from "lodash";
-import pointerMixin from "@/services/pointerMixin.js";
+import _ from 'lodash';
+import pointerMixin from '@/services/mixins/pointerMixin.js';
 export default {
-  name: "search-developer",
+  name: 'search-developer',
   mixins: [pointerMixin],
   data() {
     return {
-      query: "",
+      query: '',
       active: false,
       selectedDeveloper: {},
       developers: [
         {
-          userId: "1",
-          profileImg: "user.svg",
-          firstName: "Emil",
-          lastName: "Nilsson",
-          language: ["JavaScript", "Python", ".Net"],
+          userId: '1',
+          profileImg: 'user.svg',
+          firstName: 'Emil',
+          lastName: 'Nilsson',
+          language: ['JavaScript', 'Python', '.Net']
         },
         {
-          userId: "1",
-          profileImg: "user.svg",
-          firstName: "Erik",
-          lastName: "Svensson",
-          language: ["JavaScript", "Html", "Css"],
+          userId: '1',
+          profileImg: 'user.svg',
+          firstName: 'Erik',
+          lastName: 'Svensson',
+          language: ['JavaScript', 'Html', 'Css']
         },
         {
-          userId: "1",
-          profileImg: "user.svg",
-          firstName: "Eric",
-          lastName: "Svensson",
-          language: ["C++", "C#"],
+          userId: '1',
+          profileImg: 'user.svg',
+          firstName: 'Eric',
+          lastName: 'Svensson',
+          language: ['C++', 'C#']
         },
         {
-          userId: "1",
-          profileImg: "user.svg",
-          firstName: "Erip",
-          lastName: "Svensson",
-          language: ["Wordpress", "SQL"],
+          userId: '1',
+          profileImg: 'user.svg',
+          firstName: 'Erip',
+          lastName: 'Svensson',
+          language: ['Wordpress', 'SQL']
         },
         {
-          userId: "2",
-          profileImg: "user.svg",
-          firstName: "Sven",
-          lastName: "Nilsson",
-          language: ["Python", "Django", "Flask"],
+          userId: '2',
+          profileImg: 'user.svg',
+          firstName: 'Sven',
+          lastName: 'Nilsson',
+          language: ['Python', 'Django', 'Flask']
         },
         {
-          userId: "3",
-          profileImg: "user.svg",
-          firstName: "Nisse",
-          lastName: "Andersson",
-          language: ["Java", "Swift"],
-        },
+          userId: '3',
+          profileImg: 'user.svg',
+          firstName: 'Nisse',
+          lastName: 'Andersson',
+          language: ['Java', 'Swift']
+        }
       ],
-      filteredDevelopers: [],
+      filteredDevelopers: []
     };
   },
   methods: {
@@ -112,14 +98,9 @@ export default {
         // Detta får bli ett api anrop så gförs filtreringen på backend istället.
         let filteredDevelopers = this.developers.filter((developer) => {
           for (let key in developer) {
-            if (
-              !["language", "firstName", "lastName"].some(
-                (item) => item === key
-              )
-            )
-              continue;
+            if (!['language', 'firstName', 'lastName'].some((item) => item === key)) continue;
 
-            if (typeof developer[key] === "object") {
+            if (typeof developer[key] === 'object') {
               return developer[key].find((language) => {
                 if (language.toLowerCase().indexOf(query.toLowerCase()) > -1) {
                   return developer;
@@ -127,22 +108,18 @@ export default {
               });
             }
 
-            if (typeof developer[key] === "string") {
-              if (
-                developer[key].toLowerCase().indexOf(query.toLowerCase()) > -1
-              ) {
+            if (typeof developer[key] === 'string') {
+              if (developer[key].toLowerCase().indexOf(query.toLowerCase()) > -1) {
                 return developer;
               }
             }
           }
         });
-        this.filteredDevelopers = filteredDevelopers.sort(
-          (a, b) => b.firstName - a.firstName
-        );
+        this.filteredDevelopers = filteredDevelopers.sort((a, b) => b.firstName - a.firstName);
       } else {
-        console.log("Search query must be longer than 2 letters.");
+        console.log('Search query must be longer than 2 letters.');
       }
-    }),
+    })
   },
   computed: {
     displayDropdownActive() {
@@ -150,13 +127,13 @@ export default {
     },
     hasSelectedDeveloper() {
       return Object.keys(this.selectedDeveloper).length !== 0;
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/colors.scss";
+@import '@/assets/scss/colors.scss';
 .search-wrapper {
   position: relative;
   h3 {
@@ -164,7 +141,7 @@ export default {
     margin-bottom: 30px;
     span {
       &::before {
-        content: "";
+        content: '';
         animation: wordSwapper infinite 20s;
         color: #00f2c3;
       }

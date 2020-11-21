@@ -1,73 +1,121 @@
 <template>
-  <div class="d-input form-group">
-    <input
-      type="input"
-      class="input-field"
-      :placeholder="placeholder"
-      :id="id"
-      @input="onInput"
-      autocomplete="off"
-    />
+  <div :class="classlist">
+    <input :type="type" :name="name" class="input-field" :placeholder="placeholder" :id="id" @input="onInput" @blur="onBlur" :autocomplete="autocomplete" />
+    <i class="fas fa-exclamation" v-if="invalid"></i>
     <label :for="id" class="input-label">
       {{ inputLabel }}
     </label>
+    <slot name="error"></slot>
   </div>
 </template>
 
 <script>
 export default {
-  name: "d-input",
+  name: 'd-input',
   props: {
     value: {
-      default: null,
+      default: null
     },
     inputLabel: {
       type: String,
-      default: "Label",
+      default: 'Label'
     },
     placeholder: {
       type: String,
-      default: "text...",
+      default: 'text...'
     },
     id: {
       type: String,
-      default: "id",
+      default: 'id'
     },
     input: {
-      type: Function,
+      type: Function
     },
+    blur: {
+      type: Function
+    },
+    invalid: {
+      type: Boolean,
+      default: false
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    type: {
+      type: String,
+      default: 'input'
+    },
+    autocomplete: {
+      type: String,
+      default: 'off'
+    },
+    name: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
-      localValue: this.value,
+      localValue: this.value
     };
+  },
+  computed: {
+    classlist() {
+      return ['d-input', 'form-group', this.invalid && 'invalid', this.required && 'required'];
+    }
   },
   watch: {
     localValue(newVal, oldVal) {
       if (newVal !== oldVal) {
-        this.$emit("input", newVal);
+        this.$emit('input', newVal);
       }
-    },
+    }
   },
   methods: {
     onInput(evt) {
+      console.log(evt);
       this.localValue = evt.target.value;
       if (this.input) this.input();
     },
-  },
+    onBlur() {
+      if (this.blur) this.blur();
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-$primary: #11998e;
-$secondary: #38ef7d;
-$white: #fff;
-$gray: #9b9b9b;
+@import '@/assets/scss/colors.scss';
 .d-input {
   position: relative;
   padding: 15px 0 0;
   margin-top: 10px;
   width: 100%;
+
+  &.invalid {
+    color: #fd5d93;
+    i {
+      font-size: 14px;
+      position: absolute;
+      top: 30px;
+      right: 5px;
+      transition: all 0.3s ease;
+    }
+    .input-error {
+      display: block;
+      font-size: 12px;
+    }
+  }
+
+  &.required {
+    .input-label {
+      &::before {
+        content: '*';
+        color: $primary;
+      }
+    }
+  }
 
   .input-field {
     font-family: inherit;
@@ -89,6 +137,14 @@ $gray: #9b9b9b;
       cursor: text;
       top: 30px;
     }
+  }
+
+  .input-field:-webkit-autofill,
+  .input-field:-webkit-autofill:hover,
+  .input-field:-webkit-autofill:focus,
+  .input-field:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #1f2251 inset !important;
+    -webkit-text-fill-color: #fff !important;
   }
 
   .input-label {
@@ -115,7 +171,7 @@ $gray: #9b9b9b;
     padding-bottom: 6px;
     font-weight: 700;
     border-width: 2px;
-    border-image: linear-gradient(to right, $primary, $secondary);
+    border-image: linear-gradient(to right, $primary, $inputFocusEffect);
     border-image-slice: 1;
   }
 

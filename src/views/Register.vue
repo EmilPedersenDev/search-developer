@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="content-wrapper">
-        <create-account v-if="activeStepId === 1" />
+        <create-account :model="model" v-if="activeStepId === 1" />
         <h2 v-else>Create Profile</h2>
       </div>
     </div>
@@ -18,29 +18,33 @@
 </template>
 
 <script>
-import CreateAccount from "../components/CreateAccount";
+import CreateAccount from '../components/CreateAccount';
+import model from '../services/model/models.js';
+
 export default {
-  name: "",
+  name: '',
   data() {
     return {
       activeStepId: 1,
+      model: model.registerModel
     };
   },
   components: {
-    CreateAccount,
+    CreateAccount
   },
+
   methods: {
     submit() {},
     goToStep(stepIndex) {
       this.activeStepId = stepIndex;
-    },
+    }
   },
-  computed: {},
+  computed: {}
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/colors.scss";
+@import '@/assets/scss/colors.scss';
 .register {
   position: relative;
   margin: 60px 0px;
