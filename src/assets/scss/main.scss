@@ -1,2 +1,18 @@
-@import "./animations.scss";
-@import "./colors.scss";
+@import './animations.scss';
+@import './colors.scss';
+h1 {
+  font-size: 30px;
+}
+a {
+  text-decoration: none;
+  &.router-link {
+    color: $primary;
+    transition: all 0.3s ease;
+    display: inline-block;
+    &:hover {
+      text-decoration: none;
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+  }
+}

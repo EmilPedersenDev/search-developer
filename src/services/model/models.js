@@ -6,6 +6,12 @@ let registerModel = {
   confirmPassword: ''
 };
 
+let loginModel = {
+  email: '',
+  password: ''
+};
+
 export default {
-  registerModel
+  registerModel,
+  loginModel
 };

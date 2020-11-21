@@ -74,7 +74,6 @@ export default {
   },
   methods: {
     onInput(evt) {
-      console.log(evt);
       this.localValue = evt.target.value;
       if (this.input) this.input();
     },
