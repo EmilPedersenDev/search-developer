@@ -2,9 +2,7 @@
   <nav>
     <div class="left-nav col-4 col-md-4">
       <router-link to="/" class="logo"> &lt; DevQnect /> </router-link>
-      <router-link to="/" class="d-block d-sm-none sub-logo">
-        &lt; DQ />
-      </router-link>
+      <router-link to="/" class="d-block d-sm-none sub-logo"> &lt; DQ /> </router-link>
     </div>
     <div class="right-nav col-8 col-md-8">
       <ul>
@@ -12,31 +10,14 @@
           <router-link :class="classList" to="/about">About Us</router-link>
         </li>
         <li class="no-mobile-view">
-          <button
-            type="button"
-            class="btn btn-light"
-            :class="classList"
-            @click="signIn"
-          >
-            Sign in
-          </button>
+          <button type="button" class="btn btn-light" :class="classList" @click="signIn">Sign in</button>
         </li>
         <li class="no-desktop-view">
-          <i
-            v-if="!isToggled"
-            class="fas fa-bars"
-            :class="{ 'sub-page': !isHomePage }"
-            @click="toggle(true)"
-          ></i>
+          <i v-if="!isToggled" class="fas fa-bars" :class="{ 'sub-page': !isHomePage }" @click="toggle(true)"></i>
         </li>
       </ul>
     </div>
-    <div
-      :style="menuHeight"
-      :class="[
-        isToggled ? 'dropdown-wrapper-active' : 'dropdown-content-inactive',
-      ]"
-    >
+    <div :style="menuHeight" :class="[isToggled ? 'dropdown-wrapper-active' : 'dropdown-content-inactive']">
       <i v-if="isToggled" class="fas fa-times" @click="toggle"></i>
 
       <ul>
@@ -51,54 +32,43 @@
         </li>
       </ul>
     </div>
-    <sign-in-modal
-      v-if="showSignInModal"
-      :close="onCloseSignInModal"
-    ></sign-in-modal>
+    <sign-in-modal v-if="showSignInModal" :close="onCloseSignInModal"></sign-in-modal>
   </nav>
 </template>
 
 <script>
-import SignInModal from "./modals/SignInModal";
+import SignInModal from './modals/SignInModal';
 export default {
-  name: "app-navigation",
+  name: 'app-navigation',
   data() {
     return {
       loaded: false,
       isToggled: false,
       screenHeight: 0,
-      showSignInModal: false,
+      showSignInModal: false
     };
   },
   components: {
-    SignInModal,
+    SignInModal
   },
   mounted() {
     this.screenHeight = window.innerHeight;
 
     this.$nextTick(() => {
-      window.addEventListener("resize", this.onResize);
+      window.addEventListener('resize', this.onResize);
     });
   },
   watch: {
     screenHeight(val) {
       return val;
-    },
+    }
   },
   computed: {
     classList() {
-      return [
-        "app-navigation",
-        this.isHomePage && "start-site",
-        !this.isHomePage && "sub-page-link",
-      ];
+      return ['app-navigation', this.isHomePage && 'start-site', !this.isHomePage && 'sub-page-link'];
     },
     isHomePage() {
-      return (
-        this.$route.path === "/" ||
-        this.$route.path == "/contact" ||
-        this.$route.path === "/about"
-      );
+      return this.$route.path === '/' || this.$route.path == '/contact' || this.$route.path === '/about';
     },
     menuHeight() {
       if (this.isToggled) {
@@ -106,7 +76,7 @@ export default {
       } else {
         return `height: 0px`;
       }
-    },
+    }
   },
   methods: {
     toggle(bool) {
@@ -116,12 +86,13 @@ export default {
       this.screenHeight = window.innerHeight;
     },
     signIn() {
-      this.showSignInModal = true;
+      // this.showSignInModal = true;
+      this.$router.push('/authentication/register');
     },
     onCloseSignInModal() {
       this.showSignInModal = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -189,7 +160,7 @@ nav {
     font-weight: 600;
     position: relative;
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       width: 100%;
       height: 2px;

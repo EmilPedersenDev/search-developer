@@ -6,25 +6,38 @@
 </template>
 
 <script>
-import AppNavigation from "./components/AppNavigation";
+import AppNavigation from './components/AppNavigation';
+import { mapGetters } from 'vuex';
+import { IS_AUTHENTICATED } from './store/actions/authentication-actions';
+import { GET_ACCOUNT } from './store/actions/account-actions';
 export default {
-  name: "App",
+  name: 'App',
   components: {
-    AppNavigation,
+    AppNavigation
   },
+  created() {
+    if (this.isAuthenticated) {
+      this.$store.dispatch(GET_ACCOUNT);
+    }
+  },
+  computed: {
+    ...mapGetters({
+      isAuthenticated: IS_AUTHENTICATED
+    })
+  }
 };
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap');
 
 body {
-  background-image: url("https://demos.creative-tim.com/blk-design-system/assets/img/dots.png");
+  background-image: url('https://demos.creative-tim.com/blk-design-system/assets/img/dots.png');
   background-size: contain;
   background-color: #171941;
 }
 #app {
-  font-family: "Cairo", sans-serif;
+  font-family: 'Cairo', sans-serif;
   height: 100%;
   width: 100%;
 }

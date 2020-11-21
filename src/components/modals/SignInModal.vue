@@ -25,32 +25,32 @@
 
 <script>
 export default {
-  name: "sign-in-modal",
+  name: 'sign-in-modal',
   props: {
     close: {
-      type: Function,
-    },
+      type: Function
+    }
   },
   data() {
     return {};
   },
   methods: {
     toRegister() {
-      if (this.$route.path === "/register") {
+      if (this.$route.path === '/authentication/register') {
         this.close();
       } else {
-        this.$router.push("/register").then(() => {
+        this.$router.push('/authentication/register').then(() => {
           this.close();
         });
       }
-    },
+    }
   },
-  computed: {},
+  computed: {}
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/colors.scss";
+@import '@/assets/scss/colors.scss';
 .sign-in-header {
   color: #fff;
   text-align: center;
