@@ -9,7 +9,7 @@
 import AppNavigation from './components/AppNavigation';
 import { mapGetters } from 'vuex';
 import { IS_AUTHENTICATED } from './store/actions/authentication-actions';
-import { GET_ACCOUNT } from './store/actions/account-actions';
+import { GET_USER } from './store/actions/user-actions';
 export default {
   name: 'App',
   components: {
@@ -17,7 +17,7 @@ export default {
   },
   created() {
     if (this.isAuthenticated) {
-      this.$store.dispatch(GET_ACCOUNT);
+      this.$store.dispatch(GET_USER);
     }
   },
   computed: {
