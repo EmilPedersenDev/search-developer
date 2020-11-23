@@ -3,18 +3,14 @@
     <div class="wrapper">
       <div class="steps">
         <div class="step step-1" :class="{ active: activeStepId === 1 }">
-          <router-link class="router-link" to="/authentication/register" @click.native="goToStep(1)">Register</router-link>
-          <!-- <d-button noBorder @click="goToStep(1)">Create Account</d-button> -->
+          <router-link class="router-link" to="/authentication/login" @click.native="goToStep(1)">Login</router-link>
         </div>
-        <div class="step step-2" :class="{ active: activeStepId === 2 }">
-          <router-link class="router-link" to="/authentication/login" @click.native="goToStep(2)">Login</router-link>
-          <!-- <d-button noBorder @click="goToStep(2)">Create Profile</d-button> -->
+        <div class="step step-1" :class="{ active: activeStepId === 2 }">
+          <router-link class="router-link" to="/authentication/register" @click.native="goToStep(2)">Register</router-link>
         </div>
       </div>
       <div class="content-wrapper">
         <router-view></router-view>
-        <!-- <create-account :model="model" v-if="activeStepId === 1" />
-        <h2 v-else>Create Profile</h2> -->
       </div>
     </div>
   </div>

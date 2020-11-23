@@ -9,19 +9,23 @@ const actions = {
   [LOGIN]: ({ commit }, loginModel) => {
     return api.post('auth/signin', loginModel).then((result) => {
       commit(SET_USER, result.data);
-      commit(SET_TOKEN, result.data);
+      commit(SET_TOKEN, result.data.accessToken);
       return result.data;
     });
   },
   [LOGOUT]: async ({ commit }) => {
     await localStorage.removeItem('jwt');
+    commit(SET_TOKEN, '');
+    commit(SET_USER, {});
   }
 };
 
 const mutations = {
   [SET_TOKEN]: async (state, payload) => {
-    await localStorage.setItem('jwt', payload.accessToken);
-    state.token = payload.accessToken;
+    if (payload) {
+      await localStorage.setItem('jwt', payload);
+    }
+    state.token = payload;
   }
 };
 

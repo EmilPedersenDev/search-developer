@@ -1,40 +1,36 @@
 <template>
-  <div class="modal-custom" @click="handleClickOutside">
+  <div class="modal-custom" @click.prevent="handleClickOutside">
     <div class="modal-card" @click.stop>
-      <div class="modal-content-custom">
-        <i class="fas fa-times" @click="onClose"></i> <slot />
-      </div>
+      <div class="modal-content-custom"><i class="fas fa-times" @click="onClose"></i> <slot /></div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "d-modal",
+  name: 'd-modal',
   props: {
     isLoading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     onClose: {
-      type: Function,
-    },
+      type: Function
+    }
   },
   methods: {
     handleClickOutside() {
       if (this.isLoading) return;
-
       if (this.onClose) {
         this.onClose();
       }
-    },
-  },
-  computed: {},
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/colors.scss";
+@import '@/assets/scss/colors.scss';
 .modal-custom {
   width: 100%;
   height: 100vh;
@@ -47,8 +43,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     background: #1f2251;
-    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2),
-      0 5px 15px rgba(0, 0, 0, 0.17);
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
     border-radius: 0.2857rem;
     max-width: 500px;
     padding: 24px;

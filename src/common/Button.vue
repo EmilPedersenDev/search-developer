@@ -83,8 +83,14 @@ export default {
   }
   &.no-border {
     border: none;
-    color: $primary;
+    border-radius: 0;
+    color: $white;
     background: transparent;
+    transition: none !important;
+    padding: 0;
+    &:hover {
+      transform: translateY(0);
+    }
   }
 }
 </style>

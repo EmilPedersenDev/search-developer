@@ -69,7 +69,7 @@ export default {
     submit() {
       this.login(this.model)
         .then((result) => {
-          console.log('user is logged in', result.data);
+          this.$router.push('/profile');
         })
         .catch((err) => {
           console.error(err);

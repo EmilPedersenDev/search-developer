@@ -9,14 +9,25 @@
         <li class="no-mobile-view">
           <router-link :class="classList" to="/about">About Us</router-link>
         </li>
-        <li class="no-mobile-view">
-          <button type="button" class="btn btn-light" :class="classList" @click="signIn">Sign in</button>
+        <li class="no-mobile-view auth-wrapper">
+          <router-link v-if="!isAuthenticated" class="signin" :class="classList" to="/authentication/login">Signin</router-link>
+          <span v-else class="authenticated"><i class="far fa-user-circle"></i>{{ user.firstname }}<i class="fas fa-caret-down"></i></span>
+          <div class="profile-dropdown">
+            <ul>
+              <li><router-link to="/profile">Profile</router-link></li>
+              <li><router-link to="">Account</router-link></li>
+              <li>
+                <d-button no-border @click="onShowLogoutModal">Logout</d-button>
+              </li>
+            </ul>
+          </div>
         </li>
         <li class="no-desktop-view">
           <i v-if="!isToggled" class="fas fa-bars" :class="{ 'sub-page': !isHomePage }" @click="toggle(true)"></i>
         </li>
       </ul>
     </div>
+
     <div :style="menuHeight" :class="[isToggled ? 'dropdown-wrapper-active' : 'dropdown-content-inactive']">
       <i v-if="isToggled" class="fas fa-times" @click="toggle"></i>
 
@@ -32,24 +43,27 @@
         </li>
       </ul>
     </div>
-    <sign-in-modal v-if="showSignInModal" :close="onCloseSignInModal"></sign-in-modal>
+    <logout-modal v-if="showLogoutModal" :close="onCloseLogoutModal"></logout-modal>
   </nav>
 </template>
 
 <script>
-import SignInModal from './modals/SignInModal';
+import { mapGetters, mapActions } from 'vuex';
+import { IS_AUTHENTICATED, LOGOUT } from '../store/actions/authentication-actions';
+import { GET_USER } from '../store/actions/user-actions';
+import LogoutModal from './modals/LogoutModal';
 export default {
   name: 'app-navigation',
   data() {
     return {
       loaded: false,
       isToggled: false,
-      screenHeight: 0,
-      showSignInModal: false
+      showLogoutModal: false,
+      screenHeight: 0
     };
   },
   components: {
-    SignInModal
+    LogoutModal
   },
   mounted() {
     this.screenHeight = window.innerHeight;
@@ -64,8 +78,12 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      isAuthenticated: IS_AUTHENTICATED,
+      user: GET_USER
+    }),
     classList() {
-      return ['app-navigation', this.isHomePage && 'start-site', !this.isHomePage && 'sub-page-link'];
+      return ['app-navigation', 'app-nav-link'];
     },
     isHomePage() {
       return this.$route.path === '/' || this.$route.path == '/contact' || this.$route.path === '/about';
@@ -79,24 +97,40 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      logout: LOGOUT
+    }),
     toggle(bool) {
       this.isToggled = !this.isToggled;
     },
     onResize() {
       this.screenHeight = window.innerHeight;
     },
-    signIn() {
-      // this.showSignInModal = true;
-      this.$router.push('/authentication/register');
+    onShowLogoutModal() {
+      this.showLogoutModal = true;
     },
-    onCloseSignInModal() {
-      this.showSignInModal = false;
+    onCloseLogoutModal(val) {
+      if (!val) {
+        this.showLogoutModal = false;
+      } else {
+        this.logout()
+          .then(() => {
+            this.showLogoutModal = false;
+          })
+          .catch((err) => {
+            console.error(err);
+          })
+          .finally(() => {
+            this.$router.push('/');
+          });
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/colors.scss';
 nav {
   width: 100%;
   display: flex;
@@ -104,8 +138,6 @@ nav {
   z-index: 3;
 
   .fas {
-    width: 20px;
-    font-size: 30px;
     &:hover {
       cursor: pointer;
     }
@@ -132,14 +164,6 @@ nav {
         a {
           font-size: 24px;
           color: #fff;
-          &.sub-page-link {
-            color: #fff;
-            &:hover {
-              &::before {
-                background-color: #fff;
-              }
-            }
-          }
         }
       }
     }
@@ -155,44 +179,29 @@ nav {
     padding: 0;
   }
   a {
-    color: #001e3c;
-    font-size: 16px;
-    font-weight: 600;
-    position: relative;
-    &::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      bottom: -1px;
-      left: 0px;
-      background-color: black;
-      transform: scale(0);
-      visibility: hidden;
-      transition: all 0.3s ease-in-out 0s;
-    }
-    &.start-site {
+    &.app-nav-link {
       color: #fff;
-      &:hover {
-        &::before {
-          background-color: #fff;
-        }
-      }
-    }
-
-    &.no-underline {
-      &:hover {
-        &::before {
-          visibility: hidden;
-        }
-      }
-    }
-
-    &:hover {
-      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      position: relative;
       &::before {
-        visibility: visible;
-        transform: scale(1);
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        bottom: -1px;
+        left: 0px;
+        background-color: #fff;
+        transform: scale(0);
+        visibility: hidden;
+        transition: all 0.3s ease-in-out 0s;
+      }
+      &:hover {
+        text-decoration: none;
+        &::before {
+          visibility: visible;
+          transform: scale(1);
+        }
       }
     }
   }
@@ -256,6 +265,9 @@ nav {
     ul {
       display: flex;
       margin: 0;
+      & > * {
+        font-size: 14px;
+      }
       li {
         margin-right: 30px;
 
@@ -269,6 +281,82 @@ nav {
           margin-right: 10px;
           a {
             font-size: 14px;
+          }
+        }
+        &.auth-wrapper {
+          position: relative;
+          &:hover {
+            .profile-dropdown {
+              display: block;
+              opacity: 1;
+              visibility: visible;
+            }
+            .fa-caret-down {
+              transform: rotate(180deg);
+            }
+          }
+          .authenticated {
+            color: #fff;
+            &:hover {
+              cursor: pointer;
+            }
+
+            .fa-caret-down {
+              font-size: 14px;
+              margin-left: 5px;
+              transition: transform 0.3s ease-in-out;
+            }
+            .fa-user-circle {
+              margin-right: 5px;
+            }
+          }
+          .profile-dropdown {
+            top: 30px;
+            transition: all 0.3s ease-in-out;
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            color: #000;
+            background: #1f2251;
+            box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
+
+            &::before {
+              display: inline-block;
+              position: absolute;
+              width: 0;
+              height: 0;
+              vertical-align: middle;
+              content: '';
+              top: -5px;
+              left: 10px;
+              right: auto;
+              color: #1f2251;
+              border-bottom: 0.4em solid;
+              border-right: 0.4em solid transparent;
+              border-left: 0.4em solid transparent;
+            }
+
+            ul {
+              display: inline-block;
+              li {
+                & > * {
+                  color: $white;
+                }
+
+                margin: 0;
+                a,
+                .d-button {
+                  padding: 10px 35px;
+                  display: block;
+                  width: 100%;
+                  transition: all 0.2s ease-in-out;
+                  &:hover {
+                    cursor: pointer;
+                    background: #282c68;
+                  }
+                }
+              }
+            }
           }
         }
       }
