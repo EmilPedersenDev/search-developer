@@ -9,9 +9,8 @@
         <li class="no-mobile-view">
           <router-link :class="classList" to="/about">About Us</router-link>
         </li>
-        <li class="no-mobile-view auth-wrapper">
-          <router-link v-if="!isAuthenticated" class="signin" :class="classList" to="/authentication/login">Signin</router-link>
-          <span v-else class="authenticated"><i class="far fa-user-circle"></i>{{ user.firstname }}<i class="fas fa-caret-down"></i></span>
+        <li class="no-mobile-view auth-wrapper" v-if="isAuthenticated">
+          <span class="authenticated"><i class="far fa-user-circle"></i>{{ user.firstname }}<i class="fas fa-caret-down"></i></span>
           <div class="profile-dropdown">
             <ul>
               <li><router-link to="/profile">Profile</router-link></li>
@@ -21,6 +20,9 @@
               </li>
             </ul>
           </div>
+        </li>
+        <li class="no-mobile-view" v-else>
+          <router-link class="signin" :class="classList" to="/authentication/login">Signin</router-link>
         </li>
         <li class="no-desktop-view">
           <i v-if="!isToggled" class="fas fa-bars" :class="{ 'sub-page': !isHomePage }" @click="toggle(true)"></i>
