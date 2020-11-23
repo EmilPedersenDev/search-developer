@@ -1,5 +1,5 @@
 import { LOGIN, SET_TOKEN, IS_AUTHENTICATED, LOGOUT } from '../actions/authentication-actions';
-import { SET_ACCOUNT } from '../actions/account-actions';
+import { SET_USER } from '../actions/user-actions';
 import api from '../../api/index';
 const state = {
   token: localStorage.getItem('jwt') || ''
@@ -8,7 +8,7 @@ const state = {
 const actions = {
   [LOGIN]: ({ commit }, loginModel) => {
     return api.post('auth/signin', loginModel).then((result) => {
-      commit(SET_ACCOUNT, result.data);
+      commit(SET_USER, result.data);
       commit(SET_TOKEN, result.data);
       return result.data;
     });
