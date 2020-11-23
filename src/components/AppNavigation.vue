@@ -15,6 +15,7 @@
             <ul>
               <li><router-link to="/profile">Profile</router-link></li>
               <li><router-link to="">Account</router-link></li>
+              <span>Anna</span>
               <li>
                 <d-button no-border @click="onShowLogoutModal">Logout</d-button>
               </li>
