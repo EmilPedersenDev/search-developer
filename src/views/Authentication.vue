@@ -5,12 +5,14 @@
         <div class="step step-1" :class="{ active: activeStepId === 1 }">
           <router-link class="router-link" to="/authentication/login" @click.native="goToStep(1)">Login</router-link>
         </div>
-        <div class="step step-1" :class="{ active: activeStepId === 2 }">
+        <div class="step step-2" :class="{ active: activeStepId === 2 }">
           <router-link class="router-link" to="/authentication/register" @click.native="goToStep(2)">Register</router-link>
         </div>
       </div>
       <div class="content-wrapper">
-        <router-view></router-view>
+        <transition name="fade" mode="out-in">
+          <router-view></router-view>
+        </transition>
       </div>
     </div>
   </div>

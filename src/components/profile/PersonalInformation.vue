@@ -1,15 +1,12 @@
 <template>
-  <div class="profile">
-    <h1>Profile</h1>
-    <transition name="fade" mode="out-in">
-      <router-view></router-view>
-    </transition>
+  <div class="personal-inforamtion">
+    <h2>Personal Information</h2>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'profile',
+  name: 'personal-inforamtion',
   data() {
     return {};
   },

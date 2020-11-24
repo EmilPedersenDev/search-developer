@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import Profile from '../views/Home.vue';
 
 Vue.use(VueRouter);
 
@@ -9,7 +7,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: () => import('../views/Home.vue')
   },
   {
     path: '/about',
@@ -19,7 +17,15 @@ const routes = [
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import('../views/Profile.vue')
+    component: () => import('../views/Profile.vue'),
+    children: [
+      {
+        path: ':id',
+        name: 'profile-viewer',
+        component: () => import('../components/profile/ProfileViewer.vue'),
+        props: true
+      }
+    ]
   },
   {
     path: '/authentication',
@@ -35,6 +41,18 @@ const routes = [
         path: 'login',
         name: 'login',
         component: () => import('../components/authentication/Login.vue')
+      }
+    ]
+  },
+  {
+    path: '/create-profile',
+    name: 'create-profile',
+    component: () => import('../views/CreateProfile.vue'),
+    children: [
+      {
+        path: '',
+        name: 'personal-info',
+        component: () => import('../components/profile/PersonalInformation.vue')
       }
     ]
   }
