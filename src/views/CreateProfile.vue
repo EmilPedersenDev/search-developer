@@ -1,15 +1,13 @@
 <template>
-  <div class="profile">
-    <h1>Profile</h1>
-    <transition name="fade" mode="out-in">
-      <router-view></router-view>
-    </transition>
+  <div class="create-profile container-fluid">
+    <h1>Create Profile</h1>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'profile',
+  name: 'create-profile',
   data() {
     return {};
   },

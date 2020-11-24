@@ -50,6 +50,7 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/colors.scss';
 .d-button {
+  position: relative;
   border-radius: 0.4285rem;
   border: none;
   padding: 5px 10px;

@@ -32,7 +32,7 @@
       </d-input>
     </div>
     <div class="sign-in-footer">
-      <d-button class="col-4 col-sm-3" primary type="submit" :disabled="$v.$invalid">Sign in</d-button>
+      <d-button class="col-4 col-sm-3" primary type="submit" :disabled="$v.$invalid">Sign in <d-spinner :isLoading="isLoading" buttonSpinner></d-spinner> </d-button>
     </div>
   </form>
 </template>
@@ -47,7 +47,8 @@ export default {
   name: '',
   data() {
     return {
-      model: models.loginModel
+      model: models.loginModel,
+      isLoading: false
     };
   },
   validations: {
@@ -67,12 +68,16 @@ export default {
       login: LOGIN
     }),
     submit() {
+      this.isLoading = true;
       this.login(this.model)
-        .then((result) => {
-          this.$router.push('/profile');
+        .then((user) => {
+          this.$router.push(`/profile/${user.id}`);
         })
         .catch((err) => {
           console.error(err);
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     }
   },

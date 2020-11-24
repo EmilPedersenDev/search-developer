@@ -13,9 +13,8 @@
           <span class="authenticated"><i class="far fa-user-circle"></i>{{ user.firstname }}<i class="fas fa-caret-down"></i></span>
           <div class="profile-dropdown">
             <ul>
-              <li><router-link to="/profile">Profile</router-link></li>
+              <li><router-link :to="`profile/${user.id}`">Profile</router-link></li>
               <li><router-link to="">Account</router-link></li>
-              <span>Anna</span>
               <li>
                 <d-button no-border @click="onShowLogoutModal">Logout</d-button>
               </li>
@@ -124,7 +123,9 @@ export default {
             console.error(err);
           })
           .finally(() => {
-            this.$router.push('/');
+            if (this.$route.path !== '/') {
+              this.$router.push('/');
+            }
           });
       }
     }
