@@ -9,15 +9,19 @@
 
 <script>
 import AppNavigation from './components/AppNavigation';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { IS_AUTHENTICATED } from './store/actions/authentication-actions';
 import { GET_USER } from './store/actions/user-actions';
+import { GET_SKILLS } from './store/actions/skills-actions';
+import { LOAD_DEPENDENCIES } from './store';
 export default {
   name: 'App',
   components: {
     AppNavigation
   },
   created() {
+    this.$store.dispatch(LOAD_DEPENDENCIES);
+
     if (this.isAuthenticated) {
       this.$store.dispatch(GET_USER);
     }

@@ -13,7 +13,7 @@
           <span class="authenticated"><i class="far fa-user-circle"></i>{{ user.firstname }}<i class="fas fa-caret-down"></i></span>
           <div class="profile-dropdown">
             <ul>
-              <li><router-link :to="`profile/${user.id}`">Profile</router-link></li>
+              <li><router-link :to="`/profile/${user.id}`">Profile</router-link></li>
               <li><router-link to="">Account</router-link></li>
               <li>
                 <d-button no-border @click="onShowLogoutModal">Logout</d-button>

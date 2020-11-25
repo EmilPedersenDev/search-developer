@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="profile container-fluid">
     <h1>Profile</h1>
     <transition name="fade" mode="out-in">
       <router-view></router-view>
