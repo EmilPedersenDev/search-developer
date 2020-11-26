@@ -31,3 +31,20 @@ a {
     }
   }
 }
+
+.page-header {
+  min-height: 100vh;
+  padding: 0;
+  color: #fff;
+  @media (min-width: 768px) {
+    position: absolute;
+  }
+  top: 0;
+  overflow: hidden;
+  width: inherit;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}

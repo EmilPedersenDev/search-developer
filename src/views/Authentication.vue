@@ -50,8 +50,7 @@ export default {
       console.log('activated?????');
       this.activeStepId = stepIndex;
     }
-  },
-  computed: {}
+  }
 };
 </script>
 
