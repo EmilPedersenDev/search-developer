@@ -1,6 +1,5 @@
 <template>
-  <div class="profile container-fluid">
-    <h1>Profile</h1>
+  <div class="profile">
     <transition name="fade" mode="out-in">
       <router-view></router-view>
     </transition>
@@ -19,4 +18,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.profile {
+  width: 100%;
+}
 </style>
