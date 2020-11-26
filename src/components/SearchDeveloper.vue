@@ -8,10 +8,10 @@
           <li v-for="(developer, index) in filteredDevelopers" :key="index" @click.stop="addDeveloper(developer)" tabindex="0">
             <div class="developer-search-profile">
               <div class="profile-image col-2">
-                <img :src="developer.profileImg" alt="" />
+                <img src="user.svg" alt="" />
               </div>
               <div class="profile-name col-10">
-                <p>{{ developer.firstName + ' ' + developer.lastName }}</p>
+                <p>{{ developer.firstname + ' ' + developer.lastname }}</p>
               </div>
             </div>
           </li>
@@ -24,6 +24,7 @@
 
 <script>
 import _ from 'lodash';
+import api from '../api/index';
 import pointerMixin from '@/services/mixins/pointerMixin.js';
 export default {
   name: 'search-developer',
@@ -33,50 +34,6 @@ export default {
       query: '',
       active: false,
       selectedDeveloper: {},
-      developers: [
-        {
-          userId: '1',
-          profileImg: 'user.svg',
-          firstName: 'Emil',
-          lastName: 'Nilsson',
-          language: ['JavaScript', 'Python', '.Net']
-        },
-        {
-          userId: '1',
-          profileImg: 'user.svg',
-          firstName: 'Erik',
-          lastName: 'Svensson',
-          language: ['JavaScript', 'Html', 'Css']
-        },
-        {
-          userId: '1',
-          profileImg: 'user.svg',
-          firstName: 'Eric',
-          lastName: 'Svensson',
-          language: ['C++', 'C#']
-        },
-        {
-          userId: '1',
-          profileImg: 'user.svg',
-          firstName: 'Erip',
-          lastName: 'Svensson',
-          language: ['Wordpress', 'SQL']
-        },
-        {
-          userId: '2',
-          profileImg: 'user.svg',
-          firstName: 'Sven',
-          lastName: 'Nilsson',
-          language: ['Python', 'Django', 'Flask']
-        },
-        {
-          userId: '3',
-          profileImg: 'user.svg',
-          firstName: 'Nisse',
-          lastName: 'Andersson',
-          language: ['Java', 'Swift']
-        }
-      ],
       filteredDevelopers: []
     };
   },
@@ -95,27 +52,15 @@ export default {
     },
     fetchDevelopers: _.debounce(function (query) {
       if (query.length > 2) {
-        // Detta får bli ett api anrop så gförs filtreringen på backend istället.
-        let filteredDevelopers = this.developers.filter((developer) => {
-          for (let key in developer) {
-            if (!['language', 'firstName', 'lastName'].some((item) => item === key)) continue;
-
-            if (typeof developer[key] === 'object') {
-              return developer[key].find((language) => {
-                if (language.toLowerCase().indexOf(query.toLowerCase()) > -1) {
-                  return developer;
-                }
-              });
-            }
-
-            if (typeof developer[key] === 'string') {
-              if (developer[key].toLowerCase().indexOf(query.toLowerCase()) > -1) {
-                return developer;
-              }
-            }
-          }
-        });
-        this.filteredDevelopers = filteredDevelopers.sort((a, b) => b.firstName - a.firstName);
+        api
+          .get(`users?query=${encodeURIComponent(query)}`)
+          .then((result) => {
+            let filteredDevelopers = result.data.users;
+            this.filteredDevelopers = filteredDevelopers.sort((a, b) => b.firstname - a.firstname);
+          })
+          .catch((err) => {
+            throw new Error(err);
+          });
       } else {
         console.log('Search query must be longer than 2 letters.');
       }
