@@ -34,6 +34,16 @@ export default {
     CreateAccount
   },
 
+  watch: {
+    $route(route) {
+      if (route.name === 'login' || route.name === 'register') {
+        if (Object.keys(route.params).length !== 0) {
+          this.activeStepId = route.params.activeStepId;
+        }
+      }
+    }
+  },
+
   methods: {
     submit() {},
     goToStep(stepIndex) {

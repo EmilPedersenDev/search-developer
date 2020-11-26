@@ -103,6 +103,7 @@ export default {
       api
         .post('auth/signup', this.model)
         .then((result) => {
+          this.$router.push({ name: 'login', params: { activeStepId: 1 } });
           console.log('Successful');
         })
         .catch((err) => {

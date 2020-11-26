@@ -35,12 +35,14 @@ const routes = [
       {
         path: 'register',
         name: 'register',
-        component: () => import('../components/authentication/Register.vue')
+        component: () => import('../components/authentication/Register.vue'),
+        props: true
       },
       {
         path: 'login',
         name: 'login',
-        component: () => import('../components/authentication/Login.vue')
+        component: () => import('../components/authentication/Login.vue'),
+        props: true
       }
     ]
   },
