@@ -1,8 +1,9 @@
 <template>
   <div id="app">
     <app-navigation></app-navigation>
+    <!-- <d-spinner :isLoading="!isLoaded"></d-spinner> -->
     <transition name="fade" mode="out-in">
-      <router-view />
+      <router-view v-if="isLoaded" />
     </transition>
   </div>
 </template>
@@ -13,7 +14,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { IS_AUTHENTICATED } from './store/actions/authentication-actions';
 import { GET_USER } from './store/actions/user-actions';
 import { GET_SKILLS } from './store/actions/skills-actions';
-import { LOAD_DEPENDENCIES } from './store';
+import { LOAD_DEPENDENCIES, IS_LOADED } from './store';
 export default {
   name: 'App',
   components: {
@@ -28,7 +29,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isAuthenticated: IS_AUTHENTICATED
+      isAuthenticated: IS_AUTHENTICATED,
+      isLoaded: IS_LOADED
     })
   }
 };

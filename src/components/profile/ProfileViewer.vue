@@ -35,11 +35,6 @@ export default {
     // if (!this.isCurrentUser) {
     // }
   },
-  mounted() {
-    api.get('users').then((result) => {
-      console.log(result.data);
-    });
-  },
   methods: {
     addSkill(skill) {
       console.log('add skill');

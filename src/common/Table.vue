@@ -2,8 +2,8 @@
   <table>
     <tbody>
       <tr @click="goToProfile">
-        <td><img :src="developer.profileImg" alt="" /></td>
-        <td>{{ developer.firstName + " " + developer.lastName }}</td>
+        <td><img src="user.svg" alt="" /></td>
+        <td>{{ developer.firstname + ' ' + developer.lastname }}</td>
         <td>{{ languages }}</td>
       </tr>
     </tbody>
@@ -12,37 +12,37 @@
 
 <script>
 export default {
-  name: "d-table",
+  name: 'd-table',
   props: {
     developer: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   data() {
     return {};
   },
   methods: {
     goToProfile() {
-      this.$router.push("/profile");
-    },
+      this.$router.push('/profile');
+    }
   },
   computed: {
     languages() {
-      return this.developer.language.reduce((acc, language, index) => {
-        if (this.developer.language.length - 1 === index) {
-          acc += `${language}`;
+      return this.developer.skills.reduce((acc, skill, index) => {
+        if (this.developer.skills.length - 1 === index) {
+          acc += `${skill.name}`;
         } else {
-          acc += `${language}, `;
+          acc += `${skill.name}, `;
         }
         return acc;
-      }, "");
-    },
-  },
+      }, '');
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/colors.scss";
+@import '@/assets/scss/colors.scss';
 table {
   margin-top: 20px;
   width: 100%;
