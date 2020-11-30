@@ -1,7 +1,12 @@
 <template>
   <div class="modal-custom" @click.prevent="handleClickOutside">
     <div class="modal-card" @click.stop>
-      <div class="modal-content-custom"><i class="fas fa-times" @click="onClose"></i> <slot /></div>
+      <div class="modal-content-custom">
+        <i class="fas fa-times" @click="onClose"></i>
+        <slot name="modal-header"></slot>
+        <slot name="modal-body"></slot>
+        <slot name="modal-footer"></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -37,6 +42,7 @@ export default {
   position: fixed;
   z-index: 9998;
   transition: opacity 2s linear;
+  top: 0;
   .modal-card {
     position: relative;
     top: 50%;
@@ -60,6 +66,18 @@ export default {
         &:hover {
           cursor: pointer;
         }
+      }
+      .modal-custom-header,
+      .modal-custom-body,
+      .modal-custom-footer {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 40px;
+      }
+      .modal-custom-footer {
+        display: flex;
+        justify-content: space-evenly;
+        margin-bottom: 20px;
       }
     }
   }

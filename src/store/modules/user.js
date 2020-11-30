@@ -1,4 +1,4 @@
-import { SET_USER, GET_USER } from '../actions/user-actions';
+import { SET_USER, GET_USER, UPDATE_USER_INFORMATION } from '../actions/user-actions';
 import jwtDecode from 'vue-jwt-decode';
 import api from '../../api/index';
 const state = {
@@ -10,7 +10,12 @@ const actions = {
     let token = localStorage.getItem('jwt');
     let decodedToken = jwtDecode.decode(token);
     api.get(`user/${decodedToken.id}`).then((result) => {
-      commit(SET_USER, result.data);
+      commit(SET_USER, result.data.user);
+    });
+  },
+  [UPDATE_USER_INFORMATION]: ({ commit }, user) => {
+    api.put(`user/${user.id}/personal-information`, user).then((result) => {
+      commit(SET_USER, result.data.user);
     });
   }
 };

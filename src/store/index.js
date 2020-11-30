@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import authentication from './modules/authentication';
 import user from './modules/user';
 import skills from './modules/skills';
+import developer from './modules/developer';
 import { GET_SKILLS } from './actions/skills-actions';
 
 export const LOAD_DEPENDENCIES = 'LOAD_DEPENDENCIES';
@@ -41,6 +42,7 @@ export default new Vuex.Store({
   modules: {
     authentication,
     user,
-    skills
+    skills,
+    developer
   }
 });

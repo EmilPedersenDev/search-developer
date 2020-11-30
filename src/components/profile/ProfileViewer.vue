@@ -8,8 +8,7 @@
             <h1 class="text-on-back">01</h1>
             <h2 class="text-on-front">{{ user.firstname + ' ' + user.lastname }}</h2>
             <p class="user-info-text">
-              {{ user.description }} Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum autem ipsa temporibus ullam architecto maxime quam eius laboriosam recusandae
-              voluptate vero sequi vitae ratione, culpa deleniti. Perspiciatis cum enim dolores.
+              {{ user.information }}
             </p>
             <div class="social-sign-ins">
               <d-button> <i class="fab fa-linkedin-in"></i> </d-button>
@@ -17,6 +16,7 @@
                 <i class="fab fa-github"></i>
               </d-button>
             </div>
+            <d-button secondary edit no-border @click="openPersonalEditModal">Edit</d-button>
           </div>
           <div class="col-md-6 col-lg-4 profile-card">
             <div class="card">
@@ -32,6 +32,7 @@
                   <d-table-new :itemKeys="experienceFields" :items="tableItems" :itemsHeaders="tableHeaders"></d-table-new>
                 </div>
               </div>
+              <d-button secondary edit no-border>Edit</d-button>
             </div>
           </div>
         </div>
@@ -51,6 +52,7 @@
               voluptate vero sequi vitae ratione, culpa deleniti. Perspiciatis cum enim dolores.
             </p>
             <d-button secondary>Check Projects</d-button>
+            <d-button secondary edit no-border>Edit</d-button>
           </div>
         </div>
       </div>
@@ -61,22 +63,25 @@
           <div class="col-md-6">
             <h1 class="text-on-back">03</h1>
             <h2 class="text-on-front" style="top: 51%">Contact</h2>
+            <d-button secondary edit no-border>Edit</d-button>
           </div>
           <div class="col-md-5"></div>
         </div>
       </div>
     </section>
+    <personal-edit-modal v-if="showPersonalEditModal" :close="closePersonalEditModal" :model="model"></personal-edit-modal>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { GET_USER } from '../../store/actions/user-actions';
+import { mapGetters, mapActions } from 'vuex';
+import { GET_USER, UPDATE_USER_INFORMATION } from '../../store/actions/user-actions';
 import { GET_SKILLS } from '../../store/actions/skills-actions';
+import PersonalEditModal from '../modals/profile-modals/PersonInfoEditModal';
 import api from '../../api/index';
 import Button from '../../common/Button.vue';
 export default {
-  components: { Button },
+  components: { Button, PersonalEditModal },
   name: 'profile-viewer',
   props: {
     id: {
@@ -90,14 +95,20 @@ export default {
       tableHeaders: [],
       experienceHeaders: ['Experience'],
       experienceFields: [{ key: 'company' }, { key: 'title' }, { key: 'time' }],
-      experienceItems: [{ company: 'Netflix', title: 'Frontend', time: '2019' }]
+      experienceItems: [{ company: 'Netflix', title: 'Frontend', time: '2019' }],
+      showPersonalEditModal: false,
+      model: {
+        firstname: '',
+        lastname: '',
+        information: ''
+      }
     };
   },
-  created() {
-    // if (!this.isCurrentUser) {
-    // }
-  },
+
   methods: {
+    ...mapActions({
+      updateUser: UPDATE_USER_INFORMATION
+    }),
     addSkill(skill) {
       console.log('add skill');
       api.put(`user/${this.user.id}`, { ...this.user, skillId: skill.id }).then((result) => {
@@ -107,6 +118,22 @@ export default {
     setExperience() {
       this.tableItems = this.experienceItems;
       this.tableHeaders = this.experienceHeaders;
+    },
+    openPersonalEditModal() {
+      this.showPersonalEditModal = true;
+    },
+    closePersonalEditModal(val) {
+      if (val) {
+        this.updateUser({ ...this.model, id: parseInt(this.user.id) })
+          .catch((e) => {
+            console.error(e);
+          })
+          .finally(() => {
+            this.showPersonalEditModal = false;
+          });
+      } else {
+        this.showPersonalEditModal = false;
+      }
     }
   },
   computed: {
@@ -125,6 +152,7 @@ export default {
 .profile-viewer {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .page-header {

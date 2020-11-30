@@ -28,6 +28,10 @@ export default {
       type: Boolean,
       default: false
     },
+    edit: {
+      type: Boolean,
+      default: false
+    },
     type: {
       type: String,
       default: 'button'
@@ -41,7 +45,15 @@ export default {
   },
   computed: {
     classlist() {
-      return ['d-button', this.primary && 'primary', this.secondary && 'secondary', this.third && 'third', this.round && 'round', this.noBorder && 'no-border'];
+      return [
+        'd-button',
+        this.primary && 'primary',
+        this.secondary && 'secondary',
+        this.third && 'third',
+        this.round && 'round',
+        this.noBorder && 'no-border',
+        this.edit && 'edit'
+      ];
     }
   }
 };
@@ -92,6 +104,11 @@ export default {
     &:hover {
       transform: translateY(0);
     }
+  }
+  &.edit {
+    position: absolute;
+    right: 0;
+    bottom: 0;
   }
 }
 </style>
