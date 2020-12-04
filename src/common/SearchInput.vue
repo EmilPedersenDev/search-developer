@@ -21,82 +21,88 @@
       @keyup.esc="onKeyupEsc"
     />
     <button class="search-button">
-      <i class="fas fa-search"></i>
+      <i class="fas fa-search" v-if="useSearch"></i>
+      <span v-else>Add</span>
     </button>
   </div>
 </template>
 
 <script>
 export default {
-  name: "search-input",
+  name: 'search-input',
 
   data: function () {
     return {
-      localValue: this.value,
+      localValue: this.value
     };
   },
 
   props: {
     id: {
       type: String,
-      default: "",
+      default: ''
     },
     required: {
       type: Boolean,
-      default: false,
+      default: false
     },
     type: {
       type: String,
-      default: "text",
+      default: 'text',
       validator: function (type) {
-        return ["text", "number", "date", "tel", "password"].includes(type);
-      },
+        return ['text', 'number', 'date', 'tel', 'password'].includes(type);
+      }
     },
     placeholder: {
-      type: String,
+      type: String
     },
     value: {
-      default: null,
+      default: null
     },
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     tabindex: {
       type: String,
-      default: "0",
+      default: '0'
     },
+    useSearch: {
+      type: Boolean,
+      default: false
+    },
+
     invalid: {
       type: Boolean,
-      default: false,
+      default: false
     },
     blur: {
-      type: Function,
+      type: Function
     },
     focus: {
-      type: Function,
+      type: Function
     },
     click: {
-      type: Function,
+      type: Function
     },
     input: {
-      type: Function,
+      type: Function
     },
     keydownDown: {
-      type: Function,
+      type: Function
     },
     keydownUp: {
-      type: Function,
+      type: Function
     },
     keyupEsc: {
-      type: Function,
-    },
+      type: Function
+    }
   },
 
   computed: {
     classList: function () {
-      return ["st-input"];
-    },
+      return ['st-input'];
+    }
   },
 
   watch: {
@@ -107,9 +113,9 @@ export default {
     },
     localValue: function (newVal, oldVal) {
       if (newVal !== oldVal) {
-        this.$emit("input", newVal);
+        this.$emit('input', newVal);
       }
-    },
+    }
   },
 
   methods: {
@@ -119,16 +125,16 @@ export default {
     },
     onChange: function (evt) {
       this.localValue = evt.target.value;
-      this.$emit("change", this.localValue);
+      this.$emit('change', this.localValue);
     },
     onBlur: function () {
-      let inputGroupEl = document.getElementsByClassName("input-group")[0];
-      inputGroupEl.classList.remove("focus-group");
+      let inputGroupEl = document.getElementsByClassName('input-group')[0];
+      inputGroupEl.classList.remove('focus-group');
       if (this.blur) this.blur();
     },
     onFocus: function () {
-      let inputGroupEl = document.getElementsByClassName("input-group")[0];
-      inputGroupEl.classList.add("focus-group");
+      let inputGroupEl = document.getElementsByClassName('input-group')[0];
+      inputGroupEl.classList.add('focus-group');
       if (this.focus) this.focus();
     },
     onClick: function () {
@@ -142,13 +148,13 @@ export default {
     },
     onKeyupEsc: function () {
       if (this.keyupEsc) this.keyupEsc();
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/colors.scss";
+@import '@/assets/scss/colors.scss';
 
 .input-group {
   width: 100%;
@@ -173,8 +179,7 @@ export default {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-right: none;
-  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out,
-    background-color 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 
   &:focus {
     border-color: $primary;
@@ -201,8 +206,7 @@ button {
   border-radius: 0.25em;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out,
-    background-color 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
   &:hover {
     background: #00f2c3;
     cursor: pointer;

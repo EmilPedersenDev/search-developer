@@ -1,23 +1,18 @@
 <template>
   <div class="search-wrapper">
     <h3>Search developer in <span></span></h3>
-    <d-search-input placeholder="Search" v-model="query" :focus="activate" :blur="deActivate" @input="searchDeveloper"></d-search-input>
-    <transition name="developer-search-dropdown-transition">
-      <div v-if="displayDropdownActive" class="px-md-3 developer-search-dropdown-box">
-        <ul>
-          <li v-for="(developer, index) in filteredDevelopers" :key="index" @click.stop="addDeveloper(developer)" tabindex="0">
-            <div class="developer-search-profile">
-              <div class="profile-image col-2">
-                <img src="user.svg" alt="" />
-              </div>
-              <div class="profile-name col-10">
-                <p>{{ developer.firstname + ' ' + developer.lastname }}</p>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </transition>
+    <multi-select :filteredItems="filteredDevelopers" @input="searchDeveloper" :selectItem="addDeveloper">
+      <template slot="dropdown-content" slot-scope="{ item }">
+        <div class="developer-search-profile">
+          <div class="profile-image col-2">
+            <img src="user.svg" alt="" />
+          </div>
+          <div class="profile-name col-10">
+            <p>{{ item.firstname + ' ' + item.lastname }}</p>
+          </div>
+        </div>
+      </template>
+    </multi-select>
     <d-table v-if="hasSelectedDeveloper" :developer="selectedDeveloper" />
   </div>
 </template>
@@ -26,6 +21,7 @@
 import _ from 'lodash';
 import api from '../api/index';
 import pointerMixin from '@/services/mixins/pointerMixin.js';
+import MultiSelect from './search/MultiSelect.vue';
 export default {
   name: 'search-developer',
   mixins: [pointerMixin],
@@ -37,6 +33,9 @@ export default {
       filteredDevelopers: []
     };
   },
+  components: {
+    MultiSelect
+  },
   methods: {
     activate() {
       this.active = true;
@@ -45,6 +44,7 @@ export default {
       this.active = false;
     },
     addDeveloper(developer) {
+      debugger;
       this.selectedDeveloper = { ...developer };
     },
     searchDeveloper(query) {
@@ -101,54 +101,29 @@ export default {
   max-width: 400px;
   width: 100%;
 
-  .developer-search-dropdown-box {
-    width: 100%;
-    border: 1px solid $secondary;
-    border-bottom-left-radius: 0.25rem;
-    border-bottom-right-radius: 0.25rem;
-    padding: 0 !important;
-    position: absolute;
-    z-index: 1001;
-    background: $background;
-    ul {
-      padding: 0;
-      margin: 0;
-      li {
-        list-style-type: none;
-        &.st_dropdown_item_highlight {
-          background: rgba(225, 78, 202, 0.1);
-          outline: none;
+  .developer-search-profile {
+    display: flex;
+    .profile-image {
+      img {
+        @media (min-width: 500px) {
+          padding: 10px;
         }
-        .developer-search-profile {
-          display: flex;
-          .profile-image {
-            img {
-              @media (min-width: 500px) {
-                padding: 10px;
-              }
-              @media (max-width: 500px) {
-                padding: 5px;
-              }
-              @media (max-width: 400px) {
-                padding: 2px;
-              }
-              max-width: 100%;
-              height: auto;
-            }
-          }
-          .profile-name {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            p {
-              margin: 0;
-            }
-          }
+        @media (max-width: 500px) {
+          padding: 5px;
         }
-        &:hover {
-          background: rgba(225, 78, 202, 0.1);
-          cursor: pointer;
+        @media (max-width: 400px) {
+          padding: 2px;
         }
+        max-width: 100%;
+        height: auto;
+      }
+    }
+    .profile-name {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      p {
+        margin: 0;
       }
     }
   }

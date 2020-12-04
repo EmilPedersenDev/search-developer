@@ -2,13 +2,14 @@
   <d-modal :onClose="close">
     <div slot="modal-header" class="modal-custom-header">
       <h1>Personal Edit</h1>
-      <div class="row">
-        <d-input class="name" inputLabel="Firstname" v-model="model.firstname">Firstname</d-input>
-        <d-input class="name" inputLabel="Lastname" v-model="model.lastname">Lastname</d-input>
-      </div>
-      <d-input class="name" inputLabel="Description" v-model="model.information">Beskrivning</d-input>
     </div>
-    <div slot="modal-body" class="modal-custom-body">EMil</div>
+    <div slot="modal-body" class="modal-custom-body">
+      <div class="row">
+        <d-input class="name" inputLabel="Firstname" v-model="personalInfo.firstname">Firstname</d-input>
+        <d-input class="name" inputLabel="Lastname" v-model="personalInfo.lastname">Lastname</d-input>
+      </div>
+      <d-input class="name" inputLabel="Description" v-model="personalInfo.information">Beskrivning</d-input>
+    </div>
     <div slot="modal-footer" class="modal-custom-footer">
       <d-button class="col-4 col-sm-3" @click="closeModal(true)">Confirm</d-button>
       <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
@@ -28,10 +29,18 @@ export default {
       type: Object
     }
   },
+  mounted() {
+    this.personalInfo = { firstname: this.model.firstname, lastname: this.model.lastname, information: this.model.information };
+  },
+  data() {
+    return {
+      personalInfo: {}
+    };
+  },
   methods: {
     closeModal(val) {
       if (this.close) {
-        this.close(val);
+        this.close(val, this.personalInfo);
       }
     }
   }

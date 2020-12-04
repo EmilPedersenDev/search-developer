@@ -1,6 +1,6 @@
 <template>
   <div :class="classlist">
-    <input :type="type" :name="name" class="input-field" :placeholder="placeholder" :id="id" @input="onInput" @blur="onBlur" :autocomplete="autocomplete" />
+    <input :type="type" :name="name" class="input-field" :placeholder="placeholder" :id="id" @input="onInput" @blur="onBlur" :autocomplete="autocomplete" :value="value" />
     <i class="fas fa-exclamation" v-if="invalid"></i>
     <label :for="id" class="input-label">
       {{ inputLabel }}

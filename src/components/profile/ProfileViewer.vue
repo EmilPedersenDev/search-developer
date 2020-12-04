@@ -6,9 +6,9 @@
         <div class="row">
           <div class="col-md-6 col-lg-6 profile-info">
             <h1 class="text-on-back">01</h1>
-            <h2 class="text-on-front">{{ user.firstname + ' ' + user.lastname }}</h2>
+            <h2 class="text-on-front">{{ model.firstname + ' ' + model.lastname }}</h2>
             <p class="user-info-text">
-              {{ user.information }}
+              {{ model.information }}
             </p>
             <div class="social-sign-ins">
               <d-button> <i class="fab fa-linkedin-in"></i> </d-button>
@@ -25,14 +25,15 @@
               </div>
               <div class="card-body">
                 <div class="card-body-action">
-                  <d-button secondary @click="setExperience"> ses</d-button>
-                  <d-button secondary>sessss</d-button>
+                  <d-button secondary @click="showExperienceView">Experience</d-button>
+                  <d-button secondary @click="showSkillsView">Skills</d-button>
                 </div>
-                <div class="card-body-table">
+                <skills v-if="showSkills" :selectedSkills="selectedSkills" />
+                <!-- <div class="card-body-table">
                   <d-table-new :itemKeys="experienceFields" :items="tableItems" :itemsHeaders="tableHeaders"></d-table-new>
-                </div>
+                </div> -->
               </div>
-              <d-button secondary edit no-border>Edit</d-button>
+              <d-button secondary edit no-border @click="openExperienceEditModal">Edit</d-button>
             </div>
           </div>
         </div>
@@ -69,19 +70,27 @@
         </div>
       </div>
     </section>
+    <!-- <transition name="personal-info-save" mode="out-in"> -->
+    <section id="save-button" :class="{ 'save-button-visible': hasModelChanged }">
+      <d-button secondary @click="submit">Save</d-button>
+    </section>
+    <!-- </transition> -->
     <personal-edit-modal v-if="showPersonalEditModal" :close="closePersonalEditModal" :model="model"></personal-edit-modal>
+    <skill-edit-modal v-if="showSkillEditModal" :close="closeSkillEditModal"></skill-edit-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { GET_USER, UPDATE_USER_INFORMATION } from '../../store/actions/user-actions';
-import { GET_SKILLS } from '../../store/actions/skills-actions';
+import { GET_SKILLS, GET_SELECTED_SKILLS } from '../../store/actions/skills-actions';
 import PersonalEditModal from '../modals/profile-modals/PersonInfoEditModal';
+import SkillEditModal from '../modals/profile-modals/SkillEditModal';
+import Skills from '../skills/Skills';
 import api from '../../api/index';
 import Button from '../../common/Button.vue';
 export default {
-  components: { Button, PersonalEditModal },
+  components: { Button, PersonalEditModal, SkillEditModal, Skills },
   name: 'profile-viewer',
   props: {
     id: {
@@ -97,14 +106,31 @@ export default {
       experienceFields: [{ key: 'company' }, { key: 'title' }, { key: 'time' }],
       experienceItems: [{ company: 'Netflix', title: 'Frontend', time: '2019' }],
       showPersonalEditModal: false,
-      model: {
-        firstname: '',
-        lastname: '',
-        information: ''
-      }
+      showSkillEditModal: false,
+      showSkills: false,
+      showExperience: false,
+      model: {},
+      originalModel: {}
     };
   },
 
+  beforeMount() {
+    this.model = { ...this.user };
+    this.originalModel = { ...this.model };
+  },
+  computed: {
+    ...mapGetters({
+      user: GET_USER,
+      skills: GET_SKILLS,
+      selectedSkills: GET_SELECTED_SKILLS
+    }),
+    isCurrentUser() {
+      return this.user.id === this.id;
+    },
+    hasModelChanged() {
+      return JSON.stringify(this.model) !== JSON.stringify(this.originalModel);
+    }
+  },
   methods: {
     ...mapActions({
       updateUser: UPDATE_USER_INFORMATION
@@ -115,6 +141,14 @@ export default {
         console.log(result.data);
       });
     },
+    showExperienceView() {
+      this.showSkills = false;
+      this.showExperience = true;
+    },
+    showSkillsView() {
+      this.showExperience = false;
+      this.showSkills = true;
+    },
     setExperience() {
       this.tableItems = this.experienceItems;
       this.tableHeaders = this.experienceHeaders;
@@ -122,27 +156,26 @@ export default {
     openPersonalEditModal() {
       this.showPersonalEditModal = true;
     },
-    closePersonalEditModal(val) {
+    openExperienceEditModal() {
+      this.showSkillEditModal = true;
+    },
+    closePersonalEditModal(val, personalInfoModel) {
       if (val) {
-        this.updateUser({ ...this.model, id: parseInt(this.user.id) })
-          .catch((e) => {
-            console.error(e);
-          })
-          .finally(() => {
-            this.showPersonalEditModal = false;
-          });
-      } else {
-        this.showPersonalEditModal = false;
+        this.model = { ...this.model, firstname: personalInfoModel.firstname, lastname: personalInfoModel.lastname, information: personalInfoModel.information };
       }
-    }
-  },
-  computed: {
-    ...mapGetters({
-      user: GET_USER,
-      skills: GET_SKILLS
-    }),
-    isCurrentUser() {
-      return this.user.id === this.id;
+      this.showPersonalEditModal = false;
+    },
+    closeSkillEditModal() {
+      this.showSkillEditModal = false;
+    },
+    submit() {
+      this.updateUser(this.model)
+        .catch((e) => {
+          console.error(e);
+        })
+        .finally(() => {
+          this.showPersonalEditModal = false;
+        });
     }
   }
 };
@@ -234,5 +267,26 @@ export default {
 #projects,
 #contact {
   margin-bottom: 200px;
+}
+
+#save-button {
+  position: fixed;
+  text-align: right;
+  background: #fff;
+  bottom: 0;
+  height: 0px;
+  transition: all 0.6s ease;
+  width: 100%;
+
+  visibility: hidden;
+
+  &.save-button-visible {
+    height: 60px;
+    visibility: visible;
+  }
+  .d-button {
+    margin-right: 20px;
+    margin-top: 12px;
+  }
 }
 </style>
