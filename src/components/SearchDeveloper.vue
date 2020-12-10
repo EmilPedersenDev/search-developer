@@ -44,7 +44,6 @@ export default {
       this.active = false;
     },
     addDeveloper(developer) {
-      debugger;
       this.selectedDeveloper = { ...developer };
     },
     searchDeveloper(query) {

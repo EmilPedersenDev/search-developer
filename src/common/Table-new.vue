@@ -11,7 +11,10 @@
       <tr v-for="(item, id) in items" :key="id">
         <td>
           <div class="column-wrapper">
-            <p v-for="(fields, id) in itemKeys" :key="id">{{ item[fields.key] }}</p>
+            <p v-for="(fields, id) in itemKeys" :key="id">
+              {{ item[fields.key] }}
+              <slot :name="fields.key" :item="item"></slot>
+            </p>
           </div>
         </td>
       </tr>

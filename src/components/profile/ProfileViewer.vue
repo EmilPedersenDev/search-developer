@@ -6,9 +6,9 @@
         <div class="row">
           <div class="col-md-6 col-lg-6 profile-info">
             <h1 class="text-on-back">01</h1>
-            <h2 class="text-on-front">{{ model.firstname + ' ' + model.lastname }}</h2>
+            <h2 class="text-on-front">{{ developer.firstname + ' ' + developer.lastname }}</h2>
             <p class="user-info-text">
-              {{ model.information }}
+              {{ developer.information }}
             </p>
             <div class="social-sign-ins">
               <d-button> <i class="fab fa-linkedin-in"></i> </d-button>
@@ -28,69 +28,64 @@
                   <d-button secondary @click="showExperienceView">Experience</d-button>
                   <d-button secondary @click="showSkillsView">Skills</d-button>
                 </div>
-                <skills v-if="showSkills" :selectedSkills="selectedSkills" />
-                <!-- <div class="card-body-table">
-                  <d-table-new :itemKeys="experienceFields" :items="tableItems" :itemsHeaders="tableHeaders"></d-table-new>
-                </div> -->
+                <skills v-if="showSkills" :developerSkills="skills" />
+                <div class="card-body-table">
+                  <d-table-new v-if="showExperience && experiences.length > 0" :itemKeys="experienceFields" :items="experiences" :itemsHeaders="tableHeaders">
+                    <span slot="date" slot-scope="{ item }" @click="onDeleteExperience(item)">X</span>
+                  </d-table-new>
+                </div>
               </div>
-              <d-button secondary edit no-border @click="openExperienceEditModal">Edit</d-button>
+              <d-button secondary edit no-border @click="openExperienceEditModal">{{ showExperience ? 'Add Experience' : 'Add Skills' }}</d-button>
             </div>
           </div>
         </div>
       </div>
     </div>
     <section id="projects">
-      <div class="container">
-        <div class="row justify-content-between">
-          <div class="col-md-6">
-            <img src="https://demos.creative-tim.com/blk-design-system/assets/img/denys.jpg" alt="" />
-          </div>
-          <div class="col-md-5">
-            <h1 class="text-on-back">02</h1>
-            <h2 class="text-on-front" style="top: 31%">Projects</h2>
-            <p class="user-info-text">
-              {{ user.description }} Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum autem ipsa temporibus ullam architecto maxime quam eius laboriosam recusandae
-              voluptate vero sequi vitae ratione, culpa deleniti. Perspiciatis cum enim dolores.
-            </p>
-            <d-button secondary>Check Projects</d-button>
-            <d-button secondary edit no-border>Edit</d-button>
-          </div>
-        </div>
-      </div>
+      <projects :selectedProjects="projects">
+        <d-button slot="edit" secondary edit no-border @click="openProjectEditModal">Edit</d-button>
+      </projects>
     </section>
-    <section id="contact">
+    <!-- <section id="contact">
       <div class="container">
         <div class="row justify-content-between">
           <div class="col-md-6">
             <h1 class="text-on-back">03</h1>
             <h2 class="text-on-front" style="top: 51%">Contact</h2>
-            <d-button secondary edit no-border>Edit</d-button>
           </div>
           <div class="col-md-5"></div>
         </div>
       </div>
-    </section>
+    </section> -->
     <!-- <transition name="personal-info-save" mode="out-in"> -->
-    <section id="save-button" :class="{ 'save-button-visible': hasModelChanged }">
+    <!-- <section id="save-button" :class="{ 'save-button-visible': hasModelChanged }">
       <d-button secondary @click="submit">Save</d-button>
-    </section>
+    </section> -->
     <!-- </transition> -->
-    <personal-edit-modal v-if="showPersonalEditModal" :close="closePersonalEditModal" :model="model"></personal-edit-modal>
+    <personal-edit-modal v-if="showPersonalEditModal" :close="closePersonalEditModal"></personal-edit-modal>
     <skill-edit-modal v-if="showSkillEditModal" :close="closeSkillEditModal"></skill-edit-modal>
+    <experience-edit-modal v-if="showExperienceEditModal" :close="closeExperienceEditModal"></experience-edit-modal>
+    <project-edit-modal v-if="showProjectsEditModal" :close="closeProjectEditModal"></project-edit-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { GET_USER, UPDATE_USER_INFORMATION } from '../../store/actions/user-actions';
-import { GET_SKILLS, GET_SELECTED_SKILLS } from '../../store/actions/skills-actions';
+import { GET_USER } from '../../store/actions/user-actions';
+import { GET_DEVELOPER_SKILLS } from '../../store/actions/skills-actions';
+import { GET_DEVELOPER_EXPERIENCE, DELETE_DEVELOPER_EXPERIENCE } from '../../store/actions/experience-actions';
+import { GET_DEVELOPER_PROJECT } from '../../store/actions/project-actions';
+import { GET_DEVELOPER } from '../../store/actions/developer-actions';
 import PersonalEditModal from '../modals/profile-modals/PersonInfoEditModal';
 import SkillEditModal from '../modals/profile-modals/SkillEditModal';
+import Projects from './Projects';
+import ExperienceEditModal from '../modals/profile-modals/ExperienceEditModal';
+import ProjectEditModal from '../modals/profile-modals/ProjectEditModal';
 import Skills from '../skills/Skills';
 import api from '../../api/index';
 import Button from '../../common/Button.vue';
 export default {
-  components: { Button, PersonalEditModal, SkillEditModal, Skills },
+  components: { Button, PersonalEditModal, SkillEditModal, ExperienceEditModal, Skills, Projects, ProjectEditModal },
   name: 'profile-viewer',
   props: {
     id: {
@@ -103,37 +98,39 @@ export default {
       tableItems: [],
       tableHeaders: [],
       experienceHeaders: ['Experience'],
-      experienceFields: [{ key: 'company' }, { key: 'title' }, { key: 'time' }],
-      experienceItems: [{ company: 'Netflix', title: 'Frontend', time: '2019' }],
+      experienceFields: [{ key: 'company' }, { key: 'title' }, { key: 'date' }],
       showPersonalEditModal: false,
       showSkillEditModal: false,
+      showExperienceEditModal: false,
       showSkills: false,
       showExperience: false,
+      showProjectsEditModal: false,
       model: {},
-      originalModel: {}
+      originalDeveloper: {}
     };
   },
 
   beforeMount() {
-    this.model = { ...this.user };
-    this.originalModel = { ...this.model };
+    this.showExperience = true;
   },
   computed: {
     ...mapGetters({
       user: GET_USER,
-      skills: GET_SKILLS,
-      selectedSkills: GET_SELECTED_SKILLS
+      skills: GET_DEVELOPER_SKILLS,
+      experiences: GET_DEVELOPER_EXPERIENCE,
+      projects: GET_DEVELOPER_PROJECT,
+      developer: GET_DEVELOPER
     }),
     isCurrentUser() {
       return this.user.id === this.id;
     },
     hasModelChanged() {
-      return JSON.stringify(this.model) !== JSON.stringify(this.originalModel);
+      return JSON.stringify(this.developer) !== JSON.stringify(this.tempDeveloper);
     }
   },
   methods: {
     ...mapActions({
-      updateUser: UPDATE_USER_INFORMATION
+      deleteExperience: DELETE_DEVELOPER_EXPERIENCE
     }),
     addSkill(skill) {
       console.log('add skill');
@@ -157,25 +154,36 @@ export default {
       this.showPersonalEditModal = true;
     },
     openExperienceEditModal() {
-      this.showSkillEditModal = true;
+      if (this.showExperience) {
+        this.showExperienceEditModal = true;
+      } else {
+        this.showSkillEditModal = true;
+      }
+    },
+    openProjectEditModal() {
+      this.showProjectsEditModal = true;
     },
     closePersonalEditModal(val, personalInfoModel) {
-      if (val) {
-        this.model = { ...this.model, firstname: personalInfoModel.firstname, lastname: personalInfoModel.lastname, information: personalInfoModel.information };
-      }
       this.showPersonalEditModal = false;
     },
     closeSkillEditModal() {
       this.showSkillEditModal = false;
     },
-    submit() {
-      this.updateUser(this.model)
-        .catch((e) => {
-          console.error(e);
-        })
-        .finally(() => {
-          this.showPersonalEditModal = false;
-        });
+    closeExperienceEditModal() {
+      this.showExperienceEditModal = false;
+    },
+    closeProjectEditModal() {
+      this.showProjectsEditModal = false;
+    },
+    onDeleteExperience(item) {
+      let request = {
+        userId: this.user.id,
+        id: item.id
+      };
+
+      this.deleteExperience(request).catch((err) => {
+        console.error(err);
+      });
     }
   }
 };

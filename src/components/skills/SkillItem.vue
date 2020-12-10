@@ -1,7 +1,7 @@
 <template>
   <div class="skill-box">
     <p>{{ skill.name }}</p>
-    <p v-if="canRemove" class="remove-skill" @click="onRemoveSelectedSkill(skill.id)">X</p>
+    <p v-if="canRemove" class="remove-skill" @click="onRemoveDeveloperSkills(skill.id)">X</p>
   </div>
 </template>
 
@@ -19,14 +19,14 @@ export default {
       type: Boolean,
       default: false
     },
-    removeSelectedSkill: {
+    removeDeveloperSkill: {
       type: Function
     }
   },
   methods: {
-    onRemoveSelectedSkill(id) {
-      if (this.removeSelectedSkill) {
-        this.removeSelectedSkill(id);
+    onRemoveDeveloperSkills(id) {
+      if (this.removeDeveloperSkill) {
+        this.removeDeveloperSkill(id);
       }
     }
   }

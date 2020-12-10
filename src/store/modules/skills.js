@@ -1,4 +1,4 @@
-import { GET_SKILLS, SET_SKILLS, SET_SELECTED_SKILLS, GET_SELECTED_SKILLS } from '../actions/skills-actions';
+import { GET_SKILLS, SET_SKILLS, SET_DEVELOPER_SKILLS, GET_DEVELOPER_SKILLS } from '../actions/skills-actions';
 import api from '../../api/index';
 const state = {
   skills: [],
@@ -10,6 +10,11 @@ const actions = {
     api.get('skills').then((result) => {
       commit(SET_SKILLS, result.data.skills);
     });
+  },
+  [SET_DEVELOPER_SKILLS]: ({ commit }, payload) => {
+    api.post(`developer/${payload.id}/skills`, payload.skills).then((result) => {
+      commit(SET_DEVELOPER_SKILLS, result.data.developer.skills);
+    });
   }
 };
 
@@ -17,7 +22,7 @@ const mutations = {
   [SET_SKILLS]: (state, payload) => {
     state.skills = payload;
   },
-  [SET_SELECTED_SKILLS]: (state, payload) => {
+  [SET_DEVELOPER_SKILLS]: (state, payload) => {
     state.selectedSkills = payload;
   }
 };
@@ -26,7 +31,7 @@ const getters = {
   [GET_SKILLS]: (state) => {
     return state.skills;
   },
-  [GET_SELECTED_SKILLS]: (state) => {
+  [GET_DEVELOPER_SKILLS]: (state) => {
     return state.selectedSkills;
   }
 };
