@@ -5,44 +5,62 @@
     </div>
     <div slot="modal-body" class="modal-custom-body">
       <div class="row">
-        <d-input class="name" inputLabel="Firstname" v-model="personalInfo.firstname">Firstname</d-input>
-        <d-input class="name" inputLabel="Lastname" v-model="personalInfo.lastname">Lastname</d-input>
+        <d-input class="name" inputLabel="Firstname" v-model="developer.firstname">Firstname</d-input>
+        <d-input class="name" inputLabel="Lastname" v-model="developer.lastname">Lastname</d-input>
       </div>
-      <d-input class="name" inputLabel="Description" v-model="personalInfo.information">Beskrivning</d-input>
+      <d-input inputLabel="LinkedIn" v-model="developer.socialLink.linkedIn">LinkedIn</d-input>
+      <d-input inputLabel="Github" v-model="developer.socialLink.github">Github</d-input>
+      <d-input class="name" inputLabel="Description" v-model="developer.information">Beskrivning</d-input>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" @click="closeModal(true)">Save</d-button>
       <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
 </template>
 
 <script>
-import model from '../../../services/model/models';
+import { GET_DEVELOPER, SET_DEVELOPER } from '@/store/actions/developer-actions.js';
+import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'personal-edit-modal',
   props: {
     close: {
       type: Function
-    },
-    model: {
-      type: Object
     }
   },
-  mounted() {
-    this.personalInfo = { firstname: this.model.firstname, lastname: this.model.lastname, information: this.model.information };
+  beforeMount() {
+    this.developer = JSON.parse(JSON.stringify(this.getDeveloper));
   },
   data() {
     return {
-      personalInfo: {}
+      developer: {}
     };
   },
   methods: {
+    ...mapActions({
+      updateDeveloper: SET_DEVELOPER
+    }),
     closeModal(val) {
       if (this.close) {
-        this.close(val, this.personalInfo);
+        if (val) {
+          this.updateDeveloper(this.developer)
+            .then(() => {
+              this.close();
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        } else {
+          this.close();
+        }
       }
     }
+  },
+  computed: {
+    ...mapGetters({
+      getDeveloper: GET_DEVELOPER
+    })
   }
 };
 </script>

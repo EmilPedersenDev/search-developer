@@ -6,6 +6,8 @@ import authentication from './modules/authentication';
 import user from './modules/user';
 import skills from './modules/skills';
 import developer from './modules/developer';
+import experience from './modules/experience';
+import project from './modules/project';
 import { GET_SKILLS } from './actions/skills-actions';
 
 export const LOAD_DEPENDENCIES = 'LOAD_DEPENDENCIES';
@@ -15,6 +17,7 @@ export const IS_LOADED = 'IS_LOADED';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  strict: true,
   state: {
     isLoaded: false
   },
@@ -43,6 +46,8 @@ export default new Vuex.Store({
     authentication,
     user,
     skills,
-    developer
+    developer,
+    experience,
+    project
   }
 });

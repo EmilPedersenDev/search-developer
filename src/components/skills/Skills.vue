@@ -1,7 +1,7 @@
 <template>
   <div class="skills-wrapper">
-    <div class="skills-item" v-for="(skill, id) in selectedSkills" :key="id">
-      <skill-item :skill="skill" :canRemove="canRemove" :removeSelectedSkill="removeSelectedSkill"></skill-item>
+    <div class="skills-item" v-for="(skill, id) in developerSkills" :key="id">
+      <skill-item :skill="skill" :canRemove="canRemove" :removeDeveloperSkill="removeDeveloperSkill"></skill-item>
     </div>
   </div>
 </template>
@@ -15,10 +15,10 @@ export default {
       type: Boolean,
       default: false
     },
-    removeSelectedSkill: {
+    removeDeveloperSkill: {
       type: Function
     },
-    selectedSkills: {
+    developerSkills: {
       type: Array,
       default: () => {
         return [];

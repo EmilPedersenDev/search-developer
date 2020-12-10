@@ -11,18 +11,19 @@
           </div>
         </template>
       </multi-select>
-      <skills canRemove :removeSelectedSkill="removeSkill" :selectedSkills="tempSelectedSkills" />
+      <skills canRemove :removeDeveloperSkill="removeSkill" :developerSkills="tempDeveloperSkills" />
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)" :disabled="!hasSkillsChanged">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" @click="closeModal(true)">Confirm</d-button>
       <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
-import { SET_SELECTED_SKILLS, GET_SELECTED_SKILLS } from '@/store/actions/skills-actions.js';
+import { mapActions, mapGetters } from 'vuex';
+import { SET_DEVELOPER_SKILLS, GET_DEVELOPER_SKILLS } from '@/store/actions/skills-actions.js';
+import { GET_DEVELOPER } from '@/store/actions/developer-actions.js';
 import Skills from '@/components/skills/Skills.vue';
 import MultiSelect from '@/components/search/MultiSelect.vue';
 import api from '@/api/index';
@@ -38,27 +39,28 @@ export default {
     MultiSelect
   },
   mounted() {
-    this.originalSelectedSkills = [...this.selectedSkills];
-    this.tempSelectedSkills = [...this.selectedSkills];
+    this.originalDeveloperSkills = [...this.developerSkills];
+    this.tempDeveloperSkills = [...this.developerSkills];
   },
   data() {
     return {
       filteredSkills: [],
-      tempSelectedSkills: [],
-      originalSelectedSkills: []
+      tempDeveloperSkills: [],
+      originalDeveloperSkills: []
     };
   },
   computed: {
     ...mapGetters({
-      selectedSkills: GET_SELECTED_SKILLS
+      developerSkills: GET_DEVELOPER_SKILLS,
+      developer: GET_DEVELOPER
     }),
     hasSkillsChanged() {
-      return JSON.stringify(this.tempSelectedSkills) !== JSON.stringify(this.originalSelectedSkills);
+      return JSON.stringify(this.tempDeveloperSkills) !== JSON.stringify(this.originalDeveloperSkills);
     }
   },
   methods: {
-    ...mapMutations({
-      setSelectedSkills: SET_SELECTED_SKILLS
+    ...mapActions({
+      setDeveloperSkills: SET_DEVELOPER_SKILLS
     }),
     searchSkills(query) {
       if (query.length > 2) {
@@ -74,21 +76,28 @@ export default {
       }
     },
     addSkill(skill) {
-      let isSkillExisting = this.tempSelectedSkills.find((item) => item.name === skill.name);
+      let isSkillExisting = this.tempDeveloperSkills.find((item) => item.name === skill.name);
       if (!isSkillExisting) {
-        this.tempSelectedSkills.push(skill);
+        this.tempDeveloperSkills.push(skill);
       }
     },
     removeSkill(id) {
-      let updatedSkills = this.tempSelectedSkills.filter((skill) => skill.id !== id);
-      this.tempSelectedSkills = updatedSkills;
+      let updatedSkills = this.tempDeveloperSkills.filter((skill) => skill.id !== id);
+      this.tempDeveloperSkills = updatedSkills;
     },
     closeModal(val) {
       if (this.close) {
         if (val) {
-          this.setSelectedSkills(this.tempSelectedSkills);
+          let request = {
+            id: this.developer.id,
+            skills: this.tempDeveloperSkills
+          };
+          this.setDeveloperSkills(request).then(() => {
+            this.close();
+          });
+        } else {
+          this.close();
         }
-        this.close();
       }
     }
   }
