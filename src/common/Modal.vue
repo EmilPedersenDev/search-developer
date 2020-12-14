@@ -6,6 +6,7 @@
         <slot name="modal-header"></slot>
         <slot name="modal-body"></slot>
         <slot name="modal-footer"></slot>
+        <p class="required-description" v-if="hasValidation"><span>*</span> means that the field is required.</p>
       </div>
     </div>
   </div>
@@ -21,6 +22,10 @@ export default {
     },
     onClose: {
       type: Function
+    },
+    hasValidation: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -78,6 +83,17 @@ export default {
         display: flex;
         justify-content: space-evenly;
         margin-bottom: 20px;
+      }
+
+      .required-description {
+        font-size: 12px;
+        font-weight: 300;
+        text-align: right;
+        padding: 0;
+        margin: 0;
+        span {
+          color: #00f2c3;
+        }
       }
     }
   }

@@ -104,6 +104,7 @@ export default {
     .input-error {
       display: block;
       font-size: 12px;
+      text-align: left;
     }
   }
 

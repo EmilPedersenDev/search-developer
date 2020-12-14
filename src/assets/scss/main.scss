@@ -32,6 +32,31 @@ a {
   }
 }
 
+textarea {
+  &.invalid {
+    color: #fd5d93;
+    i {
+      font-size: 14px;
+      position: absolute;
+      top: 30px;
+      right: 5px;
+      transition: all 0.3s ease;
+    }
+    .input-error {
+      display: block;
+      font-size: 12px;
+      text-align: left;
+    }
+  }
+
+  &.required {
+    &::before {
+      content: '*';
+      color: $primary;
+    }
+  }
+}
+
 li {
   list-style-type: none;
 }
