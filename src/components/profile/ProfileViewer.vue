@@ -16,7 +16,7 @@
                 <i class="fab fa-github"></i>
               </d-button>
             </div>
-            <d-button secondary edit no-border @click="openPersonalEditModal">Edit</d-button>
+            <d-button secondary edit no-border @click="openPersonalEditModal" v-if="isAuthenticated">Edit</d-button>
           </div>
           <div class="col-md-6 col-lg-4 profile-card">
             <div class="card">
@@ -35,7 +35,7 @@
                   </d-table-new>
                 </div>
               </div>
-              <d-button secondary edit no-border @click="openExperienceEditModal">{{ showExperience ? 'Add Experience' : 'Add Skills' }}</d-button>
+              <d-button secondary edit no-border @click="openExperienceEditModal" v-if="isAuthenticated">{{ showExperience ? 'Add Experience' : 'Add Skills' }}</d-button>
             </div>
           </div>
         </div>
@@ -43,7 +43,7 @@
     </div>
     <section id="projects">
       <projects :selectedProjects="projects">
-        <d-button slot="edit" secondary edit no-border @click="openProjectEditModal">Edit</d-button>
+        <d-button slot="edit" secondary edit no-border @click="openProjectEditModal" v-if="isAuthenticated">Edit</d-button>
       </projects>
     </section>
     <!-- <section id="contact">
@@ -76,6 +76,7 @@ import { GET_DEVELOPER_SKILLS } from '../../store/actions/skills-actions';
 import { GET_DEVELOPER_EXPERIENCE, DELETE_DEVELOPER_EXPERIENCE } from '../../store/actions/experience-actions';
 import { GET_DEVELOPER_PROJECT } from '../../store/actions/project-actions';
 import { GET_DEVELOPER } from '../../store/actions/developer-actions';
+import { IS_AUTHENTICATED } from '../../store/actions/authentication-actions';
 import PersonalEditModal from '../modals/profile-modals/PersonInfoEditModal';
 import SkillEditModal from '../modals/profile-modals/SkillEditModal';
 import Projects from './Projects';
@@ -110,6 +111,12 @@ export default {
     };
   },
 
+  created() {
+    if (!this.isAuthenticated) {
+      this.getDeveloper(this.id);
+    }
+  },
+
   beforeMount() {
     this.showExperience = true;
   },
@@ -119,7 +126,8 @@ export default {
       skills: GET_DEVELOPER_SKILLS,
       experiences: GET_DEVELOPER_EXPERIENCE,
       projects: GET_DEVELOPER_PROJECT,
-      developer: GET_DEVELOPER
+      developer: GET_DEVELOPER,
+      isAuthenticated: IS_AUTHENTICATED
     }),
     isCurrentUser() {
       return this.user.id === this.id;
@@ -130,7 +138,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      deleteExperience: DELETE_DEVELOPER_EXPERIENCE
+      deleteExperience: DELETE_DEVELOPER_EXPERIENCE,
+      getDeveloper: GET_DEVELOPER
     }),
     addSkill(skill) {
       console.log('add skill');
