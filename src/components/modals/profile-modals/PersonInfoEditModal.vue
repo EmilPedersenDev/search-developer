@@ -1,5 +1,5 @@
 <template>
-  <d-modal :onClose="close">
+  <d-modal :onClose="close" hasValidation>
     <div slot="modal-header" class="modal-custom-header">
       <h1>Personal Edit</h1>
     </div>
@@ -16,10 +16,13 @@
       </div>
       <d-input inputLabel="LinkedIn" v-model="developer.socialLink.linkedIn">LinkedIn</d-input>
       <d-input inputLabel="Github" v-model="developer.socialLink.github">Github</d-input>
-      <d-input class="name" inputLabel="Description" v-model="developer.information">Beskrivning</d-input>
+      <d-input class="name" inputLabel="Description" required v-model="developer.information" :invalid="$v.developer.information.$error" :blur="$v.developer.information.$touch">
+        <span class="input-error" slot="error" v-if="$v.developer.information.$dirty && !$v.developer.information.alphaLetterValidation">Description can only contain letters</span>
+        <span class="input-error" slot="error" v-if="$v.developer.information.$dirty && !$v.developer.information.required">Description is required</span>
+      </d-input>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)">Save</d-button>
+      <d-button class="col-4 col-sm-3" @click="closeModal(true)" :disabled="$v.$invalid">Save</d-button>
       <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
@@ -49,6 +52,10 @@ export default {
         alphaLetterValidation
       },
       lastname: {
+        required,
+        alphaLetterValidation
+      },
+      information: {
         required,
         alphaLetterValidation
       }
