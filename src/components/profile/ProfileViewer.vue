@@ -111,6 +111,12 @@ export default {
     };
   },
 
+  created() {
+    if (!this.isAuthenticated) {
+      this.getDeveloper(this.id);
+    }
+  },
+
   beforeMount() {
     this.showExperience = true;
   },
@@ -132,7 +138,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      deleteExperience: DELETE_DEVELOPER_EXPERIENCE
+      deleteExperience: DELETE_DEVELOPER_EXPERIENCE,
+      getDeveloper: GET_DEVELOPER
     }),
     addSkill(skill) {
       console.log('add skill');
