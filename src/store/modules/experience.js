@@ -7,12 +7,12 @@ const state = {
 const actions = {
   [SET_DEVELOPER_EXPERIENCE]: ({ commit }, payload) => {
     api.post(`developer/${payload.id}/experience`, payload.experience).then((result) => {
-      commit(SET_DEVELOPER_EXPERIENCE, result.data.updatedDeveloper.experience);
+      commit(SET_DEVELOPER_EXPERIENCE, result.data.experiences);
     });
   },
   [DELETE_DEVELOPER_EXPERIENCE]: ({ commit }, payload) => {
     api.delete(`developer/${payload.userId}/experience/${payload.id}`).then((result) => {
-      commit(SET_DEVELOPER_EXPERIENCE, result.data.updatedExperience);
+      commit(SET_DEVELOPER_EXPERIENCE, result.data.experiences);
     });
   }
 };

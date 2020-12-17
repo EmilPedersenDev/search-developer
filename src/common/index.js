@@ -7,6 +7,7 @@ import Button from './Button.vue';
 import Spinner from './Spinner.vue';
 import Table from './Table.vue';
 import TableNew from './Table-new.vue';
+import ErrorComp from './Error.vue';
 
 vue.component('d-input', Input);
 vue.component('d-search-input', SearchInput);
@@ -15,3 +16,4 @@ vue.component('d-button', Button);
 vue.component('d-spinner', Spinner);
 vue.component('d-table', Table);
 vue.component('d-table-new', TableNew);
+vue.component('d-error', ErrorComp);

@@ -67,7 +67,7 @@ export default {
         api
           .get(`skills/search/?query=${encodeURIComponent(query)}`)
           .then((result) => {
-            let filteredSkills = result.data.skill;
+            let filteredSkills = result.data.skills;
             this.filteredSkills = filteredSkills.sort((a, b) => b.name - a.name);
           })
           .catch((err) => {

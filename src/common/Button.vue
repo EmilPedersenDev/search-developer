@@ -34,12 +34,15 @@ export default {
     },
     type: {
       type: String,
-      default: 'button'
+      default: 'button',
+      validator: function (type) {
+        return ['submit', 'button', 'reset'].includes(type);
+      }
     }
   },
   methods: {
     onClick(e) {
-      if (this.type === 'submit') return;
+      if (this.type === 'submit' || this.type === 'reset') return;
       this.$emit('click', e);
     }
   },
