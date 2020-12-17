@@ -18,7 +18,7 @@
       </d-input>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)" :disabled="$v.$invalid">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" @click="closeModal(true)">Confirm</d-button>
       <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>

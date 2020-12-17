@@ -58,6 +58,7 @@ export default {
             this.filteredDevelopers = filteredDevelopers.sort((a, b) => b.firstname - a.firstname);
           })
           .catch((err) => {
+            this.filteredDevelopers = [];
             throw new Error(err);
           });
       } else {

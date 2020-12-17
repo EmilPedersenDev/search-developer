@@ -8,23 +8,14 @@ const state = {
 
 const actions = {
   [LOGIN]: ({ commit, getters, dispatch }, loginModel) => {
-    return api
-      .post('auth/signin', loginModel)
-      .then((result) => {
-        commit(SET_USER, result.data);
-        commit(SET_TOKEN, result.data.accessToken);
+    return api.post('auth/signin', loginModel).then((result) => {
+      commit(SET_USER, result.data);
+      commit(SET_TOKEN, result.data.accessToken);
 
-        return Promise.resolve(dispatch(GET_DEVELOPER, result.data.id))
-          .then(() => {
-            return result.data;
-          })
-          .catch((e) => {
-            console.error(e);
-          });
-      })
-      .catch((e) => {
-        console.error(e);
+      return Promise.resolve(dispatch(GET_DEVELOPER, result.data.id)).then(() => {
+        return result.data;
       });
+    });
   },
   [LOGOUT]: async ({ commit }) => {
     await localStorage.removeItem('jwt');

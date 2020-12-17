@@ -17,7 +17,7 @@ export const IS_LOADED = 'IS_LOADED';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  strict: true,
+  // strict: true,
   state: {
     isLoaded: false
   },

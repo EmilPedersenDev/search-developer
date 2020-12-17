@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (err) => {
-    store.dispatch(LOGOUT);
+    // store.dispatch(LOGOUT);
     return Promise.reject(err);
   }
 );

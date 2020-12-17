@@ -21,7 +21,8 @@
           <div class="col-md-6 col-lg-4 profile-card">
             <div class="card">
               <div class="card-img-header">
-                <img src="user.svg" alt="" />
+                <img :src="profileImage" alt="" />
+                <d-button secondary @click="openProfileImageEditModal">Edit</d-button>
               </div>
               <div class="card-body">
                 <div class="card-body-action">
@@ -66,6 +67,7 @@
     <skill-edit-modal v-if="showSkillEditModal" :close="closeSkillEditModal"></skill-edit-modal>
     <experience-edit-modal v-if="showExperienceEditModal" :close="closeExperienceEditModal"></experience-edit-modal>
     <project-edit-modal v-if="showProjectsEditModal" :close="closeProjectEditModal"></project-edit-modal>
+    <profile-image-edit-modal v-if="showProfileImageEditModal" :close="closeProfileImageEditModal"></profile-image-edit-modal>
   </div>
 </template>
 
@@ -75,18 +77,19 @@ import { GET_USER } from '../../store/actions/user-actions';
 import { GET_DEVELOPER_SKILLS } from '../../store/actions/skills-actions';
 import { GET_DEVELOPER_EXPERIENCE, DELETE_DEVELOPER_EXPERIENCE } from '../../store/actions/experience-actions';
 import { GET_DEVELOPER_PROJECT } from '../../store/actions/project-actions';
-import { GET_DEVELOPER } from '../../store/actions/developer-actions';
+import { GET_DEVELOPER, SET_DEVELOPER_PROFILE_IMAGE, GET_DEVELOPER_PROFILE_IMAGE } from '../../store/actions/developer-actions';
 import { IS_AUTHENTICATED } from '../../store/actions/authentication-actions';
 import PersonalEditModal from '../modals/profile-modals/PersonInfoEditModal';
 import SkillEditModal from '../modals/profile-modals/SkillEditModal';
 import Projects from './Projects';
 import ExperienceEditModal from '../modals/profile-modals/ExperienceEditModal';
 import ProjectEditModal from '../modals/profile-modals/ProjectEditModal';
+import ProfileImageEditModal from '../modals/profile-modals/ProfileImageEditModal';
 import Skills from '../skills/Skills';
 import api from '../../api/index';
 import Button from '../../common/Button.vue';
 export default {
-  components: { Button, PersonalEditModal, SkillEditModal, ExperienceEditModal, Skills, Projects, ProjectEditModal },
+  components: { Button, PersonalEditModal, SkillEditModal, ExperienceEditModal, Skills, Projects, ProjectEditModal, ProfileImageEditModal },
   name: 'profile-viewer',
   props: {
     id: {
@@ -106,6 +109,7 @@ export default {
       showSkills: false,
       showExperience: false,
       showProjectsEditModal: false,
+      showProfileImageEditModal: false,
       model: {},
       originalDeveloper: {}
     };
@@ -127,7 +131,8 @@ export default {
       experiences: GET_DEVELOPER_EXPERIENCE,
       projects: GET_DEVELOPER_PROJECT,
       developer: GET_DEVELOPER,
-      isAuthenticated: IS_AUTHENTICATED
+      isAuthenticated: IS_AUTHENTICATED,
+      profileImage: GET_DEVELOPER_PROFILE_IMAGE
     }),
     isCurrentUser() {
       return this.user.id === this.id;
@@ -141,12 +146,6 @@ export default {
       deleteExperience: DELETE_DEVELOPER_EXPERIENCE,
       getDeveloper: GET_DEVELOPER
     }),
-    addSkill(skill) {
-      console.log('add skill');
-      api.put(`user/${this.user.id}`, { ...this.user, skillId: skill.id }).then((result) => {
-        console.log(result.data);
-      });
-    },
     showExperienceView() {
       this.showSkills = false;
       this.showExperience = true;
@@ -172,6 +171,9 @@ export default {
     openProjectEditModal() {
       this.showProjectsEditModal = true;
     },
+    openProfileImageEditModal() {
+      this.showProfileImageEditModal = true;
+    },
     closePersonalEditModal(val, personalInfoModel) {
       this.showPersonalEditModal = false;
     },
@@ -184,6 +186,10 @@ export default {
     closeProjectEditModal() {
       this.showProjectsEditModal = false;
     },
+    closeProfileImageEditModal() {
+      this.showProfileImageEditModal = false;
+    },
+
     onDeleteExperience(item) {
       let request = {
         userId: this.user.id,

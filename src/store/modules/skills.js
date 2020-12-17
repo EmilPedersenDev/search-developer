@@ -12,8 +12,8 @@ const actions = {
     });
   },
   [SET_DEVELOPER_SKILLS]: ({ commit }, payload) => {
-    api.post(`developer/${payload.id}/skills`, payload.skills).then((result) => {
-      commit(SET_DEVELOPER_SKILLS, result.data.developer.skills);
+    return api.post(`developer/${payload.id}/skills`, payload.skills).then((result) => {
+      commit(SET_DEVELOPER_SKILLS, result.data.skills);
     });
   }
 };
