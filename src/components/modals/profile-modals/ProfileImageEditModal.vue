@@ -1,19 +1,19 @@
 <template>
   <d-modal :onClose="close">
     <div slot="modal-header" class="modal-custom-header">
-      <h1>Add Projects</h1>
+      <h1>Edit Profile Image</h1>
     </div>
     <div slot="modal-body" class="modal-custom-body">
       <div class="image-wrapper">
-        <img :src="localProfileImage" alt="" v-if="!isLoading" />
+        <div class="profile-image" :style="profileImageDisplay" v-if="!isLoading"></div>
       </div>
-      <input type="file" @change="onFileChange" />
+      <d-file-upload @change="onFileChange" />
       <d-spinner :isLoading="isLoading"></d-spinner>
       <p style="color: red" v-if="imageSizeError.hasError">{{ imageSizeError.message }}</p>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)" :disabled="imageSizeError.hasError">Confirm</d-button>
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm <d-spinner :isLoading="isLoading" buttonSpinner /> </d-button>
+      <d-button class="col-4 col-sm-3" transition @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
 </template>
@@ -49,7 +49,22 @@ export default {
     ...mapGetters({
       user: GET_USER,
       profileImage: GET_DEVELOPER_PROFILE_IMAGE
-    })
+    }),
+    profileImageDisplay() {
+      return `background-image: url(${this.localProfileImage ? this.localProfileImage : '@/assets/male-avatar.svg'})`;
+    },
+    hasImageChanged() {
+      return JSON.stringify(this.profileImage) !== JSON.stringify(this.localProfileImage);
+    },
+    isDisabled() {
+      if (!this.hasImageChanged) {
+        return true;
+      } else if (this.imageSizeError.hasError) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   },
   methods: {
     ...mapActions({
@@ -112,9 +127,16 @@ export default {
 .image-wrapper {
   height: 200px;
   max-height: 200px;
-  img {
-    height: 100%;
+  width: 200px;
+  margin: 0 auto;
+  .profile-image {
+    border: 2px solid #344675;
     border-radius: 50%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

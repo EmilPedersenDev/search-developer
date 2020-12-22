@@ -16,10 +16,6 @@ export default {
       type: Boolean,
       default: false
     },
-    third: {
-      type: Boolean,
-      default: false
-    },
     round: {
       type: Boolean,
       default: false
@@ -29,6 +25,10 @@ export default {
       default: false
     },
     edit: {
+      type: Boolean,
+      default: false
+    },
+    transition: {
       type: Boolean,
       default: false
     },
@@ -52,10 +52,10 @@ export default {
         'd-button',
         this.primary && 'primary',
         this.secondary && 'secondary',
-        this.third && 'third',
         this.round && 'round',
         this.noBorder && 'no-border',
-        this.edit && 'edit'
+        this.edit && 'edit',
+        this.transition && 'transition'
       ];
     }
   }
@@ -73,12 +73,21 @@ export default {
   transition: all 0.15s ease;
   &:disabled {
     background: gray !important;
+    opacity: 0.3;
+    color: white;
   }
+
+  &.transition {
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
   &:hover {
     cursor: pointer;
     transform: translateY(-2px);
-    opacity: 0.9;
   }
+
   &.primary {
     background: #e14eca;
     background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
@@ -88,24 +97,40 @@ export default {
     transition: all 0.15s ease;
     box-shadow: none;
     color: #fff;
+    &:hover:not(:disabled) {
+      cursor: pointer;
+      transform: translateY(-2px);
+    }
   }
   &.secondary {
     background: $primary;
     color: #000;
+    &:hover:not(:disabled) {
+      cursor: pointer;
+      transform: translateY(-2px);
+    }
   }
   &.round {
     background: transparent;
     border: 1px solid #e14eca;
+    border-radius: 50%;
+    color: $white;
+    &:hover {
+      cursor: pointer;
+      transform: translateY(-2px);
+    }
   }
   &.no-border {
     border: none;
     border-radius: 0;
-    color: $white;
+    color: $primary;
     background: transparent;
-    transition: none !important;
+    transition: all 0.3s ease-in-out;
     padding: 0;
-    &:hover {
-      transform: translateY(0);
+    &:hover:not(:disabled) {
+      cursor: pointer;
+      color: $secondary;
+      transform: none;
     }
   }
   &.edit {

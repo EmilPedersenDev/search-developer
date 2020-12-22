@@ -1,59 +1,36 @@
 <template>
   <d-modal :onClose="close" hasValidation>
     <div slot="modal-header" class="modal-custom-header">
-      <h1>Add Experience</h1>
+      <h1>{{ id ? 'Edit Experience' : 'Add Experience' }}</h1>
     </div>
     <div slot="modal-body" class="modal-custom-body">
       <div class="row">
-        <d-input
-          class="col-8"
-          style="margin-right: 20px"
-          required
-          inputLabel="Company"
-          v-model="experience.company"
-          :invalid="$v.experience.company.$error"
-          :blur="$v.experience.company.$touch"
-        >
+        <d-input class="col-8" required label="Company" v-model="experience.company" :invalid="$v.experience.company.$error" :blur="$v.experience.company.$touch">
           <span class="input-error" slot="error" v-if="$v.experience.company.$dirty && !$v.experience.company.alphaLetterValidation">Company can only contain letters</span>
           <span class="input-error" slot="error" v-if="$v.experience.company.$dirty && !$v.experience.company.required">Company is required</span>
         </d-input>
-        <select class="col-3" v-model="experience.date">
-          <option>2020</option>
-          <option>2019</option>
-          <option>2018</option>
-        </select>
+        <d-date-select class="col-4" v-model="experience.date" :validation="$v.experience.date" v-on:dateInputTouch="$v.experience.date.$touch"></d-date-select>
       </div>
       <div class="row">
-        <d-input inputLabel="Title" required v-model="experience.title" :invalid="$v.experience.title.$error" :blur="$v.experience.title.$touch">
+        <d-input label="Title" required v-model="experience.title" :invalid="$v.experience.title.$error" :blur="$v.experience.title.$touch">
           <span class="input-error" slot="error" v-if="$v.experience.title.$dirty && !$v.experience.title.alphaLetterValidation">Title can only contain letters</span>
           <span class="input-error" slot="error" v-if="$v.experience.title.$dirty && !$v.experience.title.required">Title is required</span>
         </d-input>
       </div>
       <div class="row">
-        <textarea
-          id="description"
-          placeholder="Description..."
-          cols="30"
-          rows="3"
-          v-model="experience.description"
-          class="required"
-          :class="{ invalid: $v.experience.description.$error }"
-          @blur="$v.experience.description.$touch"
-        >
-        </textarea>
-        <span class="input-error" slot="error" v-if="$v.experience.description.$dirty && !$v.experience.description.required">Title is required</span>
+        <d-text-area label="Description" v-model="experience.description"> </d-text-area>
       </div>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)" :disabled="$v.$invalid">Confirm</d-button>
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { SET_DEVELOPER_EXPERIENCE } from '@/store/actions/experience-actions.js';
+import { SET_DEVELOPER_EXPERIENCE, GET_DEVELOPER_EXPERIENCE_BY_ID } from '@/store/actions/experience-actions.js';
 import { GET_USER } from '@/store/actions/user-actions.js';
 import { required } from 'vuelidate/lib/validators';
 import alphaLetterValidation from '../../../services/validations';
@@ -62,6 +39,10 @@ export default {
   props: {
     close: {
       type: Function
+    },
+    id: {
+      type: Number,
+      default: null
     }
   },
   data() {
@@ -71,8 +52,18 @@ export default {
         title: '',
         date: '',
         description: ''
-      }
+      },
+      originalExperience: {}
     };
+  },
+  beforeMount() {
+    if (!this.id) return;
+
+    this.originalExperience = this.developerExperienceById(this.id);
+
+    if (Object.keys(this.originalExperience).length !== 0) {
+      this.experience = JSON.parse(JSON.stringify(this.originalExperience));
+    }
   },
   validations: {
     experience: {
@@ -84,15 +75,28 @@ export default {
         required,
         alphaLetterValidation
       },
-      description: {
+      date: {
         required
       }
     }
   },
   computed: {
     ...mapGetters({
-      user: GET_USER
-    })
+      user: GET_USER,
+      developerExperienceById: GET_DEVELOPER_EXPERIENCE_BY_ID
+    }),
+    isDisabled() {
+      if (this.$v.$invalid) {
+        return true;
+      } else if (!this.hasExperienceChanged && this.id) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    hasExperienceChanged() {
+      return JSON.stringify(this.experience) !== JSON.stringify(this.originalExperience);
+    }
   },
   methods: {
     ...mapActions({
@@ -101,7 +105,7 @@ export default {
     closeModal(val) {
       if (this.close) {
         if (val) {
-          let experienceDate = new Date(this.experience.date);
+          let experienceDate = new Date(this.experience.date.toString());
           this.experience.date = experienceDate;
 
           let request = {
@@ -131,5 +135,9 @@ textarea {
   width: 100%;
   background: transparent;
   color: #fff;
+}
+
+.date-select {
+  padding-right: 0px !important;
 }
 </style>

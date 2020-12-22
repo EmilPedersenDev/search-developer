@@ -8,6 +8,9 @@ import Spinner from './Spinner.vue';
 import Table from './Table.vue';
 import TableNew from './Table-new.vue';
 import ErrorComp from './Error.vue';
+import FileUpload from './FileUpload.vue';
+import DateSelect from './DatePicker/DateSelect.vue';
+import TextArea from './TextArea.vue';
 
 vue.component('d-input', Input);
 vue.component('d-search-input', SearchInput);
@@ -17,3 +20,6 @@ vue.component('d-spinner', Spinner);
 vue.component('d-table', Table);
 vue.component('d-table-new', TableNew);
 vue.component('d-error', ErrorComp);
+vue.component('d-file-upload', FileUpload);
+vue.component('d-date-select', DateSelect);
+vue.component('d-text-area', TextArea);

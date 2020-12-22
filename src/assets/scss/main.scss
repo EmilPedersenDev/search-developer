@@ -15,6 +15,15 @@ span,
 li {
   color: $white;
 }
+
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
 a {
   text-decoration: none;
   &:hover {
@@ -28,31 +37,6 @@ a {
       text-decoration: none;
       transform: translateY(-2px);
       opacity: 0.9;
-    }
-  }
-}
-
-textarea {
-  &.invalid {
-    color: #fd5d93;
-    i {
-      font-size: 14px;
-      position: absolute;
-      top: 30px;
-      right: 5px;
-      transition: all 0.3s ease;
-    }
-    .input-error {
-      display: block;
-      font-size: 12px;
-      text-align: left;
-    }
-  }
-
-  &.required {
-    &::before {
-      content: '*';
-      color: $primary;
     }
   }
 }

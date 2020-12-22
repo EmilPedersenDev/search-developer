@@ -5,25 +5,41 @@
     </div>
     <div slot="modal-body" class="modal-custom-body">
       <div class="row">
-        <d-input class="name" inputLabel="Firstname" required v-model="developer.firstname" :invalid="$v.developer.firstname.$error" :blur="$v.developer.firstname.$touch">
+        <d-input
+          class="name"
+          id="firstname"
+          label="Firstname"
+          required
+          v-model="developer.firstname"
+          :invalid="$v.developer.firstname.$error"
+          :blur="$v.developer.firstname.$touch"
+        >
           <span class="input-error" slot="error" v-if="$v.developer.firstname.$dirty && !$v.developer.firstname.alphaLetterValidation">Firstname can only contain letters</span>
           <span class="input-error" slot="error" v-if="$v.developer.firstname.$dirty && !$v.developer.firstname.required">Firstname is required</span>
         </d-input>
-        <d-input class="name" inputLabel="Lastname" required v-model="developer.lastname" :invalid="$v.developer.lastname.$error" :blur="$v.developer.lastname.$touch">
+        <d-input class="name" id="lastname" label="Lastname" required v-model="developer.lastname" :invalid="$v.developer.lastname.$error" :blur="$v.developer.lastname.$touch">
           <span class="input-error" slot="error" v-if="$v.developer.lastname.$dirty && !$v.developer.lastname.alphaLetterValidation">Lastname can only contain letters</span>
           <span class="input-error" slot="error" v-if="$v.developer.lastname.$dirty && !$v.developer.lastname.required">Lastname is required</span>
         </d-input>
       </div>
-      <d-input inputLabel="LinkedIn" v-model="developer.socialLink.linkedIn">LinkedIn</d-input>
-      <d-input inputLabel="Github" v-model="developer.socialLink.github">Github</d-input>
-      <d-input class="name" inputLabel="Description" required v-model="developer.information" :invalid="$v.developer.information.$error" :blur="$v.developer.information.$touch">
+      <d-input label="LinkedIn" id="linkedin" v-model="developer.socialLink.linkedIn">LinkedIn</d-input>
+      <d-input label="Github" id="github" v-model="developer.socialLink.github">Github</d-input>
+      <d-input
+        class="name"
+        id="description"
+        label="Description"
+        required
+        v-model="developer.information"
+        :invalid="$v.developer.information.$error"
+        :blur="$v.developer.information.$touch"
+      >
         <span class="input-error" slot="error" v-if="$v.developer.information.$dirty && !$v.developer.information.alphaLetterValidation">Description can only contain letters</span>
         <span class="input-error" slot="error" v-if="$v.developer.information.$dirty && !$v.developer.information.required">Description is required</span>
       </d-input>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)" :disabled="$v.$invalid">Save</d-button>
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Save</d-button>
+      <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
 </template>
@@ -87,7 +103,19 @@ export default {
   computed: {
     ...mapGetters({
       getDeveloper: GET_DEVELOPER
-    })
+    }),
+    hasImageChanged() {
+      return JSON.stringify(this.getDeveloper) !== JSON.stringify(this.developer);
+    },
+    isDisabled() {
+      if (!this.hasImageChanged) {
+        return true;
+      } else if (this.$v.$invalid) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 };
 </script>

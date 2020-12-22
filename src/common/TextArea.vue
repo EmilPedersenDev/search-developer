@@ -1,28 +1,16 @@
 <template>
   <div :class="classlist">
-    <input
-      :type="type"
-      :name="name"
-      class="input-field"
-      :readonly="readonly"
-      :placeholder="label || placeholder"
-      :id="id"
-      @input="onInput"
-      @blur="onBlur"
-      :autocomplete="autocomplete"
-      :value="value"
-    />
+    <textarea name="description" id="description" cols="30" rows="3" :placeholder="label || placeholder" :value="value" @input="onInput" @blur="onBlur"></textarea>
+    <label for="description"> {{ label }} </label>
+    <slot name="error"></slot>
     <i class="fas fa-exclamation" v-if="invalid"></i>
     <i class="fas fa-check" v-if="required && !invalid && value !== ''"></i>
-    <label :for="id" class="input-label"> {{ label }} </label>
-
-    <slot name="error"></slot>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'd-input',
+  name: 'd-text-area',
   props: {
     value: {
       default: null
@@ -34,10 +22,6 @@ export default {
     placeholder: {
       type: String,
       default: 'text...'
-    },
-    id: {
-      type: String,
-      default: 'id'
     },
     input: {
       type: Function
@@ -53,21 +37,10 @@ export default {
       type: Boolean,
       default: false
     },
-    type: {
-      type: String,
-      default: 'input'
-    },
-    autocomplete: {
-      type: String,
-      default: 'off'
-    },
+
     name: {
       type: String,
       default: ''
-    },
-    readonly: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -77,7 +50,7 @@ export default {
   },
   computed: {
     classlist() {
-      return ['d-input', this.invalid && 'invalid', this.required && 'required'];
+      return ['d-text-area', this.invalid && 'invalid', this.required && 'required'];
     }
   },
   watch: {
@@ -101,63 +74,38 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/colors.scss';
-.d-input {
-  position: relative;
-  padding: 15px 0 0;
-  margin-top: 20px;
+
+.d-text-area {
   width: 100%;
-  input {
+  position: relative;
+  margin-top: 30px;
+  textarea {
     position: relative;
-    width: inherit;
+    width: 100%;
     background: transparent;
+    color: #fff;
     text-decoration: none;
-    border: 0.5px solid rgba($color: #fff, $alpha: 1);
+    resize: none;
     border-radius: 0.4285rem;
+    border: 0.5px solid rgba($color: #fff, $alpha: 1);
+    padding: 10px 50px 10px 18px;
+    color: #ffff;
     font-size: 14px;
     font-weight: bold;
-    padding: 10px 25px 10px 18px;
-    color: #ffff;
     transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
     &::placeholder {
       color: hsla(0, 0%, 100%, 0.5);
       font-weight: normal;
     }
   }
-  input:focus {
+  textarea:focus {
     font-weight: bold;
     border-color: $primary;
     outline: none;
     ~ label {
-      color: $primary !important;
+      color: $primary;
     }
   }
-
-  &.invalid {
-    color: #fd5d93 !important;
-    i {
-      font-size: 14px;
-      position: absolute;
-      top: 30px;
-      right: 10px;
-      transition: all 0.3s ease;
-    }
-    .input-error {
-      display: block;
-      font-size: 12px;
-      text-align: left;
-      color: $error;
-    }
-
-    & input {
-      border-color: $error;
-      &:focus {
-        ~ label {
-          color: $error !important;
-        }
-      }
-    }
-  }
-
   &.required {
     color: $primary;
     i {
@@ -167,7 +115,7 @@ export default {
       right: 10px;
       transition: all 0.3s ease;
     }
-    .input-label {
+    label {
       &::before {
         content: '*';
         color: $primary;
@@ -175,29 +123,43 @@ export default {
     }
   }
 
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px #1f2251 inset !important;
-    -webkit-text-fill-color: #fff !important;
+  &.invalid {
+    color: #fd5d93;
+    border-color: $error;
+    outline: none;
+    i {
+      font-size: 14px;
+      position: absolute;
+      top: 30px;
+      right: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .input-error {
+      display: block;
+      font-size: 12px;
+      text-align: left;
+      color: $error;
+    }
+
+    & textarea {
+      border-color: $error;
+      &:focus {
+        ~ label {
+          color: $error !important;
+        }
+      }
+    }
   }
 
   label {
     position: absolute;
-    top: -10%;
+    top: -20%;
     display: block;
     transition: 0.2s;
     font-size: 12px;
     font-weight: 300;
     color: $white;
-  }
-
-  .input-field {
-    &:required,
-    &:invalid {
-      box-shadow: none;
-    }
   }
 }
 </style>

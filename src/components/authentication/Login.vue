@@ -13,7 +13,7 @@
       <p>Or sign in with credentials</p>
     </div>
     <div class="sign-in-body">
-      <d-input type="email" name="email" v-model="model.email" inputLabel="Email" autocomplete="email" required :invalid="$v.model.email.$error" :blur="$v.model.email.$touch">
+      <d-input type="email" name="email" v-model="model.email" label="Email" autocomplete="email" required :invalid="$v.model.email.$error" :blur="$v.model.email.$touch">
         <span class="input-error" slot="error" v-if="$v.model.email.$dirty && !$v.model.email.email">Not a valid email</span>
         <span class="input-error" slot="error" v-if="$v.model.email.$dirty && !$v.model.email.required">Email is required</span>
       </d-input>
@@ -21,7 +21,7 @@
         type="password"
         name="password"
         v-model="model.password"
-        inputLabel="Password"
+        label="Password"
         autocomplete="new-password"
         required
         :invalid="$v.model.password.$error"

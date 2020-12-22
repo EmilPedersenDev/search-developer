@@ -4,16 +4,18 @@
       <h1>Add Projects</h1>
     </div>
     <div slot="modal-body" class="modal-custom-body">
-      <d-input inputLabel="Name" required v-model="project.name" :invalid="$v.project.name.$error" :blur="$v.project.name.$touch">
+      <d-input label="Name" required v-model="project.name" :invalid="$v.project.name.$error" :blur="$v.project.name.$touch">
         <span class="input-error" slot="error" v-if="$v.project.name.$dirty && !$v.project.name.alphaLetterValidation">Name can only contain letters</span>
         <span class="input-error" slot="error" v-if="$v.project.name.$dirty && !$v.project.name.required">Name is required</span>
       </d-input>
-      <d-input inputLabel="Link" required v-model="project.link" :invalid="$v.project.link.$error" :blur="$v.project.link.$touch">
-        <span class="input-error" slot="error" v-if="$v.project.link.$dirty && !$v.project.link.alphaLetterValidation">Link can only contain letters</span>
+      <d-input label="Link" required v-model="project.link" :invalid="$v.project.link.$error" :blur="$v.project.link.$touch">
         <span class="input-error" slot="error" v-if="$v.project.link.$dirty && !$v.project.link.required">Link is required</span>
       </d-input>
-      <d-input inputLabel="Repo" v-model="project.repoLink">Repo</d-input>
-      <d-input inputLabel="Description" required v-model="project.description" :invalid="$v.project.description.$error" :blur="$v.project.description.$touch">
+      <d-input label="Image link" required v-model="project.imgLink" :invalid="$v.project.imgLink.$error" :blur="$v.project.imgLink.$touch">
+        <span class="input-error" slot="error" v-if="$v.project.imgLink.$dirty && !$v.project.imgLink.required">ImgLink is required</span>
+      </d-input>
+      <d-input label="Repo" v-model="project.repoLink">Repo</d-input>
+      <d-input label="Description" required v-model="project.description" :invalid="$v.project.description.$error" :blur="$v.project.description.$touch">
         <span class="input-error" slot="error" v-if="$v.project.description.$dirty && !$v.project.description.required">Description is required</span>
       </d-input>
     </div>
@@ -43,6 +45,7 @@ export default {
         name: '',
         link: '',
         repoLink: '',
+        imgLink: '',
         description: ''
       }
     };
@@ -54,8 +57,10 @@ export default {
         alphaLetterValidation
       },
       link: {
-        required,
-        alphaLetterValidation
+        required
+      },
+      imgLink: {
+        required
       },
       description: {
         required

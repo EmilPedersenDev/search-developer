@@ -13,8 +13,8 @@
       <p>Or sign in with credentials</p>
     </div>
     <div class="sign-in-body">
-      <d-input inputLabel="Email" />
-      <d-input inputLabel="Password" />
+      <d-input label="Email" />
+      <d-input label="Password" />
       <span @click="toRegister">Create Account</span>
     </div>
     <div class="sign-in-footer">
