@@ -4,29 +4,31 @@
       <h1>Add Projects</h1>
     </div>
     <div slot="modal-body" class="modal-custom-body">
-      <d-input inputLabel="Name" required v-model="project.name" :invalid="$v.project.name.$error" :blur="$v.project.name.$touch">
+      <d-input label="Name" required v-model="project.name" :invalid="$v.project.name.$error" :blur="$v.project.name.$touch">
         <span class="input-error" slot="error" v-if="$v.project.name.$dirty && !$v.project.name.alphaLetterValidation">Name can only contain letters</span>
         <span class="input-error" slot="error" v-if="$v.project.name.$dirty && !$v.project.name.required">Name is required</span>
       </d-input>
-      <d-input inputLabel="Link" required v-model="project.link" :invalid="$v.project.link.$error" :blur="$v.project.link.$touch">
-        <span class="input-error" slot="error" v-if="$v.project.link.$dirty && !$v.project.link.alphaLetterValidation">Link can only contain letters</span>
+      <d-input label="Link" required v-model="project.link" :invalid="$v.project.link.$error" :blur="$v.project.link.$touch">
         <span class="input-error" slot="error" v-if="$v.project.link.$dirty && !$v.project.link.required">Link is required</span>
       </d-input>
-      <d-input inputLabel="Repo" v-model="project.repoLink">Repo</d-input>
-      <d-input inputLabel="Description" required v-model="project.description" :invalid="$v.project.description.$error" :blur="$v.project.description.$touch">
+      <d-input label="Image link" required v-model="project.imgLink" :invalid="$v.project.imgLink.$error" :blur="$v.project.imgLink.$touch">
+        <span class="input-error" slot="error" v-if="$v.project.imgLink.$dirty && !$v.project.imgLink.required">ImgLink is required</span>
+      </d-input>
+      <d-input label="Repo" v-model="project.repoLink">Repo</d-input>
+      <d-input label="Description" required v-model="project.description" :invalid="$v.project.description.$error" :blur="$v.project.description.$touch">
         <span class="input-error" slot="error" v-if="$v.project.description.$dirty && !$v.project.description.required">Description is required</span>
       </d-input>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)">Confirm</d-button>
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { SET_DEVELOPER_PROJECT } from '@/store/actions/project-actions.js';
+import { SET_DEVELOPER_PROJECT, GET_DEVELOPER_PROJECT_BY_ID, UPDATE_DEVELOPER_PROJECT } from '@/store/actions/project-actions.js';
 import { GET_USER } from '@/store/actions/user-actions.js';
 import { required } from 'vuelidate/lib/validators';
 import alphaLetterValidation from '../../../services/validations';
@@ -35,6 +37,9 @@ export default {
   props: {
     close: {
       type: Function
+    },
+    id: {
+      type: Number
     }
   },
   data() {
@@ -43,9 +48,20 @@ export default {
         name: '',
         link: '',
         repoLink: '',
+        imgLink: '',
         description: ''
-      }
+      },
+      originalProject: {}
     };
+  },
+  beforeMount() {
+    if (!this.id) return;
+
+    this.originalProject = this.developerProjectById(this.id);
+
+    if (Object.keys(this.originalProject).length !== 0) {
+      this.project = JSON.parse(JSON.stringify(this.originalProject));
+    }
   },
   validations: {
     project: {
@@ -54,8 +70,10 @@ export default {
         alphaLetterValidation
       },
       link: {
-        required,
-        alphaLetterValidation
+        required
+      },
+      imgLink: {
+        required
       },
       description: {
         required
@@ -64,26 +82,56 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: GET_USER
-    })
+      user: GET_USER,
+      developerProjectById: GET_DEVELOPER_PROJECT_BY_ID
+    }),
+    hasProjectChanged() {
+      return JSON.stringify(this.project) !== JSON.stringify(this.originalProject);
+    },
+    isDisabled() {
+      if (this.$v.$invalid) {
+        return true;
+      } else if (!this.hasProjectChanged && this.id) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   },
   methods: {
     ...mapActions({
-      setDeveloperProjects: SET_DEVELOPER_PROJECT
+      createDeveloperProjects: SET_DEVELOPER_PROJECT,
+      updateDeveloperProjects: UPDATE_DEVELOPER_PROJECT
     }),
 
     closeModal(val) {
-      if (this.close) {
-        if (val) {
-          let request = {
-            id: this.user.id,
-            project: this.project
-          };
-          this.setDeveloperProjects(request).then(() => {
+      if (!this.close) return;
+
+      if (!val) {
+        this.close();
+        return;
+      }
+
+      let request = {
+        id: this.user.id,
+        project: this.project
+      };
+      if (!this.id) {
+        this.createDeveloperProjects(request)
+          .catch((err) => {
+            console.error(err);
+          })
+          .finally(() => {
             this.close();
           });
-        }
-        this.close();
+      } else {
+        this.updateDeveloperProjects(request)
+          .catch((err) => {
+            console.error(err);
+          })
+          .finally(() => {
+            this.close();
+          });
       }
     }
   }

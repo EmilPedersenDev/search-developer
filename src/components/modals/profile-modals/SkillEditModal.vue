@@ -14,8 +14,8 @@
       <skills canRemove :removeDeveloperSkill="removeSkill" :developerSkills="tempDeveloperSkills" />
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)">Confirm</d-button>
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="!this.hasSkillsChanged">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
 </template>
@@ -38,7 +38,7 @@ export default {
     Skills,
     MultiSelect
   },
-  mounted() {
+  beforeMount() {
     this.originalDeveloperSkills = [...this.developerSkills];
     this.tempDeveloperSkills = [...this.developerSkills];
   },

@@ -1,4 +1,10 @@
-import { GET_DEVELOPER_PROJECT, SET_DEVELOPER_PROJECT, DELETE_DEVELOPER_PROJECT } from '../actions/project-actions';
+import {
+  GET_DEVELOPER_PROJECT,
+  SET_DEVELOPER_PROJECT,
+  DELETE_DEVELOPER_PROJECT,
+  GET_DEVELOPER_PROJECT_BY_ID,
+  UPDATE_DEVELOPER_PROJECT
+} from '../actions/project-actions';
 import api from '../../api/index';
 const state = {
   selectedProjects: []
@@ -7,6 +13,11 @@ const state = {
 const actions = {
   [SET_DEVELOPER_PROJECT]: ({ commit }, payload) => {
     api.post(`developer/${payload.id}/project`, payload.project).then((result) => {
+      commit(SET_DEVELOPER_PROJECT, result.data.project);
+    });
+  },
+  [UPDATE_DEVELOPER_PROJECT]: ({ commit }, payload) => {
+    api.put(`developer/${payload.id}/project`, payload.project).then((result) => {
       commit(SET_DEVELOPER_PROJECT, result.data.project);
     });
   },
@@ -26,6 +37,9 @@ const mutations = {
 const getters = {
   [GET_DEVELOPER_PROJECT]: (state) => {
     return state.selectedProjects;
+  },
+  [GET_DEVELOPER_PROJECT_BY_ID]: (state) => (id) => {
+    return state.selectedProjects.find((project) => project.id === id);
   }
 };
 

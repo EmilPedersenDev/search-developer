@@ -88,6 +88,16 @@
   opacity: 0;
 }
 
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
 @keyframes a {
   0% {
     transform: translateX(-10px);

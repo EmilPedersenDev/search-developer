@@ -1,5 +1,8 @@
 <template>
   <div class="input-group">
+    <span>
+      <i class="fas fa-search" v-if="useSearch"></i>
+    </span>
     <input
       :id="id"
       :type="type"
@@ -20,10 +23,6 @@
       @keydown.up.prevent="onKeydownUp"
       @keyup.esc="onKeyupEsc"
     />
-    <button class="search-button">
-      <i class="fas fa-search" v-if="useSearch"></i>
-      <span v-else>Add</span>
-    </button>
   </div>
 </template>
 
@@ -161,13 +160,13 @@ export default {
 }
 .st-input {
   height: 3em;
-  width: 90%;
-
+  width: 100%;
+  position: relative;
   border: 0.0625em solid $primary;
   border-radius: 0.25em;
   color: #fff;
   box-sizing: border-box;
-  padding-left: 1em;
+  padding-left: 45px;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -176,9 +175,6 @@ export default {
   letter-spacing: normal;
   margin-bottom: 0em !important;
   background: transparent;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-right: none;
   transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 
   &:focus {
@@ -197,35 +193,23 @@ export default {
   }
 }
 
-button {
-  width: 10%;
-  padding: 10px;
-  background: transparent;
-  color: #fff;
-  border: 0.0625em solid $primary;
-  border-radius: 0.25em;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
-  &:hover {
-    background: #00f2c3;
-    cursor: pointer;
+span {
+  position: absolute;
+  top: 50%;
+  @media (min-width: 768px) {
+    left: 3%;
   }
+  left: 5%;
+  transform: translateY(-50%);
 }
 
 .focus-group {
-  .st-input,
-  button {
+  .st-input {
+    border-bottom-left-radius: 0;
     border-color: $secondary !important;
     &:hover:not(.st-input) {
       background: $secondary;
     }
-  }
-  .st-input {
-    border-bottom-left-radius: 0;
-  }
-  button {
-    border-bottom-right-radius: 0;
   }
 }
 </style>

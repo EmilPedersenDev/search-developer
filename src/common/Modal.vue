@@ -46,8 +46,8 @@ export default {
   height: 100vh;
   position: fixed;
   z-index: 9998;
-  transition: opacity 2s linear;
   top: 0;
+  background-color: rgba(23, 25, 65, 0.9);
   .modal-card {
     position: relative;
     top: 50%;

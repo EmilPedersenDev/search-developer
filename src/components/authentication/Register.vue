@@ -6,7 +6,7 @@
         name="given-name"
         class="name firstName"
         v-model="model.firstname"
-        inputLabel="First name"
+        label="First name"
         autocomplete="given-name"
         required
         :invalid="$v.model.firstname.$error"
@@ -18,7 +18,7 @@
         name="family-name"
         class="name lastName"
         v-model="model.lastname"
-        inputLabel="Last name"
+        label="Last name"
         autocomplete="family-name"
         required
         :invalid="$v.model.lastname.$error"
@@ -28,7 +28,7 @@
       >
     </div>
     <div class="email-wrapper">
-      <d-input type="email" name="email" v-model="model.email" inputLabel="Email" autocomplete="email" required :invalid="$v.model.email.$error" :blur="$v.model.email.$touch">
+      <d-input type="email" name="email" v-model="model.email" label="Email" autocomplete="email" required :invalid="$v.model.email.$error" :blur="$v.model.email.$touch">
         <span class="input-error" slot="error" v-if="$v.model.email.$dirty && !$v.model.email.email">Not a valid email</span>
         <span class="input-error" slot="error" v-if="$v.model.email.$dirty && !$v.model.email.required">Email is required</span>
       </d-input>
@@ -38,7 +38,7 @@
         type="password"
         name="password"
         v-model="model.password"
-        inputLabel="Password"
+        label="Password"
         autocomplete="new-password"
         required
         :invalid="$v.model.password.$error"
@@ -51,7 +51,7 @@
         type="password"
         name="password"
         v-model="model.confirmPassword"
-        inputLabel="Confirm password"
+        label="Confirm password"
         autocomplete="new-password"
         required
         :invalid="$v.model.confirmPassword.$error"

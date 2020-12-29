@@ -34,9 +34,9 @@ export default {
 <style lang="scss" scoped>
 .skills-wrapper {
   display: flex;
-  margin-top: 10px;
+  margin-top: 15px;
   .skills-item {
-    margin-right: 5px;
+    margin-right: 10px;
   }
 }
 </style>

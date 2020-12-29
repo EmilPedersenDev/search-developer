@@ -18,10 +18,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/colors';
 .error-container {
   width: 100%;
   .error-wrapper {
-    background: #fd5d93;
+    background: $error;
     border-radius: 5px;
     p {
       padding: 5px 10px;
