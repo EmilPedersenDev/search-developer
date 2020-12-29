@@ -1,5 +1,6 @@
 <template>
   <div class="projects">
+    <img src="https://demos.creative-tim.com/blk-design-system/assets/img/path3.png" alt="" class="third-background-img" />
     <div class="container">
       <div class="row">
         <div class="projects-wrapper">
@@ -8,7 +9,7 @@
             <h2 class="text-on-front" style="">Projects</h2>
           </div>
           <div class="edit-button">
-            <d-button edit no-border @click="openProjectEditModal(null)" v-if="isAuthenticated">Add Project</d-button>
+            <d-button edit no-border @click="openProjectEditModal(null)" v-if="isAuthenticatedUser">Add Project</d-button>
           </div>
 
           <div class="projects-grid">
@@ -27,7 +28,7 @@
                 </div>
                 <div class="project-name">
                   <h1>{{ project.name }}</h1>
-                  <div class="edit-project-wrapper">
+                  <div class="edit-project-wrapper" v-if="isAuthenticatedUser">
                     <d-button noBorder @click.prevent="openProjectEditModal(project.id)"> <i class="fas fa-pen"></i> </d-button>
                     <span>|</span>
                     <d-button noBorder @click.prevent="openDeleteProjectModal(project.id)">
@@ -54,7 +55,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import { GET_USER } from '../../store/actions/user-actions';
 import { DELETE_DEVELOPER_PROJECT, GET_DEVELOPER_PROJECT } from '../../store/actions/project-actions';
-import { IS_AUTHENTICATED } from '../../store/actions/authentication-actions';
+import { IS_AUTHENTICATED_USER } from '../../store/actions/authentication-actions';
 import ConfirmModal from '../modals/ConfirmModal';
 import ProjectEditModal from '../modals/profile-modals/ProjectEditModal';
 
@@ -85,7 +86,7 @@ export default {
   computed: {
     ...mapGetters({
       user: GET_USER,
-      isAuthenticated: IS_AUTHENTICATED,
+      isAuthenticatedUser: IS_AUTHENTICATED_USER,
       projects: GET_DEVELOPER_PROJECT
     })
   },
@@ -137,6 +138,17 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/colors';
 .projects {
+  position: relative;
+  .third-background-img {
+    @media (min-width: 768px) {
+      opacity: 0.02;
+    }
+    position: absolute;
+    opacity: 0;
+    width: 80%;
+    left: -20%;
+    top: 15%;
+  }
   .container {
     .projects-wrapper {
       width: 100%;
@@ -223,9 +235,20 @@ export default {
             h1 {
               transition: all 0.3s ease-in-out;
               margin: 0;
+              @media (max-width: 768px) {
+                flex: 1 1 75%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                font-size: 24px;
+              }
             }
             .edit-project-wrapper {
               margin-left: auto;
+              @media (max-width: 768px) {
+                flex: 1 1 25%;
+                text-align: right;
+              }
               span,
               .d-button {
                 @media (min-width: 768px) {

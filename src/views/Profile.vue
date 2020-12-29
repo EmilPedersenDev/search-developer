@@ -8,17 +8,13 @@
 
 <script>
 export default {
-  name: 'profile',
-  data() {
-    return {};
-  },
-  methods: {},
-  computed: {}
+  name: 'profile'
 };
 </script>
 
 <style lang="scss" scoped>
 .profile {
   width: 100%;
+  height: 100%;
 }
 </style>

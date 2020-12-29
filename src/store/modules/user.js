@@ -12,7 +12,7 @@ const actions = {
     let decodedToken = jwtDecode.decode(token);
     api.get(`user/${decodedToken.id}`).then((result) => {
       commit(SET_USER, result.data.user);
-      dispatch(GET_DEVELOPER, decodedToken.id);
+      // dispatch(GET_DEVELOPER, decodedToken.id);
     });
   },
   [UPDATE_USER_INFORMATION]: ({ commit }, user) => {

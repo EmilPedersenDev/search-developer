@@ -13,11 +13,15 @@ export default {
     buttonSpinner: {
       type: Boolean,
       default: false
+    },
+    largeSpinner: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     classList() {
-      return ['d-spinner', this.buttonSpinner && 'button-spinner'];
+      return ['d-spinner', this.buttonSpinner && 'button-spinner', this.largeSpinner && 'large-spinner'];
     }
   }
 };
@@ -49,6 +53,14 @@ export default {
     top: 8px;
     right: 5px;
     left: initial;
+  }
+
+  &.large-spinner {
+    @media (min-width: 768px) {
+      margin-left: -70px;
+      width: 150px;
+      height: 150px;
+    }
   }
 }
 </style>

@@ -51,7 +51,7 @@ export default {
       profileImage: GET_DEVELOPER_PROFILE_IMAGE
     }),
     profileImageDisplay() {
-      return `background-image: url(${this.localProfileImage ? this.localProfileImage : '@/assets/male-avatar.svg'})`;
+      return `background-image: url(${this.localProfileImage ? this.localProfileImage : 'male-avatar.svg'})`;
     },
     hasImageChanged() {
       return JSON.stringify(this.profileImage) !== JSON.stringify(this.localProfileImage);
