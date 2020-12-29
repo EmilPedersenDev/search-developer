@@ -11,10 +11,6 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import { GET_USER } from '../../store/actions/user-actions';
-import { DELETE_DEVELOPER_EXPERIENCE } from '../../store/actions/experience-actions';
-
 export default {
   name: 'confirm-modal',
   props: {
@@ -25,46 +21,22 @@ export default {
       type: String,
       default: ''
     },
-    id: {
-      type: Number,
-      default: null
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   },
-  data() {
-    return {
-      isLoading: false
-    };
-  },
-  computed: {
-    ...mapGetters({
-      user: GET_USER
-    })
-  },
+
   methods: {
-    ...mapActions({
-      deleteExperience: DELETE_DEVELOPER_EXPERIENCE
-    }),
     closeModal(val) {
-      if (this.close) {
-        if (val) {
-          this.isLoading = true;
-          let request = {
-            userId: this.user.id,
-            id: this.id
-          };
-          this.deleteExperience(request)
-            .then(() => {
-              this.isLoading = false;
-              this.close();
-            })
-            .catch((err) => {
-              this.isLoading = false;
-              console.error(err);
-            });
-        } else {
-          this.close(val);
-        }
+      if (!this.close) return;
+
+      if (val) {
+        this.close(val);
+        return;
       }
+
+      this.close();
     }
   }
 };

@@ -114,7 +114,7 @@ export default {
     border: 0.5px solid rgba($color: #fff, $alpha: 1);
     border-radius: 0.4285rem;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: normal;
     padding: 10px 25px 10px 18px;
     color: #ffff;
     transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
@@ -124,7 +124,7 @@ export default {
     }
   }
   input:focus {
-    font-weight: bold;
+    font-weight: normal;
     border-color: $primary;
     outline: none;
     ~ label {

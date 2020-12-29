@@ -1,7 +1,7 @@
 <template>
   <div class="skill-box">
     <p>{{ skill.name }}</p>
-    <p v-if="canRemove" class="remove-skill" @click="onRemoveDeveloperSkills(skill.id)">X</p>
+    <span v-if="canRemove" @click="onRemoveDeveloperSkills(skill.id)">X</span>
   </div>
 </template>
 
@@ -40,14 +40,23 @@ export default {
   border-radius: 2px;
   background: $secondary;
   padding: 5px;
-  display: flex;
-  p {
-    margin: 0;
-    &.remove-skill {
-      margin-left: 5px;
-      &:hover {
-        cursor: pointer;
-      }
+  position: relative;
+
+  span {
+    position: absolute;
+    background-color: #fff;
+    color: #000;
+    border-radius: 50%;
+    font-size: 12px;
+    top: -10px;
+    right: -8px;
+    padding: 0px 5px;
+    font-weight: 900;
+    transition: all 0.15s ease;
+    &:hover {
+      background-color: rgb(128, 117, 104);
+      color: #fff;
+      cursor: pointer;
     }
   }
 }

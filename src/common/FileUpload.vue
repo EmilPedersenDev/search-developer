@@ -1,5 +1,5 @@
 <template>
-  <div class="file-input col-5">
+  <div class="file-input col-7 col-md-5">
     <input type="file" id="file" class="file" @change="onChange" />
     <label for="file">Select file</label>
   </div>

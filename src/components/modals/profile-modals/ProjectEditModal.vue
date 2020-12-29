@@ -20,15 +20,15 @@
       </d-input>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" @click="closeModal(true)">Confirm</d-button>
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(false)">Cancel</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { SET_DEVELOPER_PROJECT } from '@/store/actions/project-actions.js';
+import { SET_DEVELOPER_PROJECT, GET_DEVELOPER_PROJECT_BY_ID, UPDATE_DEVELOPER_PROJECT } from '@/store/actions/project-actions.js';
 import { GET_USER } from '@/store/actions/user-actions.js';
 import { required } from 'vuelidate/lib/validators';
 import alphaLetterValidation from '../../../services/validations';
@@ -37,6 +37,9 @@ export default {
   props: {
     close: {
       type: Function
+    },
+    id: {
+      type: Number
     }
   },
   data() {
@@ -47,8 +50,18 @@ export default {
         repoLink: '',
         imgLink: '',
         description: ''
-      }
+      },
+      originalProject: {}
     };
+  },
+  beforeMount() {
+    if (!this.id) return;
+
+    this.originalProject = this.developerProjectById(this.id);
+
+    if (Object.keys(this.originalProject).length !== 0) {
+      this.project = JSON.parse(JSON.stringify(this.originalProject));
+    }
   },
   validations: {
     project: {
@@ -69,26 +82,56 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: GET_USER
-    })
+      user: GET_USER,
+      developerProjectById: GET_DEVELOPER_PROJECT_BY_ID
+    }),
+    hasProjectChanged() {
+      return JSON.stringify(this.project) !== JSON.stringify(this.originalProject);
+    },
+    isDisabled() {
+      if (this.$v.$invalid) {
+        return true;
+      } else if (!this.hasProjectChanged && this.id) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   },
   methods: {
     ...mapActions({
-      setDeveloperProjects: SET_DEVELOPER_PROJECT
+      createDeveloperProjects: SET_DEVELOPER_PROJECT,
+      updateDeveloperProjects: UPDATE_DEVELOPER_PROJECT
     }),
 
     closeModal(val) {
-      if (this.close) {
-        if (val) {
-          let request = {
-            id: this.user.id,
-            project: this.project
-          };
-          this.setDeveloperProjects(request).then(() => {
+      if (!this.close) return;
+
+      if (!val) {
+        this.close();
+        return;
+      }
+
+      let request = {
+        id: this.user.id,
+        project: this.project
+      };
+      if (!this.id) {
+        this.createDeveloperProjects(request)
+          .catch((err) => {
+            console.error(err);
+          })
+          .finally(() => {
             this.close();
           });
-        }
-        this.close();
+      } else {
+        this.updateDeveloperProjects(request)
+          .catch((err) => {
+            console.error(err);
+          })
+          .finally(() => {
+            this.close();
+          });
       }
     }
   }

@@ -30,7 +30,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { SET_DEVELOPER_EXPERIENCE, GET_DEVELOPER_EXPERIENCE_BY_ID } from '@/store/actions/experience-actions.js';
+import { SET_DEVELOPER_EXPERIENCE, GET_DEVELOPER_EXPERIENCE_BY_ID, UPDATE_DEVELOPER_EXPERIENCE } from '@/store/actions/experience-actions.js';
 import { GET_USER } from '@/store/actions/user-actions.js';
 import { required } from 'vuelidate/lib/validators';
 import alphaLetterValidation from '../../../services/validations';
@@ -100,25 +100,41 @@ export default {
   },
   methods: {
     ...mapActions({
-      setDeveloperExperience: SET_DEVELOPER_EXPERIENCE
+      setDeveloperExperience: SET_DEVELOPER_EXPERIENCE,
+      updateDeveloperExperience: UPDATE_DEVELOPER_EXPERIENCE
     }),
     closeModal(val) {
-      if (this.close) {
-        if (val) {
-          let experienceDate = new Date(this.experience.date.toString());
-          this.experience.date = experienceDate;
+      if (!this.close) return;
 
-          let request = {
-            id: this.user.id,
-            experience: this.experience
-          };
+      if (!val) {
+        this.close();
+        return;
+      }
 
-          this.setDeveloperExperience(request).then(() => {
+      let experienceDate = new Date(this.experience.date.toString());
+      this.experience.date = experienceDate;
+
+      let request = {
+        id: this.user.id,
+        experience: this.experience
+      };
+
+      if (!this.id) {
+        this.setDeveloperExperience(request)
+          .catch((err) => {
+            console.error(err);
+          })
+          .finally(() => {
             this.close();
           });
-        } else {
-          this.close();
-        }
+      } else {
+        this.updateDeveloperExperience(request)
+          .catch((err) => {
+            console.error(err);
+          })
+          .finally(() => {
+            this.close();
+          });
       }
     }
   }

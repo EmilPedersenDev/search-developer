@@ -44,6 +44,10 @@ export default {
     window.addEventListener('resize', this.onResize);
   },
 
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize);
+  },
+
   filters: {
     dateFormat: function (value) {
       if (value instanceof Date) {

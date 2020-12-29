@@ -8,66 +8,127 @@
             <h2 class="text-on-front" style="">Projects</h2>
           </div>
           <div class="edit-button">
-            <slot name="edit"></slot>
+            <d-button edit no-border @click="openProjectEditModal(null)" v-if="isAuthenticated">Add Project</d-button>
           </div>
 
           <div class="projects-grid">
-            <div class="project-card" v-for="(project, id) in selectedProjects" :key="id">
-              <div class="project-body">
-                <img :src="project.imgLink" alt="" />
-                <div class="card-overlay">
-                  <d-button class="delete-project" @click="onDeleteProject(project)"> X </d-button>
-
-                  <div class="card-overlay-text">
-                    <p>{{ project.description }}</p>
-                    <div class="button-wrapper">
-                      <d-button noBorder>
+            <div class="project-card" v-for="(project, id) in projects" :key="id">
+              <a :href="project.link" target="_blank">
+                <div class="project-body">
+                  <img :src="project.imgLink" alt="Project image background" />
+                  <div class="card-overlay">
+                    <div class="card-overlay-text">
+                      <p>{{ project.description }}</p>
+                      <d-button noBorder @click.prevent="goToLink(project.repoLink)">
                         <i class="fab fa-github"></i>
                       </d-button>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="project-name">
-                <h1>{{ project.name }}</h1>
-              </div>
+                <div class="project-name">
+                  <h1>{{ project.name }}</h1>
+                  <div class="edit-project-wrapper">
+                    <d-button noBorder @click.prevent="openProjectEditModal(project.id)"> <i class="fas fa-pen"></i> </d-button>
+                    <span>|</span>
+                    <d-button noBorder @click.prevent="openDeleteProjectModal(project.id)">
+                      <i class="fas fa-trash"></i>
+                    </d-button>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <transition name="modal-fade">
+      <project-edit-modal v-if="showProjectsEditModal" :close="closeProjectEditModal" :id="projectById"></project-edit-modal>
+    </transition>
+    <transition name="modal-fade">
+      <confirm-modal v-if="showDeleteProjectModal" :isLoading="isLoading" :close="closeDeleteProject" :message="deleteProjectMessage"></confirm-modal>
+    </transition>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import { GET_USER } from '../../store/actions/user-actions';
-import { DELETE_DEVELOPER_PROJECT } from '../../store/actions/project-actions';
+import { DELETE_DEVELOPER_PROJECT, GET_DEVELOPER_PROJECT } from '../../store/actions/project-actions';
+import { IS_AUTHENTICATED } from '../../store/actions/authentication-actions';
+import ConfirmModal from '../modals/ConfirmModal';
+import ProjectEditModal from '../modals/profile-modals/ProjectEditModal';
+
 export default {
   name: 'projects',
   props: {
-    selectedProjects: {
-      type: Array
+    openEditModal: {
+      type: Function
+    },
+    openDeleteModal: {
+      type: Function
     }
+  },
+  components: {
+    ConfirmModal,
+    ProjectEditModal
+  },
+  data() {
+    return {
+      deleteProjectMessage: 'Are you sure you want to delete this project?',
+      isLoading: false,
+      showDeleteProjectModal: false,
+      showProjectsEditModal: false,
+      projectToDeleteById: null,
+      projectById: null
+    };
   },
   computed: {
     ...mapGetters({
-      user: GET_USER
+      user: GET_USER,
+      isAuthenticated: IS_AUTHENTICATED,
+      projects: GET_DEVELOPER_PROJECT
     })
   },
   methods: {
     ...mapActions({
       deleteProject: DELETE_DEVELOPER_PROJECT
     }),
-    onDeleteProject(project) {
+    openProjectEditModal(id) {
+      this.projectById = id;
+      this.showProjectsEditModal = true;
+    },
+    closeProjectEditModal() {
+      this.projectById = null;
+      this.showProjectsEditModal = false;
+    },
+    openDeleteProjectModal(id) {
+      this.showDeleteProjectModal = true;
+      this.projectToDeleteById = id;
+    },
+    closeDeleteProject(val) {
+      if (!val) {
+        this.showDeleteProjectModal = false;
+        return;
+      }
+      this.isLoading = true;
       let request = {
         userId: this.user.id,
-        id: project.id
+        id: this.projectToDeleteById
       };
 
-      this.deleteProject(request).catch((err) => {
-        console.error(err);
-      });
+      this.deleteProject(request)
+        .then(() => {
+          this.projectToDeleteById = null;
+          this.showDeleteProjectModal = false;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.error(err);
+        });
+    },
+    goToLink(link) {
+      window.open(link, '_blank');
     }
   }
 };
@@ -79,19 +140,16 @@ export default {
   .container {
     .projects-wrapper {
       width: 100%;
-      .text-on-back {
-        position: relative;
-        font-size: 140px;
-        line-height: 1.4em;
-        margin-bottom: 15px;
-        color: hsla(0, 0%, 100%, 0.2) !important;
-        font-weight: 900;
-      }
+
       .text-on-front {
         position: absolute;
-        font-size: 40px;
+        font-size: 30px;
         bottom: 16%;
-        left: 10%;
+        @media (min-width: 768px) {
+          font-size: 40px;
+          left: 10%;
+        }
+        left: 11%;
       }
 
       .edit-button {
@@ -101,8 +159,9 @@ export default {
       .projects-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        @media (min-width: 576px) {
-          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        @media (min-width: 768px) {
+          grid-template-columns: repeat(2, 1fr);
+          grid-auto-rows: 400px;
         }
         gap: 20px;
         .project-card {
@@ -115,6 +174,8 @@ export default {
             height: 80%;
 
             img {
+              object-fit: cover;
+              max-height: 100%;
               height: 100%;
               width: 100%;
             }
@@ -132,20 +193,6 @@ export default {
               width: 100%;
               height: 100%;
               transition: all 0.4s ease-in-out;
-              .delete-project {
-                position: absolute;
-                top: 3%;
-                right: 2%;
-                color: $error;
-                padding: 0px 6px;
-                font-size: 13px;
-                font-weight: 900;
-                border-radius: 50%;
-
-                &:hover {
-                  color: $error-hover;
-                }
-              }
               .card-overlay-text {
                 position: absolute;
                 bottom: 0;
@@ -171,10 +218,38 @@ export default {
           }
 
           .project-name {
-            height: 20%;
+            display: flex;
+            margin-top: 5px;
             h1 {
               transition: all 0.3s ease-in-out;
               margin: 0;
+            }
+            .edit-project-wrapper {
+              margin-left: auto;
+              span,
+              .d-button {
+                @media (min-width: 768px) {
+                  opacity: 0;
+                }
+              }
+              span {
+                transition: all 0.3s ease-in-out;
+                margin: 0px 10px;
+                font-size: 25px;
+                font-weight: 200;
+              }
+              .d-button {
+                &:first-child {
+                  margin-right: 0;
+                }
+                &:last-child {
+                  margin-right: 10px;
+                  color: $error;
+                  &:hover {
+                    color: $error-hover;
+                  }
+                }
+              }
             }
           }
           &:hover {
@@ -185,6 +260,12 @@ export default {
             .project-name {
               h1 {
                 color: $primary;
+              }
+              .d-button {
+                opacity: 1;
+              }
+              span {
+                opacity: 1;
               }
             }
           }

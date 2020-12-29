@@ -1,10 +1,10 @@
 <template>
   <nav>
-    <div class="left-nav col-4 col-md-4">
-      <router-link to="/" class="logo"> &lt; DevQnect /> </router-link>
-      <router-link to="/" class="d-block d-sm-none sub-logo"> &lt; DQ /> </router-link>
+    <div class="left-nav col-4 col-md-6">
+      <router-link to="/" class="logo"> <img src="@/assets/DevQnectLogo.png" alt="" /> </router-link>
+      <router-link to="/" class="d-block d-sm-none sub-logo"><img src="@/assets/DevMobile.png" alt="" /> </router-link>
     </div>
-    <div class="right-nav col-8 col-md-8">
+    <div class="right-nav col-8 col-md-6">
       <ul>
         <li class="no-mobile-view">
           <router-link :class="classList" to="/about">About Us</router-link>
@@ -220,7 +220,7 @@ nav {
       padding-left: 50px;
     }
     @media (max-width: 575px) {
-      padding-left: 33px;
+      padding-left: 15px;
     }
     a {
       color: #fff;
@@ -230,11 +230,17 @@ nav {
         @media (max-width: 576px) {
           display: none;
         }
+        img {
+          width: 200px;
+        }
       }
 
       &.sub-logo {
         @media (max-width: 450px) {
           font-size: 16px;
+        }
+        img {
+          width: 100px;
         }
       }
     }

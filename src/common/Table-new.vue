@@ -20,7 +20,7 @@
             <tr :key="'a' + i" v-if="useToggle && openRows.includes(i)" @click="toggleRow(i, item.id)" class="opened-row-child">
               <td colspan="5">
                 <p>
-                  Description:
+                  <strong> Description: </strong>
 
                   <slot name="description" :item="item" :index="i"></slot>
                 </p>
@@ -38,13 +38,13 @@
     </div>
     <div class="mobile-table">
       <div class="mobile-item" v-for="(item, i) in items" :key="i">
-        <div class="row" v-for="(header, i) in itemKeys" :key="i">
+        <div class="row" v-for="(header, i) in mobileItemKeys" :key="i">
           <div class="col-5">
             <h6>{{ header.value }}</h6>
           </div>
           <div class="col-7">
             <p v-if="item[header.key]">{{ item[header.key] }}</p>
-            <slot name="edit" :item="item" v-else></slot>
+            <slot :name="header.key" :item="item" v-else></slot>
           </div>
         </div>
       </div>
@@ -63,6 +63,9 @@ export default {
       }
     },
     itemKeys: {
+      type: Array
+    },
+    mobileItemKeys: {
       type: Array
     },
     useToggle: {

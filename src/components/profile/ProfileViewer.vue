@@ -42,9 +42,9 @@
         </div>
         <div class="card-body-table">
           <d-button class="table-edit-button" no-border @click="openExperienceEditModal(null)" v-if="isAuthenticated">Add Experience</d-button>
-          <d-table-new :itemKeys="experienceFields" :items="experiences" useToggle>
+          <d-table-new :itemKeys="experienceFields" :mobileItemKeys="experienceMobileFields" :items="experiences" useToggle>
             <d-button slot="edit" slot-scope="{ item }" @click.stop="openExperienceEditModal(item.id)" noBorder v-if="isAuthenticated"><i class="fas fa-pen"></i></d-button>
-            <d-button class="delete-btn" slot="delete" slot-scope="{ item }" @click.stop="openConfirmModal(item.id)" noBorder v-if="isAuthenticated"
+            <d-button class="delete-btn" slot="delete" slot-scope="{ item }" @click.stop="openDeleteExperienceModal(item.id)" noBorder v-if="isAuthenticated"
               ><i class="fas fa-trash"></i
             ></d-button>
             <span slot="description" slot-scope="{ item }">{{ item.description }}</span>
@@ -53,9 +53,7 @@
       </div>
     </section>
     <section id="projects">
-      <projects :selectedProjects="projects">
-        <d-button slot="edit" edit no-border @click="openProjectEditModal" v-if="isAuthenticated">Add Project</d-button>
-      </projects>
+      <projects />
     </section>
     <transition name="modal-fade">
       <personal-edit-modal v-if="showPersonalEditModal" :close="closePersonalEditModal"></personal-edit-modal>
@@ -70,14 +68,11 @@
     </transition>
 
     <transition name="modal-fade">
-      <project-edit-modal v-if="showProjectsEditModal" :close="closeProjectEditModal"></project-edit-modal>
+      <profile-image-edit-modal v-if="showProfileImageEditModal" :close="closeProfileImageEditModal"></profile-image-edit-modal>
     </transition>
 
     <transition name="modal-fade">
-      <profile-image-edit-modal v-if="showProfileImageEditModal" :close="closeProfileImageEditModal"></profile-image-edit-modal>
-    </transition>
-    <transition name="modal-fade">
-      <confirm-modal v-if="showConfirmModal" :close="closeConfirmModal" :message="deleteExperienceMessage" :id="experienceByIdToDelete"></confirm-modal>
+      <confirm-modal v-if="showDeleteExpModal" :isLoading="isLoading" :close="closeDeleteExperience" :message="deleteExperienceMessage"></confirm-modal>
     </transition>
   </div>
 </template>
@@ -87,21 +82,19 @@ import { mapGetters, mapActions } from 'vuex';
 import { GET_USER } from '../../store/actions/user-actions';
 import { GET_DEVELOPER_SKILLS } from '../../store/actions/skills-actions';
 import { GET_DEVELOPER_EXPERIENCE, DELETE_DEVELOPER_EXPERIENCE } from '../../store/actions/experience-actions';
-import { GET_DEVELOPER_PROJECT } from '../../store/actions/project-actions';
 import { GET_DEVELOPER, SET_DEVELOPER_PROFILE_IMAGE, GET_DEVELOPER_PROFILE_IMAGE } from '../../store/actions/developer-actions';
 import { IS_AUTHENTICATED } from '../../store/actions/authentication-actions';
 import PersonalEditModal from '../modals/profile-modals/PersonInfoEditModal';
 import SkillEditModal from '../modals/profile-modals/SkillEditModal';
 import Projects from './Projects';
 import ExperienceEditModal from '../modals/profile-modals/ExperienceEditModal';
-import ProjectEditModal from '../modals/profile-modals/ProjectEditModal';
 import ProfileImageEditModal from '../modals/profile-modals/ProfileImageEditModal';
 import ConfirmModal from '../modals/ConfirmModal';
 import Skills from '../skills/Skills';
 import api from '../../api/index';
 import Button from '../../common/Button.vue';
 export default {
-  components: { Button, PersonalEditModal, SkillEditModal, ExperienceEditModal, ConfirmModal, Skills, Projects, ProjectEditModal, ProfileImageEditModal },
+  components: { Button, PersonalEditModal, SkillEditModal, ExperienceEditModal, ConfirmModal, Skills, Projects, ProfileImageEditModal },
   name: 'profile-viewer',
   props: {
     id: {
@@ -117,6 +110,12 @@ export default {
         { key: 'title', value: 'Title' },
         { key: 'date', value: 'Date' }
       ],
+      experienceMobileFields: [
+        { key: 'company', value: 'Company' },
+        { key: 'title', value: 'Title' },
+        { key: 'date', value: 'Date' },
+        { key: 'description', value: 'Description' }
+      ],
       experienceFieldsAuthenticated: [
         { key: 'edit', value: 'Edit' },
         { key: 'delete', value: 'Delete' }
@@ -125,14 +124,14 @@ export default {
       showSkillEditModal: false,
       showExperienceEditModal: false,
       showExperience: false,
-      showProjectsEditModal: false,
       showProfileImageEditModal: false,
-      showConfirmModal: false,
+      showDeleteExpModal: false,
       model: {},
       originalDeveloper: {},
       experienceById: null,
       experienceByIdToDelete: null,
-      deleteExperienceMessage: 'Are you sure you want to delete this experience?'
+      deleteExperienceMessage: 'Are you sure you want to delete this experience?',
+      isLoading: false
     };
   },
 
@@ -152,7 +151,6 @@ export default {
       user: GET_USER,
       skills: GET_DEVELOPER_SKILLS,
       experiences: GET_DEVELOPER_EXPERIENCE,
-      projects: GET_DEVELOPER_PROJECT,
       developer: GET_DEVELOPER,
       isAuthenticated: IS_AUTHENTICATED,
       profileImage: GET_DEVELOPER_PROFILE_IMAGE
@@ -193,15 +191,12 @@ export default {
     openSkillEditModal() {
       this.showSkillEditModal = true;
     },
-    openProjectEditModal() {
-      this.showProjectsEditModal = true;
-    },
     openProfileImageEditModal() {
       this.showProfileImageEditModal = true;
     },
-    openConfirmModal(val) {
+    openDeleteExperienceModal(val) {
       this.experienceByIdToDelete = val;
-      this.showConfirmModal = true;
+      this.showDeleteExpModal = true;
     },
     closePersonalEditModal(val, personalInfoModel) {
       this.showPersonalEditModal = false;
@@ -213,31 +208,37 @@ export default {
       this.experienceById = null;
       this.showExperienceEditModal = false;
     },
-    closeProjectEditModal() {
-      this.showProjectsEditModal = false;
-    },
     closeProfileImageEditModal() {
       this.showProfileImageEditModal = false;
     },
-    closeConfirmModal() {
-      this.experienceByIdToDelete = null;
-      this.showConfirmModal = false;
+    closeDeleteExperience(val) {
+      if (!val) {
+        this.showDeleteExpModal = false;
+        return;
+      }
+
+      this.isLoading = true;
+      let request = {
+        userId: this.user.id,
+        id: this.experienceByIdToDelete
+      };
+      this.deleteExperience(request)
+        .then(() => {
+          this.experienceByIdToDelete = null;
+          this.isLoading = false;
+          this.showDeleteExpModal = false;
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.error(err);
+        });
     },
     goToLink(link) {
       window.open(link, '_blank');
     },
     setExperienceFields() {
       this.experienceFields = [...this.experienceFields, ...this.experienceFieldsAuthenticated];
-    },
-    onDeleteExperience(item) {
-      let request = {
-        userId: this.user.id,
-        id: item.id
-      };
-
-      this.deleteExperience(request).catch((err) => {
-        console.error(err);
-      });
+      this.experienceMobileFields = [...this.experienceMobileFields, ...this.experienceFieldsAuthenticated];
     }
   }
 };
@@ -270,10 +271,16 @@ export default {
   margin-bottom: 15px;
   color: hsla(0, 0%, 100%, 0.2) !important;
   font-weight: 900;
+  @media (max-width: 576px) {
+    font-size: 100px;
+  }
 }
 .text-on-front {
   position: absolute;
   font-size: 40px;
+  @media (max-width: 576px) {
+    font-size: 30px;
+  }
 }
 
 .profile-header {
@@ -291,18 +298,19 @@ export default {
     .edit-personal-btn {
       position: absolute;
       top: 8%;
-      z-index: 9999;
+      z-index: 9997;
     }
     .text-on-front {
       @media (min-width: 768px) {
         top: 27%;
         left: 10%;
       }
-      top: 51%;
-      left: 10%;
+      top: 38%;
+      left: 11%;
     }
     .user-info-text {
-      margin-top: -30px;
+      margin-top: -40px;
+      margin-bottom: 20px;
       color: hsla(0, 0%, 100%, 0.7) !important;
       max-width: 450px;
       line-height: 1.8;
@@ -357,12 +365,7 @@ export default {
         width: 100%;
         height: 100%;
       }
-      // img {
-      //   height: auto;
-      //   width: 200px;
-      //   border-radius: 50%;
-      //   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
-      // }
+
       .d-button {
         position: absolute;
         top: 10%;
@@ -388,8 +391,12 @@ export default {
 
 #experience {
   .text-on-front {
-    bottom: 16%;
-    left: 10%;
+    @media (min-width: 768px) {
+      bottom: 16%;
+      left: 10%;
+    }
+    bottom: 15%;
+    left: 11%;
   }
   .delete-btn {
     color: $error;
