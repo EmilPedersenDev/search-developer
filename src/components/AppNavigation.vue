@@ -30,21 +30,6 @@
       </ul>
     </div>
 
-    <div :style="menuHeight" :class="[isToggled ? 'dropdown-wrapper-active' : 'dropdown-content-inactive']">
-      <i v-if="isToggled" class="fas fa-times" @click="toggle"></i>
-
-      <ul>
-        <li @click="toggle">
-          <router-link :class="classList" to="/services">Our Work</router-link>
-        </li>
-        <li @click="toggle">
-          <router-link :class="classList" to="/about">About Us</router-link>
-        </li>
-        <li @click="toggle">
-          <router-link :class="classList" to="/contact">Contact</router-link>
-        </li>
-      </ul>
-    </div>
     <logout-modal v-if="showLogoutModal" :close="onCloseLogoutModal"></logout-modal>
   </nav>
 </template>
@@ -146,38 +131,7 @@ nav {
       cursor: pointer;
     }
   }
-  .dropdown-wrapper-active {
-    position: fixed;
-    z-index: 7;
-    padding: 30px;
-    color: #000;
-    background-color: #000;
-    width: 100%;
-    .fa-times {
-      color: #fff;
-      float: right;
-      font-size: 30px;
-    }
-    ul {
-      position: absolute;
-      top: 30%;
-      margin-top: -50px;
-      margin-left: 30px;
-      li {
-        margin: 20px 0px;
-        a {
-          font-size: 24px;
-          color: #fff;
-        }
-      }
-    }
-  }
-  .dropdown-content-inactive {
-    display: none;
-    .sub-page {
-      color: #000;
-    }
-  }
+
   ul {
     list-style-type: none;
     padding: 0;

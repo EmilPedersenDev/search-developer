@@ -62,7 +62,7 @@ export default {
   .wrapper {
     max-width: 600px;
     margin: 0 auto;
-    background: #1f2251;
+    background: $contrast-background;
     color: #fff;
     border-radius: 0.2857rem;
 
@@ -77,7 +77,7 @@ export default {
       .step {
         background: #282c68;
         &.active {
-          background: #1f2251;
+          background: $contrast-background;
         }
       }
       .step-1,

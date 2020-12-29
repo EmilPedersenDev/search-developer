@@ -30,7 +30,7 @@
         <span class="input-error" slot="error" v-if="$v.model.password.$dirty && !$v.model.password.required">Password required</span>
         <span class="input-error" slot="error" v-if="$v.model.password.$dirty && !$v.model.password.minLength">Password need to contain 8 characters</span>
       </d-input>
-      <d-error v-if="Object.keys(error).length !== 0" :error="error"></d-error>
+      <d-error :error="error"></d-error>
     </div>
     <div class="sign-in-footer">
       <d-button class="col-4 col-sm-3" primary type="submit" :disabled="$v.$invalid">Sign in <d-spinner :isLoading="isLoading" buttonSpinner></d-spinner> </d-button>

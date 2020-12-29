@@ -1,8 +1,5 @@
 <template>
   <div class="input-group">
-    <span>
-      <i class="fas fa-search" v-if="useSearch"></i>
-    </span>
     <input
       :id="id"
       :type="type"
@@ -14,15 +11,21 @@
       :aria-required="required"
       :aria-invalid="invalid"
       :aria-errormessage="id + '-error'"
+      autocomplete="off"
       @input="onInput"
       @change="onChange"
       @blur="onBlur"
       @focus="onFocus"
       @click="onClick"
+      @keyup.enter.prevent="activateButtonClick"
       @keydown.down.prevent="onKeydownDown"
       @keydown.up.prevent="onKeydownUp"
       @keyup.esc="onKeyupEsc"
     />
+    <button ref="searchButton" class="search-button" @click="activateButtonClick">
+      <i class="fas fa-search" v-if="useSearch"></i>
+      <span v-else>Add</span>
+    </button>
   </div>
 </template>
 
@@ -95,22 +98,25 @@ export default {
     },
     keyupEsc: {
       type: Function
+    },
+    searchAll: {
+      type: Function
     }
   },
 
   computed: {
-    classList: function () {
+    classList() {
       return ['st-input'];
     }
   },
 
   watch: {
-    value: function (newVal, oldVal) {
+    value(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.localValue = newVal;
       }
     },
-    localValue: function (newVal, oldVal) {
+    localValue(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.$emit('input', newVal);
       }
@@ -118,35 +124,40 @@ export default {
   },
 
   methods: {
-    onInput: function (evt) {
+    onInput(evt) {
       this.localValue = evt.target.value;
       if (this.input) this.input();
     },
-    onChange: function (evt) {
+    onChange(evt) {
       this.localValue = evt.target.value;
       this.$emit('change', this.localValue);
     },
-    onBlur: function () {
+    onBlur(e) {
       let inputGroupEl = document.getElementsByClassName('input-group')[0];
       inputGroupEl.classList.remove('focus-group');
-      if (this.blur) this.blur();
+      if (this.blur) this.blur(e);
     },
-    onFocus: function () {
+    onFocus() {
       let inputGroupEl = document.getElementsByClassName('input-group')[0];
       inputGroupEl.classList.add('focus-group');
       if (this.focus) this.focus();
     },
-    onClick: function () {
+    onClick() {
+      console.log('heeej');
       if (this.click) this.click();
     },
-    onKeydownDown: function () {
+    onKeydownDown() {
       if (this.keydownDown) this.keydownDown();
     },
-    onKeydownUp: function () {
+    onKeydownUp() {
       if (this.keydownUp) this.keydownUp();
     },
-    onKeyupEsc: function () {
+    onKeyupEsc() {
       if (this.keyupEsc) this.keyupEsc();
+    },
+    activateButtonClick(e) {
+      this.$refs.searchButton.focus();
+      if (this.searchAll) this.searchAll();
     }
   }
 };
@@ -157,16 +168,27 @@ export default {
 
 .input-group {
   width: 100%;
+  border-radius: 0.25em;
+  &:focus {
+    outline: none;
+  }
 }
 .st-input {
   height: 3em;
-  width: 100%;
+  width: 80%;
+  @media (min-width: 768px) and (max-width: 992px) {
+    width: 85%;
+  }
+  @media (min-width: 992px) {
+    width: 90%;
+  }
+
   position: relative;
   border: 0.0625em solid $primary;
   border-radius: 0.25em;
   color: #fff;
   box-sizing: border-box;
-  padding-left: 45px;
+  padding-left: 1em;
   font-size: 1em;
   font-weight: normal;
   font-style: normal;
@@ -175,10 +197,12 @@ export default {
   letter-spacing: normal;
   margin-bottom: 0em !important;
   background: transparent;
-  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+  transition: all 0.15s ease-in-out;
 
   &:focus {
-    border-color: $primary;
     outline: none;
   }
 
@@ -193,6 +217,32 @@ export default {
   }
 }
 
+button {
+  width: 20%;
+  @media (min-width: 768px) and (max-width: 992px) {
+    width: 15%;
+  }
+  @media (min-width: 992px) {
+    width: 10%;
+  }
+  padding: 10px;
+  background: transparent;
+  color: #fff;
+  border: 0.0625em solid $primary;
+  border-radius: 0.25em;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  &:hover {
+    background: rgba(0, 242, 195, 0.1);
+    cursor: pointer;
+  }
+  &:focus {
+    outline: none;
+    background: rgba(0, 242, 195, 0.1);
+  }
+}
+
 span {
   position: absolute;
   top: 50%;
@@ -201,15 +251,27 @@ span {
   }
   left: 5%;
   transform: translateY(-50%);
+  i {
+    transition: all 0.3s ease;
+  }
 }
 
 .focus-group {
+  box-shadow: $primary 0px 0px 10px;
+
+  button,
   .st-input {
     border-bottom-left-radius: 0;
-    border-color: $secondary !important;
+    border-color: $primary !important;
     &:hover:not(.st-input) {
-      background: $secondary;
+      background: rgba(0, 242, 195, 0.1);
     }
+  }
+  .st-input {
+    border-bottom-left-radius: 0;
+  }
+  button {
+    border-bottom-right-radius: 0;
   }
 }
 </style>

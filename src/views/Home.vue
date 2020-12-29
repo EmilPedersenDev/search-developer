@@ -1,16 +1,8 @@
 <template>
   <div class="home">
     <div class="page-header">
-      <img
-        src="https://demos.creative-tim.com/blk-design-system/assets/img/path4.png"
-        alt=""
-        class="first-background-img"
-      />
-      <img
-        src="https://demos.creative-tim.com/blk-design-system/assets/img/path5.png"
-        alt=""
-        class="second-background-img"
-      />
+      <img src="https://demos.creative-tim.com/blk-design-system/assets/img/path4.png" alt="" class="first-background-img" />
+      <img src="https://demos.creative-tim.com/blk-design-system/assets/img/path5.png" alt="" class="second-background-img" />
       <div class="content-center">
         <div class="header-info row row-grid justify-content-between">
           <div class="col-md-6 header-info-search">
@@ -27,26 +19,26 @@
 
 <script>
 // @ is an alias to /src
-import SearchDeveloper from "../components/SearchDeveloper.vue";
-import LandingInfoText from "../components/LandingInfoText.vue";
+import SearchDeveloper from '../components/SearchDeveloper.vue';
+import LandingInfoText from '../components/LandingInfoText.vue';
 
 export default {
-  name: "Home",
+  name: 'Home',
   data() {
     return {};
   },
   mounted() {
-    console.log("Mounted");
+    console.log('Mounted');
   },
   components: {
     SearchDeveloper,
-    LandingInfoText,
-  },
+    LandingInfoText
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/animations.scss";
+@import '@/assets/scss/animations.scss';
 .home {
   width: 100%;
 
@@ -104,7 +96,7 @@ export default {
           display: flex;
           justify-content: center;
           @media (max-width: 768px) {
-            margin-top: 20px;
+            margin: 20px 0px 100px;
           }
         }
       }

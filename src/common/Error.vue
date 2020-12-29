@@ -1,6 +1,6 @@
 <template>
-  <div class="error-container">
-    <div class="error-wrapper">
+  <div class="error-container" v-if="Object.keys(error).length !== 0">
+    <div class="error-wrapper" :class="{ noBackground: noBackground }">
       <p>{{ error.message }}</p>
     </div>
   </div>
@@ -8,10 +8,14 @@
 
 <script>
 export default {
-  name: '',
+  name: 'd-error',
   props: {
     error: {
       type: Object
+    },
+    noBackground: {
+      type: Boolean,
+      default: false
     }
   }
 };
@@ -26,6 +30,16 @@ export default {
     border-radius: 5px;
     p {
       padding: 5px 10px;
+    }
+
+    &.noBackground {
+      background: transparent;
+      text-align: left;
+      font-weight: 200;
+      p {
+        padding-left: 0px;
+        color: $error-hover;
+      }
     }
   }
 }

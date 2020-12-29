@@ -1,89 +1,104 @@
 <template>
-  <div class="profile-viewer">
-    <div class="page-header">
-      <img src="https://demos.creative-tim.com/blk-design-system/assets/img/path4.png" alt="" class="first-background-img" />
-      <div class="container profile-header">
-        <div class="row">
-          <div class="col-md-6 col-lg-6 profile-info">
-            <d-button class="edit-personal-btn" noBorder @click="openPersonalEditModal" v-if="isAuthenticated"><i class="fas fa-pen"></i></d-button>
-            <h1 class="text-on-back">01</h1>
-            <h2 class="text-on-front">{{ developer.firstname + ' ' + developer.lastname }}</h2>
-            <p class="user-info-text">
-              {{ developer.information }}
-            </p>
-            <div class="social-sign-ins">
-              <d-button class="linked-in" round @click="goToLink(developer.socialLink.linkedIn)"> <i class="fab fa-linkedin-in"></i> </d-button>
-              <d-button class="github" round @click="goToLink(developer.socialLink.github)">
-                <i class="fab fa-github"></i>
-              </d-button>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4 profile-card">
-            <div class="card">
-              <div class="card-img-header">
-                <div class="profile-image" :style="setProfileImage"></div>
-                <d-button noBorder @click="openProfileImageEditModal"><i class="fas fa-pen"></i></d-button>
-              </div>
-              <div class="card-body">
-                <h2>Skills</h2>
-                <skills :developerSkills="skills" />
-              </div>
-              <d-button class="edit-skills-btn" edit no-border @click="openSkillEditModal" v-if="isAuthenticated">Edit Skills</d-button>
-            </div>
-          </div>
-        </div>
+  <div class="profile-viewer-container">
+    <div class="loading-overlay" v-if="isDeveloperStateLoading">
+      <div class="overlay-wrapper">
+        <d-spinner :isLoading="isDeveloperStateLoading" largeSpinner></d-spinner>
       </div>
     </div>
-    <section id="experience">
-      <div class="container">
-        <div class="col-md-6">
-          <h1 class="text-on-back">02</h1>
-          <h2 class="text-on-front" style="">Experience</h2>
+    <transition name="fade" mode="out-in">
+      <div class="profile-viewer" v-if="!isDeveloperStateLoading">
+        <div class="page-header">
+          <img src="https://demos.creative-tim.com/blk-design-system/assets/img/path4.png" alt="" class="first-background-img" />
+          <div class="container profile-header">
+            <div class="row">
+              <div class="col-md-6 col-lg-6 profile-info">
+                <d-button class="edit-personal-btn" noBorder @click="openPersonalEditModal" v-if="isAuthenticatedUser"><i class="fas fa-pen"></i></d-button>
+                <h1 class="text-on-back">01</h1>
+                <h2 class="text-on-front">{{ developer.firstname + ' ' + developer.lastname }}</h2>
+                <p class="user-info-text">
+                  {{ developer.information }}
+                </p>
+                <div class="social-sign-ins">
+                  <d-button class="linked-in" round @click="goToLink(developer.socialLink.linkedIn)"> <i class="fab fa-linkedin-in"></i> </d-button>
+                  <d-button class="github" round @click="goToLink(developer.socialLink.github)">
+                    <i class="fab fa-github"></i>
+                  </d-button>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 profile-card">
+                <div class="card">
+                  <div class="card-img-header">
+                    <div class="profile-image" :style="setProfileImage"></div>
+                    <d-button noBorder @click="openProfileImageEditModal" v-if="isAuthenticatedUser"><i class="fas fa-pen"></i></d-button>
+                  </div>
+                  <div class="card-body">
+                    <h2>Skills</h2>
+                    <skills :developerSkills="skills" />
+                  </div>
+                  <d-button class="edit-skills-btn" edit no-border @click="openSkillEditModal" v-if="isAuthenticatedUser">Edit Skills</d-button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="card-body-table">
-          <d-button class="table-edit-button" no-border @click="openExperienceEditModal(null)" v-if="isAuthenticated">Add Experience</d-button>
-          <d-table-new :itemKeys="experienceFields" :mobileItemKeys="experienceMobileFields" :items="experiences" useToggle>
-            <d-button slot="edit" slot-scope="{ item }" @click.stop="openExperienceEditModal(item.id)" noBorder v-if="isAuthenticated"><i class="fas fa-pen"></i></d-button>
-            <d-button class="delete-btn" slot="delete" slot-scope="{ item }" @click.stop="openDeleteExperienceModal(item.id)" noBorder v-if="isAuthenticated"
-              ><i class="fas fa-trash"></i
-            ></d-button>
-            <span slot="description" slot-scope="{ item }">{{ item.description }}</span>
-          </d-table-new>
-        </div>
+        <section id="experience">
+          <div class="container">
+            <div class="col-md-6">
+              <h1 class="text-on-back">02</h1>
+              <h2 class="text-on-front" style="">Experience</h2>
+            </div>
+            <div class="card-body-table">
+              <d-button class="table-edit-button" no-border @click="openExperienceEditModal(null)" v-if="isAuthenticatedUser">Add Experience</d-button>
+              <d-table-new :itemKeys="experienceFields" :mobileItemKeys="experienceMobileFields" :items="experiences" useToggle>
+                <d-button slot="edit" slot-scope="{ item }" @click.stop="openExperienceEditModal(item.id)" noBorder v-if="isAuthenticatedUser"><i class="fas fa-pen"></i></d-button>
+                <d-button class="delete-btn" slot="delete" slot-scope="{ item }" @click.stop="openDeleteExperienceModal(item.id)" noBorder v-if="isAuthenticatedUser"
+                  ><i class="fas fa-trash"></i
+                ></d-button>
+                <span slot="description" slot-scope="{ item }">{{ item.description }}</span>
+              </d-table-new>
+            </div>
+          </div>
+        </section>
+        <section id="projects">
+          <projects />
+        </section>
+        <transition name="modal-fade">
+          <personal-edit-modal v-if="showPersonalEditModal" :close="closePersonalEditModal"></personal-edit-modal>
+        </transition>
+
+        <transition name="modal-fade">
+          <skill-edit-modal v-if="showSkillEditModal" :close="closeSkillEditModal"></skill-edit-modal>
+        </transition>
+
+        <transition name="modal-fade">
+          <experience-edit-modal v-if="showExperienceEditModal" :close="closeExperienceEditModal" :id="experienceById"></experience-edit-modal>
+        </transition>
+
+        <transition name="modal-fade">
+          <profile-image-edit-modal v-if="showProfileImageEditModal" :close="closeProfileImageEditModal"></profile-image-edit-modal>
+        </transition>
+
+        <transition name="modal-fade">
+          <confirm-modal v-if="showDeleteExpModal" :isLoading="isLoading" :close="closeDeleteExperience" :message="deleteExperienceMessage"></confirm-modal>
+        </transition>
       </div>
-    </section>
-    <section id="projects">
-      <projects />
-    </section>
-    <transition name="modal-fade">
-      <personal-edit-modal v-if="showPersonalEditModal" :close="closePersonalEditModal"></personal-edit-modal>
-    </transition>
-
-    <transition name="modal-fade">
-      <skill-edit-modal v-if="showSkillEditModal" :close="closeSkillEditModal"></skill-edit-modal>
-    </transition>
-
-    <transition name="modal-fade">
-      <experience-edit-modal v-if="showExperienceEditModal" :close="closeExperienceEditModal" :id="experienceById"></experience-edit-modal>
-    </transition>
-
-    <transition name="modal-fade">
-      <profile-image-edit-modal v-if="showProfileImageEditModal" :close="closeProfileImageEditModal"></profile-image-edit-modal>
-    </transition>
-
-    <transition name="modal-fade">
-      <confirm-modal v-if="showDeleteExpModal" :isLoading="isLoading" :close="closeDeleteExperience" :message="deleteExperienceMessage"></confirm-modal>
     </transition>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import { GET_USER } from '../../store/actions/user-actions';
 import { GET_DEVELOPER_SKILLS } from '../../store/actions/skills-actions';
 import { GET_DEVELOPER_EXPERIENCE, DELETE_DEVELOPER_EXPERIENCE } from '../../store/actions/experience-actions';
-import { GET_DEVELOPER, SET_DEVELOPER_PROFILE_IMAGE, GET_DEVELOPER_PROFILE_IMAGE } from '../../store/actions/developer-actions';
-import { IS_AUTHENTICATED } from '../../store/actions/authentication-actions';
+import {
+  GET_DEVELOPER,
+  SET_DEVELOPER_PROFILE_IMAGE,
+  GET_DEVELOPER_PROFILE_IMAGE,
+  SET_DEVELOPER_STATE_LOADING,
+  IS_DEVELOPER_STATE_LOADING
+} from '../../store/actions/developer-actions';
+import { IS_AUTHENTICATED, IS_AUTHENTICATED_USER } from '../../store/actions/authentication-actions';
 import PersonalEditModal from '../modals/profile-modals/PersonInfoEditModal';
 import SkillEditModal from '../modals/profile-modals/SkillEditModal';
 import Projects from './Projects';
@@ -135,11 +150,19 @@ export default {
     };
   },
 
-  created() {
-    if (!this.isAuthenticated) {
-      this.getDeveloper(this.id);
-    } else {
-      this.setExperienceFields();
+  watch: {
+    id: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.setDeveloperStateLoading(true);
+          this.getDeveloper(this.id).then(() => {
+            if (this.isAuthenticated || this.user.id == this.id) {
+              this.setExperienceFields();
+            }
+          });
+        }
+      }
     }
   },
 
@@ -153,7 +176,9 @@ export default {
       experiences: GET_DEVELOPER_EXPERIENCE,
       developer: GET_DEVELOPER,
       isAuthenticated: IS_AUTHENTICATED,
-      profileImage: GET_DEVELOPER_PROFILE_IMAGE
+      isAuthenticatedUser: IS_AUTHENTICATED_USER,
+      profileImage: GET_DEVELOPER_PROFILE_IMAGE,
+      isDeveloperStateLoading: IS_DEVELOPER_STATE_LOADING
     }),
     isCurrentUser() {
       return this.user.id === this.id;
@@ -162,13 +187,16 @@ export default {
       return JSON.stringify(this.developer) !== JSON.stringify(this.tempDeveloper);
     },
     setProfileImage() {
-      return `background-image: url(${this.profileImage ? this.profileImage : '@/assets/male-avatar.svg'})`;
+      return `background-image: url(${this.profileImage ? this.profileImage : `male-avatar.svg`})`;
     }
   },
   methods: {
     ...mapActions({
       deleteExperience: DELETE_DEVELOPER_EXPERIENCE,
       getDeveloper: GET_DEVELOPER
+    }),
+    ...mapMutations({
+      setDeveloperStateLoading: SET_DEVELOPER_STATE_LOADING
     }),
     showExperienceView() {
       this.showSkills = false;
@@ -246,6 +274,20 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/scss/colors.scss';
+
+.loading-overlay {
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  .overlay-wrapper {
+    position: relative;
+    height: inherit;
+    width: inherit;
+  }
+}
+
 .profile-viewer {
   width: 100%;
   height: 100%;
@@ -256,12 +298,15 @@ export default {
   position: relative;
 }
 .first-background-img {
+  @media (min-width: 768px) {
+    opacity: 0.02;
+  }
   position: absolute;
-  opacity: 0.02;
+  opacity: 0;
   max-width: 65%;
   width: 65%;
   right: 3%;
-  top: 20%;
+  top: 10%;
 }
 
 .text-on-back {

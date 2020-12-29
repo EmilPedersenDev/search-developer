@@ -8,3 +8,4 @@ export const SET_TOKEN = 'SET_TOKEN';
 
 // getters
 export const IS_AUTHENTICATED = 'IS_AUTHENTICATED';
+export const IS_AUTHENTICATED_USER = 'IS_AUTHENTICATED_USER';

@@ -171,6 +171,10 @@ export default {
       display: none;
     }
 
+    .row {
+      margin: 5px 0px;
+    }
+
     .mobile-item {
       background: #1f2251;
       box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);

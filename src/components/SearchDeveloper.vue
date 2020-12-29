@@ -1,7 +1,7 @@
 <template>
   <div class="search-wrapper">
     <h3>Search developer in <span></span></h3>
-    <multi-select :filteredItems="filteredDevelopers" @input="searchDeveloper" :selectItem="addDeveloper">
+    <multi-select :filteredItems="filteredDevelopers" @input="searchDeveloper" :selectItem="addDeveloper" :searchAllDevelopers="allDevelopers">
       <template slot="dropdown-content" slot-scope="{ item }">
         <div class="developer-search-profile">
           <div class="profile-image col-2">
@@ -13,7 +13,8 @@
         </div>
       </template>
     </multi-select>
-    <d-table v-if="hasSelectedDeveloper" :developer="selectedDeveloper" />
+    <d-error :error="error" noBackground></d-error>
+    <d-table v-if="hasSelectedDeveloper" :developers="selectedDeveloper" />
   </div>
 </template>
 
@@ -29,8 +30,9 @@ export default {
     return {
       query: '',
       active: false,
-      selectedDeveloper: {},
-      filteredDevelopers: []
+      selectedDeveloper: [],
+      filteredDevelopers: [],
+      error: {}
     };
   },
   components: {
@@ -44,7 +46,11 @@ export default {
       this.active = false;
     },
     addDeveloper(developer) {
-      this.selectedDeveloper = { ...developer };
+      this.selectedDeveloper = [];
+      this.selectedDeveloper.push(developer);
+    },
+    allDevelopers() {
+      this.selectedDeveloper = this.filteredDevelopers;
     },
     searchDeveloper(query) {
       this.fetchDevelopers(query);
@@ -54,12 +60,14 @@ export default {
         api
           .get(`users?query=${encodeURIComponent(query)}`)
           .then((result) => {
+            this.error = {};
             let filteredDevelopers = result.data.users;
             this.filteredDevelopers = filteredDevelopers.sort((a, b) => b.firstname - a.firstname);
           })
           .catch((err) => {
             this.filteredDevelopers = [];
-            throw new Error(err);
+            this.error = err.response.data;
+            console.error(err);
           });
       } else {
         console.log('Search query must be longer than 2 letters.');
@@ -85,6 +93,9 @@ export default {
     text-align: left;
     margin-bottom: 30px;
     span {
+      @media (max-width: 768px) {
+        display: block;
+      }
       &::before {
         content: '';
         animation: wordSwapper infinite 20s;
@@ -97,7 +108,7 @@ export default {
     margin-bottom: 0px;
     padding-top: 80px;
   }
-  margin: 0 auto 20px;
+  margin: 20px auto 40px;
   max-width: 400px;
   width: 100%;
 
