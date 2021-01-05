@@ -10,9 +10,10 @@
       <d-file-upload @change="onFileChange" />
       <d-spinner :isLoading="isLoading"></d-spinner>
       <p style="color: red" v-if="imageSizeError.hasError">{{ imageSizeError.message }}</p>
+      <d-error :error="error"></d-error>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm <d-spinner :isLoading="isLoading" buttonSpinner /> </d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm <d-spinner :isLoading="isAsyncLoading" buttonSpinner /> </d-button>
       <d-button class="col-4 col-sm-3" transition @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
@@ -35,11 +36,13 @@ export default {
     return {
       localProfileImage: '',
       isLoading: false,
+      isAsyncLoading: false,
       imageSizeError: {
         message: '',
         hasError: false
       },
-      maxSize: 1024 * 1024
+      maxSize: 1024 * 1024,
+      error: {}
     };
   },
   beforeMount() {
@@ -98,6 +101,7 @@ export default {
     closeModal(val) {
       if (this.close) {
         if (val) {
+          this.isAsyncLoading = true;
           let formData = new FormData();
           formData.append('file', this.file);
 
@@ -107,10 +111,15 @@ export default {
           };
           this.setProfileImage(request)
             .then(() => {
+              this.error = {};
               this.close();
             })
             .catch((err) => {
+              this.error = err.response.data;
               console.error(err);
+            })
+            .finally(() => {
+              this.isAsyncLoading = false;
             });
         } else {
           this.close();

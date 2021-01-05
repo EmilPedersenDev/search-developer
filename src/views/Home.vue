@@ -96,7 +96,7 @@ export default {
           display: flex;
           justify-content: center;
           @media (max-width: 768px) {
-            margin: 20px 0px 100px;
+            margin: 20px 0px 0px;
           }
         }
       }

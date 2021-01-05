@@ -14,15 +14,18 @@ const actions = {
       commit(SET_USER, result.data);
       commit(SET_TOKEN, result.data.accessToken);
 
-      return Promise.resolve(dispatch(GET_DEVELOPER, result.data.id)).then(() => {
-        return result.data;
-      });
+      // return Promise.resolve(dispatch(GET_DEVELOPER, result.data.id)).then(() => {
+      //   return result.data;
+      // });
     });
   },
-  [LOGOUT]: async ({ commit }) => {
-    await localStorage.removeItem('jwt');
-    commit(SET_TOKEN, '');
-    commit(SET_USER, {});
+  [LOGOUT]: ({ commit }) => {
+    return new Promise((resolve) => {
+      localStorage.removeItem('jwt');
+      commit(SET_TOKEN, '');
+      commit(SET_USER, {});
+      resolve();
+    });
   }
 };
 

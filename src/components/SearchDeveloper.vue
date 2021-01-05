@@ -1,7 +1,7 @@
 <template>
   <div class="search-wrapper">
     <h3>Search developer in <span></span></h3>
-    <multi-select :filteredItems="filteredDevelopers" @input="searchDeveloper" :selectItem="addDeveloper" :searchAllDevelopers="allDevelopers">
+    <multi-select :filteredItems="filteredDevelopers" @input="searchDeveloper" :selectItem="addDeveloper" :searchAllDevelopers="allDevelopers" :lengthToDisplayDropdown="2">
       <template slot="dropdown-content" slot-scope="{ item }">
         <div class="developer-search-profile">
           <div class="profile-image col-2">
@@ -21,11 +21,9 @@
 <script>
 import _ from 'lodash';
 import api from '../api/index';
-import pointerMixin from '@/services/mixins/pointerMixin.js';
 import MultiSelect from './search/MultiSelect.vue';
 export default {
   name: 'search-developer',
-  mixins: [pointerMixin],
   data() {
     return {
       query: '',
@@ -69,15 +67,10 @@ export default {
             this.error = err.response.data;
             console.error(err);
           });
-      } else {
-        console.log('Search query must be longer than 2 letters.');
       }
-    })
+    }, 200)
   },
   computed: {
-    displayDropdownActive() {
-      return this.active && this.query.length > 2;
-    },
     hasSelectedDeveloper() {
       return Object.keys(this.selectedDeveloper).length !== 0;
     }

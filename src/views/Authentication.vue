@@ -2,15 +2,15 @@
   <div class="register container-fluid">
     <div class="wrapper">
       <div class="steps">
-        <div class="step step-1" :class="{ active: activeStepId === 1 }">
-          <router-link class="router-link" to="/authentication/login" @click.native="goToStep(1)">Login</router-link>
+        <div class="step step-1" :class="{ active: $route.name === 'login' }">
+          <router-link class="router-link" to="/authentication/login">Login</router-link>
         </div>
-        <div class="step step-2" :class="{ active: activeStepId === 2 }">
-          <router-link class="router-link" to="/authentication/register" @click.native="goToStep(2)">Register</router-link>
+        <div class="step step-2" :class="{ active: $route.name === 'register' }">
+          <router-link class="router-link" to="/authentication/register">Register</router-link>
         </div>
       </div>
       <div class="content-wrapper">
-        <transition name="fade" mode="out-in">
+        <transition name="fade-fast" mode="out-in">
           <router-view></router-view>
         </transition>
       </div>
@@ -26,30 +26,11 @@ export default {
   name: '',
   data() {
     return {
-      activeStepId: 1,
       model: model.registerModel
     };
   },
   components: {
     CreateAccount
-  },
-
-  watch: {
-    $route(route) {
-      if (route.name === 'login' || route.name === 'register') {
-        if (Object.keys(route.params).length !== 0) {
-          this.activeStepId = route.params.activeStepId;
-        }
-      }
-    }
-  },
-
-  methods: {
-    submit() {},
-    goToStep(stepIndex) {
-      console.log('activated?????');
-      this.activeStepId = stepIndex;
-    }
   }
 };
 </script>
@@ -57,17 +38,26 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/colors.scss';
 .register {
-  position: relative;
-  margin: 60px 0px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   .wrapper {
-    max-width: 600px;
-    margin: 0 auto;
+    width: 100%;
+    @media (min-width: 768px) {
+      max-width: 600px;
+      width: 600px;
+    }
     background: $contrast-background;
     color: #fff;
     border-radius: 0.2857rem;
 
     .content-wrapper {
-      padding: 30px;
+      padding: 30px 0px;
+      @media (min-width: 768px) {
+        padding: 30px;
+      }
     }
 
     .steps {

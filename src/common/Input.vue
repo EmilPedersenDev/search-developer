@@ -11,6 +11,7 @@
       @blur="onBlur"
       :autocomplete="autocomplete"
       :value="value"
+      :disabled="disabled"
     />
     <i class="fas fa-exclamation" v-if="invalid"></i>
     <i class="fas fa-check" v-if="required && !invalid && value !== ''"></i>
@@ -66,6 +67,10 @@ export default {
       default: ''
     },
     readonly: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
       type: Boolean,
       default: false
     }

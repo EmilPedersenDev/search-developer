@@ -1,8 +1,8 @@
 <template>
-  <div class="modal-custom" @click.prevent="handleClickOutside">
+  <div class="modal-custom" @click.prevent="onExitClose">
     <div class="modal-card" @click.stop>
       <div class="modal-content-custom">
-        <i class="fas fa-times" @click="onClose"></i>
+        <i class="fas fa-times" @click="onExitClose"></i>
         <slot name="modal-header"></slot>
         <slot name="modal-body"></slot>
         <slot name="modal-footer"></slot>
@@ -29,7 +29,7 @@ export default {
     }
   },
   methods: {
-    handleClickOutside() {
+    onExitClose() {
       if (this.isLoading) return;
       if (this.onClose) {
         this.onClose();
@@ -42,11 +42,12 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/colors.scss';
 .modal-custom {
-  width: 100%;
-  height: 100vh;
   position: fixed;
   z-index: 9998;
   top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: rgba(23, 25, 65, 0.9);
   .modal-card {
     position: relative;
@@ -58,6 +59,8 @@ export default {
     border-radius: 0.2857rem;
     max-width: 500px;
     padding: 24px;
+    max-height: calc(100% - 20px);
+    overflow-y: auto;
 
     .modal-content-custom {
       position: relative;

@@ -9,6 +9,7 @@
       :blur="deActivate"
       @input="updateSearch"
       :id="id"
+      :useSearchButton="useSearchButton"
       ref="searchInput"
     ></d-search-input>
     <transition name="developer-search-dropdown-transition">
@@ -49,6 +50,13 @@ export default {
     },
     searchAllDevelopers: {
       type: Function
+    },
+    useSearchButton: {
+      type: Boolean,
+      default: true
+    },
+    lengthToDisplayDropdown: {
+      type: Number
     }
   },
   methods: {
@@ -91,7 +99,7 @@ export default {
   },
   computed: {
     displayDropdownActive() {
-      return this.active && this.query.length > 2;
+      return this.active && this.query.length >= this.lengthToDisplayDropdown;
     }
   }
 };

@@ -4,17 +4,19 @@
       <h1>Add Skills</h1>
     </div>
     <div slot="modal-body" class="modal-custom-body">
-      <multi-select :filteredItems="filteredSkills" @input="searchSkills" :selectItem="addSkill">
+      <multi-select :filteredItems="filteredSkills" @input="searchSkills" :selectItem="addSkill" :useSearchButton="false" :lengthToDisplayDropdown="1">
         <template slot="dropdown-content" slot-scope="{ item }">
           <div class="dropdown-skill-item">
             <p>{{ item.name }}</p>
           </div>
         </template>
       </multi-select>
+      <d-error :error="error" noBackground></d-error>
       <skills canRemove :removeDeveloperSkill="removeSkill" :developerSkills="tempDeveloperSkills" />
+      <d-error :error="submitError"></d-error>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="!this.hasSkillsChanged">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="!this.hasSkillsChanged">Confirm<d-spinner :isLoading="isLoading" buttonSpinner /></d-button>
       <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
@@ -26,6 +28,7 @@ import { SET_DEVELOPER_SKILLS, GET_DEVELOPER_SKILLS } from '@/store/actions/skil
 import { GET_DEVELOPER } from '@/store/actions/developer-actions.js';
 import Skills from '@/components/skills/Skills.vue';
 import MultiSelect from '@/components/search/MultiSelect.vue';
+import _ from 'lodash';
 import api from '@/api/index';
 export default {
   name: 'skill-edit-modal',
@@ -46,7 +49,10 @@ export default {
     return {
       filteredSkills: [],
       tempDeveloperSkills: [],
-      originalDeveloperSkills: []
+      originalDeveloperSkills: [],
+      isLoading: false,
+      error: {},
+      submitError: {}
     };
   },
   computed: {
@@ -62,19 +68,19 @@ export default {
     ...mapActions({
       setDeveloperSkills: SET_DEVELOPER_SKILLS
     }),
-    searchSkills(query) {
-      if (query.length > 2) {
-        api
-          .get(`skills/search/?query=${encodeURIComponent(query)}`)
-          .then((result) => {
-            let filteredSkills = result.data.skills;
-            this.filteredSkills = filteredSkills.sort((a, b) => b.name - a.name);
-          })
-          .catch((err) => {
-            throw new Error(err);
-          });
-      }
-    },
+    searchSkills: _.debounce(function (query) {
+      api
+        .get(`skills/search/?query=${encodeURIComponent(query)}`)
+        .then((result) => {
+          this.error = {};
+          let filteredSkills = result.data.skills;
+          this.filteredSkills = filteredSkills.sort((a, b) => b.name - a.name);
+        })
+        .catch((err) => {
+          this.error = err.response.data;
+          console.error(err);
+        });
+    }, 200),
     addSkill(skill) {
       let isSkillExisting = this.tempDeveloperSkills.find((item) => item.name === skill.name);
       if (!isSkillExisting) {
@@ -88,13 +94,23 @@ export default {
     closeModal(val) {
       if (this.close) {
         if (val) {
+          this.isLoading = true;
           let request = {
             id: this.developer.id,
             skills: this.tempDeveloperSkills
           };
-          this.setDeveloperSkills(request).then(() => {
-            this.close();
-          });
+          this.setDeveloperSkills(request)
+            .then(() => {
+              this.submitError = {};
+              this.close();
+            })
+            .catch((err) => {
+              this.submitError = err.response.data;
+              console.error(err);
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
         } else {
           this.close();
         }

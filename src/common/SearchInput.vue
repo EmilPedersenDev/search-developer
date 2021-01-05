@@ -22,7 +22,7 @@
       @keydown.up.prevent="onKeydownUp"
       @keyup.esc="onKeyupEsc"
     />
-    <button ref="searchButton" class="search-button" @click="activateButtonClick">
+    <button v-if="useSearchButton" ref="searchButton" class="search-button" @click="activateButtonClick">
       <i class="fas fa-search" v-if="useSearch"></i>
       <span v-else>Add</span>
     </button>
@@ -101,12 +101,16 @@ export default {
     },
     searchAll: {
       type: Function
+    },
+    useSearchButton: {
+      type: Boolean,
+      default: true
     }
   },
 
   computed: {
     classList() {
-      return ['st-input'];
+      return ['st-input', !this.useSearchButton && 'no-search-btn'];
     }
   },
 
@@ -143,7 +147,6 @@ export default {
       if (this.focus) this.focus();
     },
     onClick() {
-      console.log('heeej');
       if (this.click) this.click();
     },
     onKeydownDown() {
@@ -156,6 +159,7 @@ export default {
       if (this.keyupEsc) this.keyupEsc();
     },
     activateButtonClick(e) {
+      if (!this.useSearchButton) return;
       this.$refs.searchButton.focus();
       if (this.searchAll) this.searchAll();
     }
@@ -181,6 +185,13 @@ export default {
   }
   @media (min-width: 992px) {
     width: 90%;
+  }
+
+  &.no-search-btn {
+    width: 100%;
+    border-right: 0.0625em solid $primary;
+    border-top-right-radius: 0.25em;
+    border-bottom-right-radius: 0.25em;
   }
 
   position: relative;

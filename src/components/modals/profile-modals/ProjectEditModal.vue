@@ -18,9 +18,10 @@
       <d-input label="Description" required v-model="project.description" :invalid="$v.project.description.$error" :blur="$v.project.description.$touch">
         <span class="input-error" slot="error" v-if="$v.project.description.$dirty && !$v.project.description.required">Description is required</span>
       </d-input>
+      <d-error :error="error"></d-error>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm<d-spinner :isLoading="isLoading" buttonSpinner /></d-button>
       <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
@@ -51,7 +52,9 @@ export default {
         imgLink: '',
         description: ''
       },
-      originalProject: {}
+      originalProject: {},
+      isLoading: false,
+      error: {}
     };
   },
   beforeMount() {
@@ -117,20 +120,33 @@ export default {
         project: this.project
       };
       if (!this.id) {
+        this.isLoading = true;
         this.createDeveloperProjects(request)
+          .then(() => {
+            this.error = {};
+            this.close();
+          })
           .catch((err) => {
+            this.error = err.response.data;
             console.error(err);
           })
           .finally(() => {
-            this.close();
+            this.isLoading = false;
           });
       } else {
+        this.isLoading = true;
+
         this.updateDeveloperProjects(request)
+          .then(() => {
+            this.error = {};
+            this.close();
+          })
           .catch((err) => {
+            this.error = err.response.data;
             console.error(err);
           })
           .finally(() => {
-            this.close();
+            this.isLoading = false;
           });
       }
     }

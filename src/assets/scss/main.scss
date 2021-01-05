@@ -24,6 +24,12 @@ h6 {
   margin: 0;
 }
 
+h4 {
+  &.account-sub-title {
+    margin-top: 10px;
+  }
+}
+
 ul {
   margin: 0;
   padding: 0;
@@ -41,6 +47,22 @@ a {
       text-decoration: none;
       transform: translateY(-2px);
       opacity: 0.9;
+    }
+  }
+
+  &.top-link {
+    font-size: 0.8125em;
+    font-weight: 600;
+    color: $white;
+
+    &:before {
+      content: '‹';
+      margin-right: 0.3125em;
+    }
+
+    &:hover {
+      text-decoration: underline !important;
+      color: $white !important;
     }
   }
 }
@@ -79,5 +101,14 @@ img {
   font-weight: 900;
   @media (max-width: 576px) {
     font-size: 100px;
+  }
+}
+
+.page-header,
+.container,
+.container-fluid {
+  @media (max-width: 768px) {
+    margin-bottom: 100px;
+    margin-top: 20px;
   }
 }
