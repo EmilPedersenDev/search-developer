@@ -20,9 +20,10 @@
       <div class="row">
         <d-text-area label="Description" v-model="experience.description"> </d-text-area>
       </div>
+      <d-error :error="error"></d-error>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Confirm<d-spinner :isLoading="isLoading" buttonSpinner /></d-button>
       <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
@@ -53,7 +54,9 @@ export default {
         date: '',
         description: ''
       },
-      originalExperience: {}
+      originalExperience: {},
+      isLoading: false,
+      error: {}
     };
   },
   beforeMount() {
@@ -120,20 +123,33 @@ export default {
       };
 
       if (!this.id) {
+        this.isLoading = true;
         this.setDeveloperExperience(request)
+          .then(() => {
+            this.error = {};
+            this.close();
+          })
           .catch((err) => {
+            this.error = err.response.data;
             console.error(err);
           })
           .finally(() => {
-            this.close();
+            this.isLoading = false;
           });
       } else {
+        this.isLoading = true;
+
         this.updateDeveloperExperience(request)
+          .then(() => {
+            this.error = {};
+            this.close();
+          })
           .catch((err) => {
+            this.error = err.response.data;
             console.error(err);
           })
           .finally(() => {
-            this.close();
+            this.isLoading = false;
           });
       }
     }

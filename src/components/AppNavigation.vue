@@ -6,15 +6,12 @@
     </div>
     <div class="right-nav col-8 col-md-6">
       <ul>
-        <li class="no-mobile-view">
-          <router-link :class="classList" to="/about">About Us</router-link>
-        </li>
         <li class="no-mobile-view auth-wrapper" v-if="isAuthenticated">
           <span class="authenticated"><i class="far fa-user-circle"></i>{{ user.firstname }}<i class="fas fa-caret-down"></i></span>
           <div class="profile-dropdown">
             <ul>
               <li><router-link :to="`/profile/${user.id}`">Profile</router-link></li>
-              <li><router-link to="">Account</router-link></li>
+              <li><router-link to="/account">Account</router-link></li>
               <li>
                 <d-button no-border @click="onShowLogoutModal">Logout</d-button>
               </li>
@@ -22,12 +19,34 @@
           </div>
         </li>
         <li class="no-mobile-view" v-else>
-          <router-link class="signin" :class="classList" to="/authentication/login">Signin</router-link>
+          <router-link class="signin" :class="classList" to="/authentication/login"><i class="far fa-user-circle"></i>Signin</router-link>
         </li>
         <li class="no-desktop-view">
-          <i v-if="!isToggled" class="fas fa-bars" :class="{ 'sub-page': !isHomePage }" @click="toggle(true)"></i>
+          <i :class="{ active: !isToggled }" class="fas fa-bars" @click="toggle"></i>
         </li>
       </ul>
+      <div class="mobile-nav-overlay" v-if="isToggled" @click="toggle"></div>
+      <div class="no-desktop-view mobile-sliding-in-menu" :class="{ active: isToggled }">
+        <i class="fas fa-times" @click="toggle"></i>
+        <ul>
+          <li class="mobile-account" v-if="isAuthenticated">
+            <p class="user-name-mobile">
+              {{ user.firstname }}<i class="fas fa-plus" :class="{ active: !isMobileAccountToggled }" @click="toggleMobileAccount"></i
+              ><i class="fas fa-minus" :class="{ active: isMobileAccountToggled }" @click="toggleMobileAccount"></i>
+            </p>
+
+            <ul :class="{ active: isMobileAccountToggled }">
+              <li @click="toggle"><router-link :class="classList" :to="`/profile/${user.id}`">Profile</router-link></li>
+              <li @click="toggle"><router-link :class="classList" to="/account">Account</router-link></li>
+              <li @click="toggle">
+                <d-button no-border class="sign-out-mobile app-nav-link" @click="onShowLogoutModal">Logout</d-button>
+              </li>
+            </ul>
+          </li>
+          <li @click="toggle"><router-link to="/" :class="classList">Home</router-link></li>
+          <li @click="toggle" v-if="!isAuthenticated"><router-link :class="classList" to="/authentication/login">Signin</router-link></li>
+        </ul>
+      </div>
     </div>
 
     <logout-modal v-if="showLogoutModal" :close="onCloseLogoutModal"></logout-modal>
@@ -46,7 +65,8 @@ export default {
       loaded: false,
       isToggled: false,
       showLogoutModal: false,
-      screenHeight: 0
+      screenHeight: 0,
+      isMobileAccountToggled: false
     };
   },
   components: {
@@ -87,8 +107,12 @@ export default {
     ...mapActions({
       logout: LOGOUT
     }),
-    toggle(bool) {
+    toggle() {
       this.isToggled = !this.isToggled;
+      this.isMobileAccountToggled = false;
+    },
+    toggleMobileAccount() {
+      this.isMobileAccountToggled = !this.isMobileAccountToggled;
     },
     onResize() {
       this.screenHeight = window.innerHeight;
@@ -125,6 +149,7 @@ nav {
   display: flex;
   position: relative;
   z-index: 3;
+  height: 10vh;
 
   .fas {
     &:hover {
@@ -136,7 +161,8 @@ nav {
     list-style-type: none;
     padding: 0;
   }
-  a {
+  a,
+  .sign-out-mobile {
     &.app-nav-link {
       color: #fff;
       font-size: 14px;
@@ -156,6 +182,8 @@ nav {
       }
       &:hover {
         text-decoration: none;
+        color: #fff !important;
+
         &::before {
           visibility: visible;
           transform: scale(1);
@@ -168,7 +196,6 @@ nav {
     align-items: center;
     justify-content: flex-start;
     padding-left: 100px;
-    height: 110px;
 
     @media (max-width: 768px) {
       padding-left: 50px;
@@ -217,12 +244,27 @@ nav {
       }
     }
 
+    .signin {
+      .far {
+        margin-right: 5px;
+      }
+    }
+
     .no-desktop-view {
       @media (min-width: 993px) {
         display: none;
       }
       .sub-page {
         color: black;
+      }
+      .fa-bars {
+        transition: all 0.5s ease-in-out;
+        opacity: 0;
+        font-size: 18px;
+        &.active {
+          opacity: 1;
+          color: #fff;
+        }
       }
     }
 
@@ -317,6 +359,103 @@ nav {
                   &:hover {
                     cursor: pointer;
                     background: #282c68;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .mobile-nav-overlay {
+      position: fixed;
+      height: 100vh;
+      width: 50%;
+      @media (min-width: 768px) {
+        width: 70%;
+      }
+      top: 0;
+      left: 0;
+    }
+
+    .mobile-sliding-in-menu {
+      position: fixed;
+      height: 100vh;
+      width: 50%;
+
+      @media (min-width: 768px) {
+        width: 30%;
+      }
+      top: 0;
+      right: -50%;
+      background-color: $contrast-background;
+
+      color: #fff;
+      border-left: 1px solid #000;
+      transition: all 0.5s ease-in-out;
+      &.active {
+        right: 0;
+      }
+
+      i {
+        text-align: right;
+        display: block;
+        padding: 20px 20px 0px;
+        color: #fff;
+        font-size: 18px;
+      }
+      ul {
+        display: block;
+        text-align: center;
+        li {
+          margin: 15px 0px;
+          &.mobile-account {
+            i {
+              display: inline;
+              padding: 0px 0px 0px 8px;
+              &.fa-plus,
+              &.fa-minus {
+                font-size: 14px;
+                display: none;
+                &.active {
+                  display: inline;
+                }
+              }
+            }
+            ul {
+              margin: 0 auto;
+              width: 80%;
+              background: #272b68;
+              visibility: hidden;
+              height: 0px;
+              transition: all 0.3s ease-in-out;
+              border-radius: 8px;
+              li {
+                transition: all 0.3s ease-in-out;
+                visibility: hidden;
+                margin: 0px;
+                a,
+                button {
+                  transition: all 0.1s ease-in;
+                  visibility: hidden;
+                }
+                .sign-out-mobile {
+                  padding-bottom: 2px;
+                }
+              }
+
+              &.active {
+                visibility: visible;
+                height: 110px;
+                margin-top: 10px;
+                li {
+                  visibility: visible;
+                  padding: 7px;
+                  height: 33.3333%;
+                  a,
+                  button {
+                    visibility: visible;
                   }
                 }
               }

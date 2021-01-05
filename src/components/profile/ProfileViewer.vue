@@ -14,7 +14,9 @@
               <div class="col-md-6 col-lg-6 profile-info">
                 <d-button class="edit-personal-btn" noBorder @click="openPersonalEditModal" v-if="isAuthenticatedUser"><i class="fas fa-pen"></i></d-button>
                 <h1 class="text-on-back">01</h1>
-                <h2 class="text-on-front">{{ developer.firstname + ' ' + developer.lastname }}</h2>
+                <h2 class="text-on-front">
+                  {{ developer.firstname }} <span class="d-none d-md-inline"> {{ developer.lastname }} </span>
+                </h2>
                 <p class="user-info-text">
                   {{ developer.information }}
                 </p>
@@ -296,6 +298,9 @@ export default {
 
 .page-header {
   position: relative;
+  @media (max-width: 768px) {
+    margin-bottom: 0px;
+  }
 }
 .first-background-img {
   @media (min-width: 768px) {
@@ -329,6 +334,7 @@ export default {
 }
 
 .profile-header {
+  margin-bottom: 0px;
   @media (min-width: 768px) {
     position: absolute;
     top: 40%;

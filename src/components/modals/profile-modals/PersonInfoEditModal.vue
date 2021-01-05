@@ -36,9 +36,10 @@
         <span class="input-error" slot="error" v-if="$v.developer.information.$dirty && !$v.developer.information.alphaLetterValidation">Description can only contain letters</span>
         <span class="input-error" slot="error" v-if="$v.developer.information.$dirty && !$v.developer.information.required">Description is required</span>
       </d-input>
+      <d-error :error="error"></d-error>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Save</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)" :disabled="isDisabled">Save<d-spinner :isLoading="isLoading" buttonSpinner /></d-button>
       <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
@@ -58,7 +59,9 @@ export default {
   },
   data() {
     return {
-      developer: {}
+      developer: {},
+      isLoading: false,
+      error: {}
     };
   },
   validations: {
@@ -87,12 +90,18 @@ export default {
     closeModal(val) {
       if (this.close) {
         if (val) {
+          this.isLoading = true;
           this.updateDeveloper(this.developer)
             .then(() => {
+              this.error = {};
               this.close();
             })
             .catch((err) => {
+              this.error = err.response.data;
               console.error(err);
+            })
+            .finally(() => {
+              this.isLoading = false;
             });
         } else {
           this.close();
