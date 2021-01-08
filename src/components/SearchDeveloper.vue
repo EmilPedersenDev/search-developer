@@ -1,11 +1,18 @@
 <template>
   <div class="search-wrapper">
     <h3>Search developer in <span></span></h3>
-    <multi-select :filteredItems="filteredDevelopers" @input="searchDeveloper" :selectItem="addDeveloper" :searchAllDevelopers="allDevelopers" :lengthToDisplayDropdown="2">
+    <multi-select
+      :filteredItems="filteredDevelopers"
+      @input="searchDeveloper"
+      :selectItem="addDeveloper"
+      :searchAllDevelopers="allDevelopers"
+      :lengthToDisplayDropdown="1"
+      dropdownSize="large"
+    >
       <template slot="dropdown-content" slot-scope="{ item }">
         <div class="developer-search-profile">
           <div class="profile-image col-2">
-            <img src="user.svg" alt="" />
+            <img src="male-avatar.svg" alt="" />
           </div>
           <div class="profile-name col-10">
             <p>{{ item.firstname + ' ' + item.lastname }}</p>

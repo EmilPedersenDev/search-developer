@@ -14,7 +14,7 @@
     ></d-search-input>
     <transition name="developer-search-dropdown-transition">
       <div v-if="displayDropdownActive" class="px-md-3 developer-search-dropdown-box">
-        <ul class="dropdown-content-container" ref="dropdownContent">
+        <ul class="dropdown-content-container" :class="dropdownSize" ref="dropdownContent">
           <li v-for="(item, index) in filteredItems" :key="index" @click.stop="onSelectItem(item)" @keyup.enter.stop="onSelectItem(item)" tabindex="0">
             <div class="dropdown-content-wrapper">
               <slot name="dropdown-content" :item="item"></slot>
@@ -57,6 +57,10 @@ export default {
     },
     lengthToDisplayDropdown: {
       type: Number
+    },
+    dropdownSize: {
+      type: String,
+      default: 'sm'
     }
   },
   methods: {
@@ -119,6 +123,24 @@ export default {
   ul {
     padding: 0;
     margin: 0;
+    overflow-y: auto;
+    &.sm {
+      max-height: 100px;
+    }
+    &.large {
+      max-height: 200px;
+    }
+    &::-webkit-scrollbar {
+      width: 6px;
+      background-color: #f5f5f5;
+    }
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(23, 25, 65, 0.3);
+      background-color: #282c68;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+    }
     li {
       list-style-type: none;
       transition: all 0.15s ease-in-out;

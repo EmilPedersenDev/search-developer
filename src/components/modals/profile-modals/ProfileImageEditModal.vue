@@ -83,7 +83,7 @@ export default {
         this.file = files[0];
 
         if (this.file.size > this.maxSize) {
-          this.imageSizeError.message = 'Filen är för stor, får inte överstiga 1MB';
+          this.imageSizeError.message = 'The file is too big, cannot exceed 1MB';
           this.imageSizeError.hasError = true;
         }
 
