@@ -5,6 +5,7 @@
     <h4 class="account-sub-title">Change Password</h4>
     <div class="password-wrapper">
       <d-input
+        id="password"
         type="password"
         name="password"
         v-model="model.password"
@@ -18,6 +19,7 @@
         <span class="input-error" slot="error" v-if="$v.model.password.$dirty && !$v.model.password.minLength">Password need to contain 8 characters</span>
       </d-input>
       <d-input
+        id="confirmPassword"
         type="password"
         name="password"
         v-model="model.confirmPassword"

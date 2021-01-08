@@ -12,31 +12,45 @@
             <d-button edit no-border @click="openProjectEditModal(null)" v-if="isAuthenticatedUser">Add Project</d-button>
           </div>
 
-          <div class="projects-grid">
+          <div class="projects-grid" v-if="projects.length > 0">
             <div class="project-card" v-for="(project, id) in projects" :key="id">
-              <a :href="project.link" target="_blank">
-                <div class="project-body">
-                  <img :src="project.imgLink" alt="Project image background" />
-                  <div class="card-overlay">
-                    <div class="card-overlay-text">
-                      <p>{{ project.description }}</p>
-                      <d-button noBorder @click.prevent="goToLink(project.repoLink)">
-                        <i class="fab fa-github"></i>
-                      </d-button>
-                    </div>
-                  </div>
-                </div>
-                <div class="project-name">
+              <div class="project-card-inner">
+                <div class="flip-card-front">
                   <h1>{{ project.name }}</h1>
-                  <div class="edit-project-wrapper" v-if="isAuthenticatedUser">
-                    <d-button noBorder @click.prevent="openProjectEditModal(project.id)"> <i class="fas fa-pen"></i> </d-button>
-                    <span>|</span>
-                    <d-button noBorder @click.prevent="openDeleteProjectModal(project.id)">
+                </div>
+                <div class="flip-card-back">
+                  <div class="card-back-header">
+                    <d-button noBorder @click.prevent="openProjectEditModal(project.id)" v-if="isAuthenticatedUser"> <i class="fas fa-pen"></i> </d-button>
+                    <span class="seperator" v-if="isAuthenticatedUser">|</span>
+                    <d-button noBorder error @click.prevent="openDeleteProjectModal(project.id)" v-if="isAuthenticatedUser">
                       <i class="fas fa-trash"></i>
                     </d-button>
                   </div>
+
+                  <div class="card-back-body">
+                    <div class="inner-body-wrapper">
+                      <p class="d-none d-sm-flex">{{ project.description }}</p>
+                      <h1 class="d-sm-none" style="text-align: center">{{ project.name }}</h1>
+                    </div>
+                  </div>
+
+                  <div class="card-back-footer">
+                    <a :href="project.link" target="_blank">
+                      <d-button noBorder>Go to Demo </d-button>
+                    </a>
+
+                    <d-button class="repo-btn" noBorder @click.prevent="goToLink(project.repoLink)">
+                      <i class="fab fa-github"></i>
+                    </d-button>
+                  </div>
                 </div>
-              </a>
+              </div>
+            </div>
+          </div>
+          <div class="row empty-wrapper" v-else>
+            <div class="col-12">
+              <img src="empty-box.svg" alt="" />
+              <h1>Looks pretty empty</h1>
             </div>
           </div>
         </div>
@@ -128,6 +142,7 @@ export default {
           console.error(err);
         });
     },
+
     goToLink(link) {
       window.open(link, '_blank');
     }
@@ -136,169 +151,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/colors';
-.projects {
-  position: relative;
-  .third-background-img {
-    @media (min-width: 768px) {
-      opacity: 0.02;
-    }
-    position: absolute;
-    opacity: 0;
-    width: 80%;
-    left: -20%;
-    top: 15%;
-  }
-  .container {
-    .projects-wrapper {
-      width: 100%;
-
-      .text-on-front {
-        position: absolute;
-        font-size: 30px;
-        bottom: 16%;
-        @media (min-width: 768px) {
-          font-size: 40px;
-          left: 10%;
-        }
-        left: 11%;
-      }
-
-      .edit-button {
-        margin: 0px 0px 30px;
-      }
-
-      .projects-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        @media (min-width: 768px) {
-          grid-template-columns: repeat(2, 1fr);
-          grid-auto-rows: 400px;
-        }
-        gap: 20px;
-        .project-card {
-          width: 100%;
-          height: 100%;
-          transition: all 0.4s ease-in-out;
-
-          .project-body {
-            position: relative;
-            height: 80%;
-
-            img {
-              object-fit: cover;
-              max-height: 100%;
-              height: 100%;
-              width: 100%;
-            }
-            h1,
-            span {
-              position: absolute;
-            }
-
-            .card-overlay {
-              position: absolute;
-              top: 0;
-              left: 0;
-              background: linear-gradient(to bottom, transparent 0%, black 100%);
-              opacity: 0;
-              width: 100%;
-              height: 100%;
-              transition: all 0.4s ease-in-out;
-              .card-overlay-text {
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 10px;
-                p {
-                  margin: 0;
-                  flex: 0 0 80%;
-                  color: $white;
-                }
-                .button-wrapper {
-                  position: relative;
-                  flex: 0 0 20%;
-                  align-self: flex-end;
-                  text-align: right;
-                  bottom: 0;
-                }
-              }
-            }
-          }
-
-          .project-name {
-            display: flex;
-            margin-top: 5px;
-            h1 {
-              transition: all 0.3s ease-in-out;
-              margin: 0;
-              @media (max-width: 768px) {
-                flex: 1 1 75%;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-                font-size: 24px;
-              }
-            }
-            .edit-project-wrapper {
-              margin-left: auto;
-              @media (max-width: 768px) {
-                flex: 1 1 25%;
-                text-align: right;
-              }
-              span,
-              .d-button {
-                @media (min-width: 768px) {
-                  opacity: 0;
-                }
-              }
-              span {
-                transition: all 0.3s ease-in-out;
-                margin: 0px 10px;
-                font-size: 25px;
-                font-weight: 200;
-              }
-              .d-button {
-                &:first-child {
-                  margin-right: 0;
-                }
-                &:last-child {
-                  margin-right: 10px;
-                  color: $error;
-                  &:hover {
-                    color: $error-hover;
-                  }
-                }
-              }
-            }
-          }
-          &:hover {
-            cursor: pointer;
-            .card-overlay {
-              opacity: 1;
-            }
-            .project-name {
-              h1 {
-                color: $primary;
-              }
-              .d-button {
-                opacity: 1;
-              }
-              span {
-                opacity: 1;
-              }
-            }
-          }
-        }
-      }
-
-      button {
-        position: relative;
-      }
-    }
-  }
-}
+@import '@/assets/scss/projects';
 </style>

@@ -32,6 +32,10 @@ export default {
       type: Boolean,
       default: false
     },
+    error: {
+      type: Boolean,
+      default: false
+    },
     type: {
       type: String,
       default: 'button',
@@ -55,7 +59,8 @@ export default {
         this.round && 'round',
         this.noBorder && 'no-border',
         this.edit && 'edit',
-        this.transition && 'transition'
+        this.transition && 'transition',
+        this.error && 'error'
       ];
     }
   }
@@ -131,6 +136,14 @@ export default {
       cursor: pointer;
       color: $secondary;
       transform: none;
+    }
+
+    &.error {
+      &:hover:not(:disabled) {
+        cursor: pointer;
+        color: $error;
+        transform: none;
+      }
     }
   }
   &.edit {

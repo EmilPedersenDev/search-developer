@@ -1,7 +1,7 @@
 <template>
   <div class="error-container" v-if="Object.keys(error).length !== 0">
     <div class="error-wrapper" :class="{ noBackground: noBackground }">
-      <p>{{ error.message }} <i class="fas fa-exclamation"></i></p>
+      <p><i class="fas fa-exclamation-triangle"></i>{{ error.message }}</p>
     </div>
   </div>
 </template>
@@ -26,16 +26,15 @@ export default {
 .error-container {
   width: 100%;
   .error-wrapper {
-    margin: 20px 0px;
+    margin: 8px 0px;
     background: transparent;
-    border: 1px solid $error;
-    border-radius: 5px;
+    text-align: left;
+
     p {
-      padding: 5px 10px;
       color: $error;
       .fas {
-        float: right;
         padding-top: 3px;
+        margin-right: 8px;
       }
     }
 
@@ -48,10 +47,7 @@ export default {
       margin-top: 5px;
       p {
         padding: 0px;
-        color: $error-hover;
-        .fas {
-          display: none;
-        }
+        color: $error;
       }
     }
   }

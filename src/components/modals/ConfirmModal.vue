@@ -4,8 +4,10 @@
       <h1>{{ message }}</h1>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
-      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)">Confirm <d-spinner :isLoading="isLoading" buttonSpinner></d-spinner> </d-button>
-      <d-button class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
+      <d-button class="col-4 col-sm-3" secondary @click="closeModal(true)"
+        >{{ noOptions ? 'Ok' : 'Confirm' }} <d-spinner :isLoading="isLoading" buttonSpinner></d-spinner>
+      </d-button>
+      <d-button v-if="!noOptions" class="col-4 col-sm-3" @click="closeModal(false)">Cancel</d-button>
     </div>
   </d-modal>
 </template>
@@ -22,6 +24,10 @@ export default {
       default: ''
     },
     isLoading: {
+      type: Boolean,
+      default: false
+    },
+    noOptions: {
       type: Boolean,
       default: false
     }

@@ -29,7 +29,10 @@
           </template>
           <template v-if="items.length < 1">
             <tr>
-              <td colspan="5"><h4>No Items</h4></td>
+              <td colspan="5">
+                <img class="empty-img" src="work-remote.svg" alt="" />
+                <h4>Nothing to show here</h4>
+              </td>
             </tr>
           </template>
         </tbody>
@@ -48,13 +51,19 @@
           </div>
         </div>
       </div>
+      <div class="row empty-wrapper" v-if="items.length < 1">
+        <div class="col-12">
+          <img class="empty-img" src="work-remote.svg" alt="" />
+          <h1>Looks pretty empty</h1>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'd-table-new',
+  name: 'experience-table',
   props: {
     items: {
       type: Array,
@@ -97,6 +106,7 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/colors.scss';
 .table-custom-container {
+  margin-top: 20px;
   .desktop-table {
     display: none;
     @media (min-width: 768px) {
@@ -108,6 +118,9 @@ export default {
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      border-radius: 5px;
+
       tr {
         border-bottom: 0.0625rem solid $primary;
         transition: all 0.3s ease-in-out;
@@ -177,7 +190,7 @@ export default {
 
     .mobile-item {
       background: #1f2251;
-      box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.17);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
       padding: 15px 0px;
       border-radius: 0.2857rem;
       margin-bottom: 10px;
@@ -187,5 +200,14 @@ export default {
       }
     }
   }
+}
+h4 {
+  margin-top: 10px;
+}
+.empty-img {
+  height: 100px;
+}
+.empty-wrapper {
+  text-align: center;
 }
 </style>

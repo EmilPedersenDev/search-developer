@@ -2,23 +2,28 @@
   <div class="login-wrapper">
     <form @submit.prevent="submit" autocomplete="on">
       <div class="sign-in-header">
-        <h1>Sign in With</h1>
-        <div class="social-sign-ins">
-          <d-button>
-            <i class="fab fa-google"></i>
-          </d-button>
-          <d-button>
-            <i class="fab fa-github"></i>
-          </d-button>
+        <h1>Sign in</h1>
+        <div class="welcome-wrapper">
+          <img src="lock.svg" alt="" />
         </div>
-        <p>Or sign in with credentials</p>
       </div>
       <div class="sign-in-body">
-        <d-input type="email" name="email" v-model="model.email" label="Email" autocomplete="email" required :invalid="$v.model.email.$error" :blur="$v.model.email.$touch">
+        <d-input
+          id="email"
+          type="email"
+          name="email"
+          v-model="model.email"
+          label="Email"
+          autocomplete="email"
+          required
+          :invalid="$v.model.email.$error"
+          :blur="$v.model.email.$touch"
+        >
           <span class="input-error" slot="error" v-if="$v.model.email.$dirty && !$v.model.email.email">Not a valid email</span>
           <span class="input-error" slot="error" v-if="$v.model.email.$dirty && !$v.model.email.required">Email is required</span>
         </d-input>
         <d-input
+          id="password"
           type="password"
           name="password"
           v-model="model.password"
@@ -127,15 +132,11 @@ export default {
     font-weight: 300;
   }
 
-  .social-sign-ins {
+  .welcome-wrapper {
     margin: 20px 0px;
-    .d-button {
-      &:first-child {
-        margin-right: 5px;
-      }
-      i {
-        color: $secondary;
-      }
+    height: 100px;
+    img {
+      height: 100%;
     }
   }
 }

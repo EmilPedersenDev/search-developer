@@ -64,7 +64,6 @@ export default {
       this.active = true;
     },
     deActivate(e) {
-      console.log(e.relatedTarget);
       if (!e.relatedTarget || !e.relatedTarget.parentElement.classList.contains('dropdown-content-container')) {
         this.active = false;
       }
@@ -117,8 +116,6 @@ export default {
   z-index: 1001;
   background: $background;
 
-  &:focus {
-  }
   ul {
     padding: 0;
     margin: 0;

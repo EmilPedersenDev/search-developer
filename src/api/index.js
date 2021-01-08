@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LOGOUT } from '../store/actions/authentication-actions';
+import { LOGOUT, SET_LOGOUT_CONFIRM_MODAL } from '../store/actions/authentication-actions';
 import store from '../store/index';
 
 let axiosInstance = axios.create({
@@ -24,7 +24,14 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (err) => {
-    // store.dispatch(LOGOUT);
+    if (err.response.status === 403) {
+      return new Promise((res, rej) => {
+        store.dispatch(LOGOUT).then(() => {
+          store.commit(SET_LOGOUT_CONFIRM_MODAL, true);
+          rej(err);
+        });
+      });
+    }
     return Promise.reject(err);
   }
 );

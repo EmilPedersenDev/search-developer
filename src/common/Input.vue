@@ -38,7 +38,7 @@ export default {
     },
     id: {
       type: String,
-      default: 'id'
+      default: ''
     },
     input: {
       type: Function

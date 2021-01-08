@@ -1,9 +1,23 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+// import stor from 'module';
 
 Vue.use(VueRouter);
 
+const ifAuthenticated = (to, from, next) => {
+  const token = localStorage.getItem('jwt');
+  if (!token) {
+    next('/');
+    return;
+  }
+  next();
+};
+
 const routes = [
+  {
+    path: '*',
+    redirect: '/'
+  },
   {
     path: '/',
     name: 'home',
@@ -42,21 +56,10 @@ const routes = [
     ]
   },
   {
-    path: '/create-profile',
-    name: 'create-profile',
-    component: () => import('../views/CreateProfile.vue'),
-    children: [
-      {
-        path: '',
-        name: 'personal-info',
-        component: () => import('../components/profile/PersonalInformation.vue')
-      }
-    ]
-  },
-  {
     path: '/account',
     name: 'account',
     component: () => import('../views/Account.vue'),
+    beforeEnter: ifAuthenticated,
     children: [
       {
         path: 'change-name',

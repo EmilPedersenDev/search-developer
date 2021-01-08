@@ -5,6 +5,7 @@
     <h4 class="account-sub-title">Change Name</h4>
     <div class="name-wrapper">
       <d-input
+        id="given-name"
         name="given-name"
         class="name firstName"
         v-model="model.firstname"
@@ -17,6 +18,7 @@
         <span class="input-error" slot="error" v-if="$v.model.firstname.$dirty && !$v.model.firstname.required">First name required</span>
       </d-input>
       <d-input
+        id="family-name"
         name="family-name"
         class="name lastName"
         v-model="model.lastname"

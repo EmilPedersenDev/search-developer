@@ -4,7 +4,17 @@
 
     <h4 class="account-sub-title">Change Email</h4>
     <div class="row">
-      <d-input type="email" name="email" v-model="model.email" label="Email" autocomplete="email" required :invalid="$v.model.email.$error" :blur="$v.model.email.$touch">
+      <d-input
+        id="email"
+        type="email"
+        name="email"
+        v-model="model.email"
+        label="Email"
+        autocomplete="email"
+        required
+        :invalid="$v.model.email.$error"
+        :blur="$v.model.email.$touch"
+      >
         <span class="input-error" slot="error" v-if="$v.model.email.$dirty && !$v.model.email.email">Not a valid email</span>
         <span class="input-error" slot="error" v-if="$v.model.email.$dirty && !$v.model.email.required">Email is required</span>
       </d-input>

@@ -24,18 +24,7 @@
       </div>
       <d-input label="LinkedIn" id="linkedin" v-model="developer.socialLink.linkedIn">LinkedIn</d-input>
       <d-input label="Github" id="github" v-model="developer.socialLink.github">Github</d-input>
-      <d-input
-        class="name"
-        id="description"
-        label="Description"
-        required
-        v-model="developer.information"
-        :invalid="$v.developer.information.$error"
-        :blur="$v.developer.information.$touch"
-      >
-        <span class="input-error" slot="error" v-if="$v.developer.information.$dirty && !$v.developer.information.alphaLetterValidation">Description can only contain letters</span>
-        <span class="input-error" slot="error" v-if="$v.developer.information.$dirty && !$v.developer.information.required">Description is required</span>
-      </d-input>
+      <d-input class="name" id="description" label="Description" v-model="developer.information"> </d-input>
       <d-error :error="error"></d-error>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">
@@ -71,10 +60,6 @@ export default {
         alphaLetterValidation
       },
       lastname: {
-        required,
-        alphaLetterValidation
-      },
-      information: {
         required,
         alphaLetterValidation
       }
