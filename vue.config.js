@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '<My_REPO>' : '/'
+  publicPath: process.env.NODE_ENV === 'production' ? '/search-developer-fe/' : '/'
 };
