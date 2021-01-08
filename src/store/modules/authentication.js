@@ -1,11 +1,20 @@
-import { LOGIN, SET_TOKEN, IS_AUTHENTICATED, IS_AUTHENTICATED_USER, LOGOUT } from '../actions/authentication-actions';
+import {
+  LOGIN,
+  SET_TOKEN,
+  IS_AUTHENTICATED,
+  IS_AUTHENTICATED_USER,
+  LOGOUT,
+  SET_LOGOUT_CONFIRM_MODAL,
+  SHOW_LOGOUT_MODAL
+} from '../actions/authentication-actions';
 import { SET_USER } from '../actions/user-actions';
 import { GET_DEVELOPER } from '../actions/developer-actions';
 import api from '../../api/index';
 import jwtDecode from 'vue-jwt-decode';
 
 const state = {
-  token: localStorage.getItem('jwt') || ''
+  token: localStorage.getItem('jwt') || '',
+  showlogoutConfirmModal: false
 };
 
 const actions = {
@@ -35,6 +44,9 @@ const mutations = {
       await localStorage.setItem('jwt', payload);
     }
     state.token = payload;
+  },
+  [SET_LOGOUT_CONFIRM_MODAL]: (state, payload) => {
+    state.showlogoutConfirmModal = payload;
   }
 };
 
@@ -50,6 +62,9 @@ const getters = {
     if (!decodedToken) return false;
 
     return decodedToken.id === rootState.developer.developer.id;
+  },
+  [SHOW_LOGOUT_MODAL]: (state) => {
+    return state.showlogoutConfirmModal;
   }
 };
 

@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import CreateAccount from '../components/CreateAccount';
 import model from '../services/model/models.js';
 
 export default {
@@ -28,9 +27,6 @@ export default {
     return {
       model: model.registerModel
     };
-  },
-  components: {
-    CreateAccount
   }
 };
 </script>

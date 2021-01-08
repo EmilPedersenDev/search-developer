@@ -4,20 +4,30 @@
     <transition name="fade" mode="out-in">
       <router-view v-if="isLoaded" />
     </transition>
+    <transition name="modal-fade">
+      <confirm-modal v-if="showLogoutModal" :close="closeLogoutConfirmModal" :message="logoutMessage" noOptions></confirm-modal>
+    </transition>
   </div>
 </template>
 
 <script>
 import AppNavigation from './components/AppNavigation';
-import { mapGetters, mapActions } from 'vuex';
-import { IS_AUTHENTICATED } from './store/actions/authentication-actions';
+import { mapGetters, mapMutations } from 'vuex';
+import { IS_AUTHENTICATED, SHOW_LOGOUT_MODAL, SET_LOGOUT_CONFIRM_MODAL } from './store/actions/authentication-actions';
 import { GET_USER } from './store/actions/user-actions';
 import { GET_SKILLS } from './store/actions/skills-actions';
 import { LOAD_DEPENDENCIES, IS_LOADED } from './store';
+import confirmModal from './components/modals/ConfirmModal';
 export default {
   name: 'App',
   components: {
-    AppNavigation
+    AppNavigation,
+    confirmModal
+  },
+  data() {
+    return {
+      logoutMessage: 'Sorry, your session is up. Please login again.'
+    };
   },
   created() {
     this.$store.dispatch(LOAD_DEPENDENCIES);
@@ -29,8 +39,18 @@ export default {
   computed: {
     ...mapGetters({
       isAuthenticated: IS_AUTHENTICATED,
-      isLoaded: IS_LOADED
+      isLoaded: IS_LOADED,
+      showLogoutModal: SHOW_LOGOUT_MODAL
     })
+  },
+  methods: {
+    ...mapMutations({
+      setLogoutConfirmModal: SET_LOGOUT_CONFIRM_MODAL
+    }),
+    closeLogoutConfirmModal() {
+      this.setLogoutConfirmModal(false);
+      this.$router.push('/authentication/login');
+    }
   }
 };
 </script>

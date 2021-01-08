@@ -12,7 +12,7 @@
         </template>
       </multi-select>
       <d-error :error="error" noBackground></d-error>
-      <skills canRemove :removeDeveloperSkill="removeSkill" :developerSkills="tempDeveloperSkills" />
+      <skills canRemove modalView :removeDeveloperSkill="removeSkill" :developerSkills="tempDeveloperSkills" />
       <d-error :error="submitError"></d-error>
     </div>
     <div slot="modal-footer" class="modal-custom-footer">

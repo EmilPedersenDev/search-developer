@@ -9,11 +9,11 @@
           <div class="account-info" v-if="$route.name === 'account'">
             <h1>User</h1>
             <div class="name-wrapper">
-              <d-input class="name firstName" disabled v-model="user.firstname" label="First name" />
+              <d-input id="firstname" class="name firstName" disabled v-model="user.firstname" label="First name" />
               <d-input class="name lastName" disabled v-model="user.lastname" label="Last name" />
             </div>
             <div class="email-wrapper">
-              <d-input v-model="user.email" disabled label="Email"> </d-input>
+              <d-input id="email" v-model="user.email" disabled label="Email"> </d-input>
             </div>
           </div>
           <router-view v-else></router-view>

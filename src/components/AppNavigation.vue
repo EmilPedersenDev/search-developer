@@ -48,8 +48,9 @@
         </ul>
       </div>
     </div>
-
-    <logout-modal v-if="showLogoutModal" :close="onCloseLogoutModal"></logout-modal>
+    <transition name="modal-fade">
+      <logout-modal v-if="showLogoutModal" :close="onCloseLogoutModal"></logout-modal>
+    </transition>
   </nav>
 </template>
 

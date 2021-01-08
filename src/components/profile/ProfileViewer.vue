@@ -13,10 +13,12 @@
             <div class="row">
               <div class="col-md-6 col-lg-6 profile-info">
                 <d-button class="edit-personal-btn" noBorder @click="openPersonalEditModal" v-if="isAuthenticatedUser"><i class="fas fa-pen"></i></d-button>
-                <h1 class="text-on-back">01</h1>
-                <h2 class="text-on-front">
-                  {{ developer.firstname }} <span class="d-none d-md-inline"> {{ developer.lastname }} </span>
-                </h2>
+                <div class="header-text-wrapper">
+                  <h1 class="text-on-back">01</h1>
+                  <h2 class="text-on-front" :class="{ adjust: skills.length < 1 }">
+                    {{ developer.firstname }} <span class="d-none d-md-inline"> {{ developer.lastname }} </span>
+                  </h2>
+                </div>
                 <p class="user-info-text">
                   {{ developer.information }}
                 </p>
@@ -34,7 +36,6 @@
                     <d-button noBorder @click="openProfileImageEditModal" v-if="isAuthenticatedUser"><i class="fas fa-pen"></i></d-button>
                   </div>
                   <div class="card-body">
-                    <h2>Skills</h2>
                     <skills :developerSkills="skills" />
                   </div>
                   <d-button class="edit-skills-btn" edit no-border @click="openSkillEditModal" v-if="isAuthenticatedUser">Edit Skills</d-button>
@@ -51,13 +52,13 @@
             </div>
             <div class="card-body-table">
               <d-button class="table-edit-button" no-border @click="openExperienceEditModal(null)" v-if="isAuthenticatedUser">Add Experience</d-button>
-              <d-table-new :itemKeys="experienceFields" :mobileItemKeys="experienceMobileFields" :items="experiences" useToggle>
+              <experience-table :itemKeys="experienceFields" :mobileItemKeys="experienceMobileFields" :items="experiences" useToggle>
                 <d-button slot="edit" slot-scope="{ item }" @click.stop="openExperienceEditModal(item.id)" noBorder v-if="isAuthenticatedUser"><i class="fas fa-pen"></i></d-button>
                 <d-button class="delete-btn" slot="delete" slot-scope="{ item }" @click.stop="openDeleteExperienceModal(item.id)" noBorder v-if="isAuthenticatedUser"
                   ><i class="fas fa-trash"></i
                 ></d-button>
                 <span slot="description" slot-scope="{ item }">{{ item.description }}</span>
-              </d-table-new>
+              </experience-table>
             </div>
           </div>
         </section>
@@ -109,9 +110,9 @@ import ProfileImageEditModal from '../modals/profile-modals/ProfileImageEditModa
 import ConfirmModal from '../modals/ConfirmModal';
 import Skills from '../skills/Skills';
 import api from '../../api/index';
-import Button from '../../common/Button.vue';
+import ExperienceTable from '../ExperienceTable';
 export default {
-  components: { Button, PersonalEditModal, SkillEditModal, ExperienceEditModal, ConfirmModal, Skills, Projects, ProfileImageEditModal },
+  components: { PersonalEditModal, SkillEditModal, ExperienceEditModal, ConfirmModal, Skills, Projects, ProfileImageEditModal, ExperienceTable },
   name: 'profile-viewer',
   props: {
     id: {
@@ -275,218 +276,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/colors.scss';
-
-.loading-overlay {
-  height: 100vh;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  .overlay-wrapper {
-    position: relative;
-    height: inherit;
-    width: inherit;
-  }
-}
-
-.profile-viewer {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.page-header {
-  position: relative;
-  @media (max-width: 768px) {
-    margin-bottom: 0px;
-  }
-}
-.first-background-img {
-  @media (min-width: 768px) {
-    opacity: 0.02;
-  }
-  position: absolute;
-  opacity: 0;
-  max-width: 65%;
-  width: 65%;
-  right: 3%;
-  top: 10%;
-}
-
-.text-on-back {
-  position: relative;
-  font-size: 140px;
-  line-height: 1.4em;
-  margin-bottom: 15px;
-  color: hsla(0, 0%, 100%, 0.2) !important;
-  font-weight: 900;
-  @media (max-width: 576px) {
-    font-size: 100px;
-  }
-}
-.text-on-front {
-  position: absolute;
-  font-size: 40px;
-  @media (max-width: 576px) {
-    font-size: 30px;
-  }
-}
-
-.profile-header {
-  margin-bottom: 0px;
-  @media (min-width: 768px) {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -40%);
-  }
-  .profile-info {
-    position: relative;
-    @media (max-width: 768px) {
-      margin-bottom: 150px;
-    }
-    .edit-personal-btn {
-      position: absolute;
-      top: 8%;
-      z-index: 9997;
-    }
-    .text-on-front {
-      @media (min-width: 768px) {
-        top: 27%;
-        left: 10%;
-      }
-      top: 38%;
-      left: 11%;
-    }
-    .user-info-text {
-      margin-top: -40px;
-      margin-bottom: 20px;
-      color: hsla(0, 0%, 100%, 0.7) !important;
-      max-width: 450px;
-      line-height: 1.8;
-      font-size: 16px;
-    }
-
-    .social-sign-ins {
-      button {
-        &.linked-in {
-          background-color: #0e76a8;
-          border-color: #0e76a8;
-        }
-        &.github {
-          background-color: #fff;
-          border-color: #fff;
-          color: #000;
-        }
-        &:first-child {
-          margin-right: 10px;
-        }
-      }
-    }
-  }
-}
-
-.profile-card {
-  margin-left: auto;
-  @media (max-width: 768px) {
-    margin-bottom: 50px;
-  }
-  .card {
-    width: 100%;
-    height: 400px;
-    border: 2px solid #344675;
-    border-radius: 5px;
-    background: transparent;
-    .card-img-header {
-      position: relative;
-      margin: -100px auto 20px auto;
-      text-align: center;
-      padding: 20px;
-      height: 200px;
-      max-height: 200px;
-      width: 200px;
-      .profile-image {
-        border-radius: 50%;
-        border: 2px solid #344675;
-        background-color: #171941;
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        width: 100%;
-        height: 100%;
-      }
-
-      .d-button {
-        position: absolute;
-        top: 10%;
-        left: 10%;
-      }
-    }
-    .card-body {
-      .card-body-action {
-        display: flex;
-        justify-content: space-around;
-        button {
-          flex: 0 0 20%;
-        }
-      }
-    }
-
-    .edit-skills-btn {
-      right: 3%;
-      bottom: 1%;
-    }
-  }
-}
-
-#experience {
-  .text-on-front {
-    @media (min-width: 768px) {
-      bottom: 16%;
-      left: 10%;
-    }
-    bottom: 15%;
-    left: 11%;
-  }
-  .delete-btn {
-    color: $error;
-    &:hover {
-      color: $error-hover;
-    }
-  }
-}
-#experience,
-#projects,
-#contact {
-  @media (min-width: 768px) {
-    margin-bottom: 200px;
-  }
-  margin-bottom: 50px;
-}
-
-.table-edit-button {
-  margin-bottom: 8px;
-}
-
-#save-button {
-  position: fixed;
-  text-align: right;
-  background: #fff;
-  bottom: 0;
-  height: 0px;
-  transition: all 0.6s ease;
-  width: 100%;
-
-  visibility: hidden;
-
-  &.save-button-visible {
-    height: 60px;
-    visibility: visible;
-  }
-  .d-button {
-    margin-right: 20px;
-    margin-top: 12px;
-  }
-}
+@import '@/assets/scss/profile-viewer.scss';
 </style>

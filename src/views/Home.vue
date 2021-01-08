@@ -24,12 +24,6 @@ import LandingInfoText from '../components/LandingInfoText.vue';
 
 export default {
   name: 'Home',
-  data() {
-    return {};
-  },
-  mounted() {
-    console.log('Mounted');
-  },
   components: {
     SearchDeveloper,
     LandingInfoText
@@ -44,7 +38,6 @@ export default {
 
   .page-header {
     min-height: 100vh;
-    // max-height: 999px;
     padding: 0;
     color: #fff;
     @media (min-width: 768px) {

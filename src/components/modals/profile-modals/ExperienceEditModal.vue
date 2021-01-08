@@ -5,14 +5,14 @@
     </div>
     <div slot="modal-body" class="modal-custom-body">
       <div class="row">
-        <d-input class="col-8" required label="Company" v-model="experience.company" :invalid="$v.experience.company.$error" :blur="$v.experience.company.$touch">
+        <d-input id="company" class="col-8" required label="Company" v-model="experience.company" :invalid="$v.experience.company.$error" :blur="$v.experience.company.$touch">
           <span class="input-error" slot="error" v-if="$v.experience.company.$dirty && !$v.experience.company.alphaLetterValidation">Company can only contain letters</span>
           <span class="input-error" slot="error" v-if="$v.experience.company.$dirty && !$v.experience.company.required">Company is required</span>
         </d-input>
         <d-date-select class="col-4" v-model="experience.date" :validation="$v.experience.date" v-on:dateInputTouch="$v.experience.date.$touch"></d-date-select>
       </div>
       <div class="row">
-        <d-input label="Title" required v-model="experience.title" :invalid="$v.experience.title.$error" :blur="$v.experience.title.$touch">
+        <d-input id="title" label="Title" required v-model="experience.title" :invalid="$v.experience.title.$error" :blur="$v.experience.title.$touch">
           <span class="input-error" slot="error" v-if="$v.experience.title.$dirty && !$v.experience.title.alphaLetterValidation">Title can only contain letters</span>
           <span class="input-error" slot="error" v-if="$v.experience.title.$dirty && !$v.experience.title.required">Title is required</span>
         </d-input>
