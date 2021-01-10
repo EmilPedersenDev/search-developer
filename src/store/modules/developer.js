@@ -36,7 +36,7 @@ const actions = {
     });
   },
   [SET_DEVELOPER]: ({ commit }, developer) => {
-    api.put(`developer/${developer.id}`, developer).then((result) => {
+    return api.put(`developer/${developer.id}`, developer).then((result) => {
       commit(SET_DEVELOPER, result.data.updatedDeveloper);
     });
   },

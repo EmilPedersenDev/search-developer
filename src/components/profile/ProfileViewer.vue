@@ -52,13 +52,15 @@
             </div>
             <div class="card-body-table">
               <d-button class="table-edit-button" no-border @click="openExperienceEditModal(null)" v-if="isAuthenticatedUser">Add Experience</d-button>
-              <experience-table :itemKeys="experienceFields" :mobileItemKeys="experienceMobileFields" :items="experiences" useToggle>
-                <d-button slot="edit" slot-scope="{ item }" @click.stop="openExperienceEditModal(item.id)" noBorder v-if="isAuthenticatedUser"><i class="fas fa-pen"></i></d-button>
-                <d-button class="delete-btn" slot="delete" slot-scope="{ item }" @click.stop="openDeleteExperienceModal(item.id)" noBorder v-if="isAuthenticatedUser"
-                  ><i class="fas fa-trash"></i
-                ></d-button>
-                <span slot="description" slot-scope="{ item }">{{ item.description }}</span>
-              </experience-table>
+              <experience :items="experiences">
+                <div class="edit-wrapper" slot="edit-slot" slot-scope="{ item }">
+                  <d-button noBorder @click="openExperienceEditModal(item.id)" v-if="isAuthenticatedUser"> <i class="fas fa-pen"></i> </d-button>
+                  <span class="seperator" v-if="isAuthenticatedUser">|</span>
+                  <d-button noBorder error @click.prevent="openDeleteExperienceModal(item.id)" v-if="isAuthenticatedUser">
+                    <i class="fas fa-trash"></i>
+                  </d-button>
+                </div>
+              </experience>
             </div>
           </div>
         </section>
@@ -110,9 +112,9 @@ import ProfileImageEditModal from '../modals/profile-modals/ProfileImageEditModa
 import ConfirmModal from '../modals/ConfirmModal';
 import Skills from '../skills/Skills';
 import api from '../../api/index';
-import ExperienceTable from '../ExperienceTable';
+import Experience from './Experience';
 export default {
-  components: { PersonalEditModal, SkillEditModal, ExperienceEditModal, ConfirmModal, Skills, Projects, ProfileImageEditModal, ExperienceTable },
+  components: { PersonalEditModal, SkillEditModal, ExperienceEditModal, ConfirmModal, Skills, Projects, ProfileImageEditModal, Experience },
   name: 'profile-viewer',
   props: {
     id: {
@@ -122,22 +124,6 @@ export default {
   },
   data() {
     return {
-      tableItems: [],
-      experienceFields: [
-        { key: 'company', value: 'Company' },
-        { key: 'title', value: 'Title' },
-        { key: 'date', value: 'Date' }
-      ],
-      experienceMobileFields: [
-        { key: 'company', value: 'Company' },
-        { key: 'title', value: 'Title' },
-        { key: 'date', value: 'Date' },
-        { key: 'description', value: 'Description' }
-      ],
-      experienceFieldsAuthenticated: [
-        { key: 'edit', value: 'Edit' },
-        { key: 'delete', value: 'Delete' }
-      ],
       showPersonalEditModal: false,
       showSkillEditModal: false,
       showExperienceEditModal: false,
@@ -265,6 +251,7 @@ export default {
         });
     },
     goToLink(link) {
+      if (!link) return;
       window.open(link, '_blank');
     },
     setExperienceFields() {

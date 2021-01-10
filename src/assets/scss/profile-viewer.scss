@@ -192,6 +192,22 @@
       color: $error-hover;
     }
   }
+
+  .edit-wrapper {
+    @media (min-width: 768px) {
+      opacity: 0;
+      padding: 10px;
+    }
+    min-height: 60px;
+    text-align: right;
+    padding: 10px 15px 10px;
+    transition: all 0.3s ease;
+    .seperator {
+      margin: 0px 10px;
+      font-size: 25px;
+      font-weight: 200;
+    }
+  }
 }
 #experience,
 #projects,

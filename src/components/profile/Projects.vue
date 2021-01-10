@@ -29,8 +29,8 @@
 
                   <div class="card-back-body">
                     <div class="inner-body-wrapper">
+                      <h1 class="d-md-none" style="text-align: center">{{ project.name }}</h1>
                       <p class="d-none d-sm-flex">{{ project.description }}</p>
-                      <h1 class="d-sm-none" style="text-align: center">{{ project.name }}</h1>
                     </div>
                   </div>
 
