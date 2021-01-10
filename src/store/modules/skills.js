@@ -7,7 +7,7 @@ const state = {
 
 const actions = {
   [GET_SKILLS]: ({ commit }) => {
-    api.get('skills').then((result) => {
+    return api.get('skills').then((result) => {
       commit(SET_SKILLS, result.data.skills);
     });
   },

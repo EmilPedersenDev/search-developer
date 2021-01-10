@@ -10,9 +10,8 @@ const actions = {
   [GET_USER]: ({ commit, getters, dispatch }) => {
     let token = localStorage.getItem('jwt');
     let decodedToken = jwtDecode.decode(token);
-    api.get(`user/${decodedToken.id}`).then((result) => {
+    return api.get(`user/${decodedToken.id}`).then((result) => {
       commit(SET_USER, result.data.user);
-      // dispatch(GET_DEVELOPER, decodedToken.id);
     });
   },
   [UPDATE_USER_NAME]: ({ commit }, user) => {

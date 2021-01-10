@@ -22,10 +22,6 @@ const actions = {
     return api.post('auth/signin', loginModel).then((result) => {
       commit(SET_USER, result.data);
       commit(SET_TOKEN, result.data.accessToken);
-
-      // return Promise.resolve(dispatch(GET_DEVELOPER, result.data.id)).then(() => {
-      //   return result.data;
-      // });
     });
   },
   [LOGOUT]: ({ commit }) => {

@@ -61,20 +61,18 @@ export default {
       this.fetchDevelopers(query);
     },
     fetchDevelopers: _.debounce(function (query) {
-      if (query.length > 2) {
-        api
-          .get(`users?query=${encodeURIComponent(query)}`)
-          .then((result) => {
-            this.error = {};
-            let filteredDevelopers = result.data.users;
-            this.filteredDevelopers = filteredDevelopers.sort((a, b) => b.firstname - a.firstname);
-          })
-          .catch((err) => {
-            this.filteredDevelopers = [];
-            this.error = err.response.data;
-            console.error(err);
-          });
-      }
+      api
+        .get(`users?query=${encodeURIComponent(query)}`)
+        .then((result) => {
+          this.error = {};
+          let filteredDevelopers = result.data.users;
+          this.filteredDevelopers = filteredDevelopers.sort((a, b) => b.firstname - a.firstname);
+        })
+        .catch((err) => {
+          this.filteredDevelopers = [];
+          this.error = err.response.data;
+          console.error(err);
+        });
     }, 200)
   },
   computed: {

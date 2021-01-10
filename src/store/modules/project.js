@@ -12,17 +12,17 @@ const state = {
 
 const actions = {
   [SET_DEVELOPER_PROJECT]: ({ commit }, payload) => {
-    api.post(`developer/${payload.id}/project`, payload.project).then((result) => {
+    return api.post(`developer/${payload.id}/project`, payload.project).then((result) => {
       commit(SET_DEVELOPER_PROJECT, result.data.project);
     });
   },
   [UPDATE_DEVELOPER_PROJECT]: ({ commit }, payload) => {
-    api.put(`developer/${payload.id}/project`, payload.project).then((result) => {
+    return api.put(`developer/${payload.id}/project`, payload.project).then((result) => {
       commit(SET_DEVELOPER_PROJECT, result.data.project);
     });
   },
   [DELETE_DEVELOPER_PROJECT]: ({ commit }, payload) => {
-    api.delete(`developer/${payload.userId}/project/${payload.id}`).then((result) => {
+    return api.delete(`developer/${payload.userId}/project/${payload.id}`).then((result) => {
       commit(SET_DEVELOPER_PROJECT, result.data.project);
     });
   }
