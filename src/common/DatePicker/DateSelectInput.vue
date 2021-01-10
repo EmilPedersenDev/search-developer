@@ -51,7 +51,7 @@ export default {
   filters: {
     dateFormat: function (value) {
       if (value instanceof Date) {
-        return moment(value, 'ddd, DD MMM YYYY HH:mm:ss ZZ').format('D MMMM, YYYY');
+        return moment(value, 'ddd, DD MMM YYYY HH:mm:ss ZZ').format('YYYY');
       } else {
         return value;
       }

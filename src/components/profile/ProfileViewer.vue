@@ -38,7 +38,7 @@
                   <div class="card-body">
                     <skills :developerSkills="skills" />
                   </div>
-                  <d-button class="edit-skills-btn" edit no-border @click="openSkillEditModal" v-if="isAuthenticatedUser">Edit Skills</d-button>
+                  <d-button class="edit-skills-btn" edit no-border @click="openSkillEditModal" v-if="isAuthenticatedUser">{{ skillsEditText }}</d-button>
                 </div>
               </div>
             </div>
@@ -177,6 +177,9 @@ export default {
     },
     setProfileImage() {
       return `background-image: url(${this.profileImage ? this.profileImage : `male-avatar.svg`})`;
+    },
+    skillsEditText() {
+      return this.skills.length < 1 ? 'Add Skills' : 'Edit Skills';
     }
   },
   methods: {
