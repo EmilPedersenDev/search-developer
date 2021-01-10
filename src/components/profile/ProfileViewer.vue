@@ -145,11 +145,7 @@ export default {
       handler(newVal, oldVal) {
         if (newVal !== oldVal) {
           this.setDeveloperStateLoading(true);
-          this.getDeveloper(this.id).then(() => {
-            if (this.isAuthenticated || this.user.id == this.id) {
-              this.setExperienceFields();
-            }
-          });
+          this.getDeveloper(this.id);
         }
       }
     }
@@ -256,10 +252,6 @@ export default {
     goToLink(link) {
       if (!link) return;
       window.open(link, '_blank');
-    },
-    setExperienceFields() {
-      this.experienceFields = [...this.experienceFields, ...this.experienceFieldsAuthenticated];
-      this.experienceMobileFields = [...this.experienceMobileFields, ...this.experienceFieldsAuthenticated];
     }
   }
 };
