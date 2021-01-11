@@ -49,6 +49,7 @@
             <div class="col-md-6">
               <h1 class="text-on-back">02</h1>
               <h2 class="text-on-front" style="">Experience</h2>
+              <d-button @click="sendEmail">Send Email</d-button>
             </div>
             <div class="card-body-table">
               <d-button class="table-edit-button" no-border @click="openExperienceEditModal(null)" v-if="isAuthenticatedUser">Add Experience</d-button>
@@ -186,6 +187,16 @@ export default {
     ...mapMutations({
       setDeveloperStateLoading: SET_DEVELOPER_STATE_LOADING
     }),
+    sendEmail() {
+      api
+        .post('/email')
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     showExperienceView() {
       this.showSkills = false;
       this.showExperience = true;
