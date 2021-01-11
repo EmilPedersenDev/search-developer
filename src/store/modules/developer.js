@@ -58,7 +58,7 @@ const actions = {
 
 const mutations = {
   [SET_DEVELOPER]: (state, payload) => {
-    state.developer = new DeveloperBase(payload.id, payload.firstname, payload.lastname, payload.information, payload.socialLink);
+    state.developer = new DeveloperBase(payload.id, payload.firstname, payload.lastname, payload.information, payload.socialLink, payload.email);
   },
   [SET_DEVELOPER_PROFILE_IMAGE]: (state, payload) => {
     if (!payload) {

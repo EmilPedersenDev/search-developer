@@ -93,9 +93,21 @@ export default {
     font-size: 14px;
     font-weight: bold;
     transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    overflow-y: auto;
     &::placeholder {
       color: hsla(0, 0%, 100%, 0.5);
       font-weight: normal;
+    }
+    &::-webkit-scrollbar {
+      width: 6px;
+      background-color: #f5f5f5;
+    }
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(23, 25, 65, 0.3);
+      background-color: #282c68;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
     }
   }
   textarea:focus {

@@ -1,5 +1,4 @@
 import { SET_USER, GET_USER, UPDATE_USER_NAME, SET_USER_NAME, SET_USER_EMAIL, UPDATE_USER_EMAIL, UPDATE_USER_PASSWORD } from '../actions/user-actions';
-import { GET_DEVELOPER } from '../actions/developer-actions';
 import jwtDecode from 'vue-jwt-decode';
 import api from '../../api/index';
 const state = {

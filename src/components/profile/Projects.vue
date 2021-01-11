@@ -6,7 +6,7 @@
         <div class="projects-wrapper">
           <div class="col-md-6">
             <h1 class="text-on-back">03</h1>
-            <h2 class="text-on-front" style="">Projects</h2>
+            <h2 class="text-on-front">Projects</h2>
           </div>
           <div class="edit-button">
             <d-button edit no-border @click="openProjectEditModal(null)" v-if="isAuthenticatedUser">Add Project</d-button>
@@ -144,6 +144,7 @@ export default {
     },
 
     goToLink(link) {
+      if (!link) return;
       window.open(link, '_blank');
     }
   }

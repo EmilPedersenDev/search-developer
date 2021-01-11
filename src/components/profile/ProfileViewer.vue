@@ -49,7 +49,6 @@
             <div class="col-md-6">
               <h1 class="text-on-back">02</h1>
               <h2 class="text-on-front" style="">Experience</h2>
-              <d-button @click="sendEmail">Send Email</d-button>
             </div>
             <div class="card-body-table">
               <d-button class="table-edit-button" no-border @click="openExperienceEditModal(null)" v-if="isAuthenticatedUser">Add Experience</d-button>
@@ -67,6 +66,9 @@
         </section>
         <section id="projects">
           <projects />
+        </section>
+        <section id="email" v-if="!isAuthenticatedUser">
+          <email />
         </section>
         <transition name="modal-fade">
           <personal-edit-modal v-if="showPersonalEditModal" :close="closePersonalEditModal"></personal-edit-modal>
@@ -112,10 +114,11 @@ import ExperienceEditModal from '../modals/profile-modals/ExperienceEditModal';
 import ProfileImageEditModal from '../modals/profile-modals/ProfileImageEditModal';
 import ConfirmModal from '../modals/ConfirmModal';
 import Skills from '../skills/Skills';
+import Email from '../email/Email';
 import api from '../../api/index';
 import Experience from './Experience';
 export default {
-  components: { PersonalEditModal, SkillEditModal, ExperienceEditModal, ConfirmModal, Skills, Projects, ProfileImageEditModal, Experience },
+  components: { PersonalEditModal, SkillEditModal, ExperienceEditModal, ConfirmModal, Skills, Email, Projects, ProfileImageEditModal, Experience },
   name: 'profile-viewer',
   props: {
     id: {
@@ -187,16 +190,6 @@ export default {
     ...mapMutations({
       setDeveloperStateLoading: SET_DEVELOPER_STATE_LOADING
     }),
-    sendEmail() {
-      api
-        .post('/email')
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
     showExperienceView() {
       this.showSkills = false;
       this.showExperience = true;
