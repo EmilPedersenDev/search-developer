@@ -26,11 +26,9 @@ npm run lint
 ```
 
 ### Live at
-```
 https://emilpedersendev.github.io/search-developer-fe/#/
-````
+
 
 ### Backend repo at
-```
 https://github.com/EmilPedersenDev/search-developer-be
-````
+
