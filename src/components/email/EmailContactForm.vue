@@ -49,14 +49,14 @@
         </div>
         <d-error :error="error"></d-error>
         <div class="row button-wrapper">
-          <d-button class="col-5 col-sm-3" secondary @click="sendEmail" :disabled="$v.$invalid">Send Email</d-button>
+          <d-button class="col-5 col-sm-3" secondary @click="sendEmail" :disabled="$v.$invalid">Send Message</d-button>
         </div>
       </div>
       <transition name="modal-fade" mode="out-in">
         <div class="email-sent" v-if="isMessageSent">
           <div class="row email-sent-wrapper">
             <div class="col-12 email-sent-card">
-              <h1>Email has been sent to {{ developer.firstname }}!</h1>
+              <h1>Message has been sent to {{ developer.firstname }}!</h1>
               <img src="check.svg" alt="" />
             </div>
           </div>

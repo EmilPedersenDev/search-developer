@@ -91,7 +91,7 @@ export default {
     padding: 10px 50px 10px 18px;
     color: #ffff;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: normal;
     transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
     overflow-y: auto;
     &::placeholder {
@@ -111,7 +111,7 @@ export default {
     }
   }
   textarea:focus {
-    font-weight: bold;
+    font-weight: normal;
     border-color: $primary;
     outline: none;
     ~ label {
