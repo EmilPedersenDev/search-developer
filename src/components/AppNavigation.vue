@@ -1,8 +1,8 @@
 <template>
   <nav>
     <div class="left-nav col-4 col-md-6">
-      <router-link to="/" class="logo"> <img src="@/assets/DevQnectLogo.png" alt="" /> </router-link>
-      <router-link to="/" class="d-block d-sm-none sub-logo"><img src="@/assets/DevMobile.png" alt="" /> </router-link>
+      <router-link to="/" class="logo"> <img src="DevQnectLogo.png" alt="" /> </router-link>
+      <router-link to="/" class="d-block d-sm-none sub-logo"><img src="DevMobile.png" alt="" /> </router-link>
     </div>
     <div class="right-nav col-8 col-md-6">
       <ul>
