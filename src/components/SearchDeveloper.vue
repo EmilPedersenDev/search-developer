@@ -20,7 +20,7 @@
         </div>
       </template>
     </multi-select>
-    <d-error :error="error" noBackground></d-error>
+    <d-error :error="error" warning></d-error>
     <d-table v-if="hasSelectedDeveloper" :developers="selectedDeveloper" />
   </div>
 </template>

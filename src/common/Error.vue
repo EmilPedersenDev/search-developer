@@ -1,6 +1,6 @@
 <template>
   <div class="error-container" v-if="Object.keys(error).length !== 0">
-    <div class="error-wrapper" :class="{ noBackground: noBackground }">
+    <div class="error-wrapper" :class="{ noBackground: noBackground, warning: warning }">
       <p><i class="fas fa-exclamation-triangle"></i>{{ error.message }}</p>
     </div>
   </div>
@@ -14,6 +14,10 @@ export default {
       type: Object
     },
     noBackground: {
+      type: Boolean,
+      default: false
+    },
+    warning: {
       type: Boolean,
       default: false
     }
@@ -35,6 +39,15 @@ export default {
       .fas {
         padding-top: 3px;
         margin-right: 8px;
+      }
+    }
+
+    &.warning {
+      p {
+        color: $white;
+        i {
+          display: none;
+        }
       }
     }
 
