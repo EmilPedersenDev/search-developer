@@ -27,3 +27,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Live at
+https://emilpedersendev.github.io/search-developer-fe/#/
