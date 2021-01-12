@@ -2,7 +2,7 @@
   <div id="app">
     <app-navigation></app-navigation>
     <transition name="fade" mode="out-in">
-      <router-view v-if="isLoaded" />
+      <router-view />
     </transition>
     <transition name="modal-fade">
       <confirm-modal v-if="showLogoutModal" :close="closeLogoutConfirmModal" :message="logoutMessage" noOptions></confirm-modal>
@@ -16,7 +16,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import { IS_AUTHENTICATED, SHOW_LOGOUT_MODAL, SET_LOGOUT_CONFIRM_MODAL } from './store/actions/authentication-actions';
 import { GET_USER } from './store/actions/user-actions';
 import { GET_SKILLS } from './store/actions/skills-actions';
-import { LOAD_DEPENDENCIES, IS_LOADED } from './store';
+import { LOAD_DEPENDENCIES } from './store';
 import confirmModal from './components/modals/ConfirmModal';
 export default {
   name: 'App',
@@ -39,7 +39,6 @@ export default {
   computed: {
     ...mapGetters({
       isAuthenticated: IS_AUTHENTICATED,
-      isLoaded: IS_LOADED,
       showLogoutModal: SHOW_LOGOUT_MODAL
     })
   },

@@ -52,7 +52,7 @@
           <d-button class="col-5 col-sm-3" secondary @click="sendEmail" :disabled="$v.$invalid">Send Email</d-button>
         </div>
       </div>
-      <transition name="modal-fade">
+      <transition name="modal-fade" mode="out-in">
         <div class="email-sent" v-if="isMessageSent">
           <div class="row email-sent-wrapper">
             <div class="col-12 email-sent-card">

@@ -1,32 +1,45 @@
 <template>
   <div class="home">
-    <div class="page-header">
-      <img src="https://demos.creative-tim.com/blk-design-system/assets/img/path4.png" alt="" class="first-background-img" />
-      <img src="https://demos.creative-tim.com/blk-design-system/assets/img/path5.png" alt="" class="second-background-img" />
-      <div class="content-center">
-        <div class="header-info row row-grid justify-content-between">
-          <div class="col-md-6 header-info-search">
-            <search-developer />
-          </div>
-          <div class="col-md-6 header-info-description">
-            <landing-info-text />
+    <div class="loading-overlay" v-if="!isLoaded">
+      <div class="overlay-wrapper">
+        <d-spinner :isLoading="isLoaded === false" largeSpinner></d-spinner>
+      </div>
+    </div>
+    <transition name="fade" mode="out-in">
+      <div class="page-header" v-if="isLoaded">
+        <img src="https://demos.creative-tim.com/blk-design-system/assets/img/path4.png" alt="" class="first-background-img" />
+        <img src="https://demos.creative-tim.com/blk-design-system/assets/img/path5.png" alt="" class="second-background-img" />
+        <div class="content-center">
+          <div class="header-info row row-grid justify-content-between">
+            <div class="col-md-6 header-info-search">
+              <search-developer />
+            </div>
+            <div class="col-md-6 header-info-description">
+              <landing-info-text />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 import SearchDeveloper from '../components/SearchDeveloper.vue';
 import LandingInfoText from '../components/LandingInfoText.vue';
+import { IS_LOADED } from '../store';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Home',
   components: {
     SearchDeveloper,
     LandingInfoText
+  },
+  computed: {
+    ...mapGetters({
+      isLoaded: IS_LOADED
+    })
   }
 };
 </script>

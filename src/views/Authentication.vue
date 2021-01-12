@@ -34,7 +34,9 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/scss/colors.scss';
 .register {
-  height: 90vh;
+  @media (min-width: 768px) {
+    height: 90vh;
+  }
   display: flex;
   flex-direction: column;
   justify-content: center;
