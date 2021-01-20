@@ -49,6 +49,7 @@ export default {
     closeLogoutConfirmModal() {
       this.setLogoutConfirmModal(false);
       this.$router.push('/authentication/login');
+      console.log('test');
     }
   }
 };
