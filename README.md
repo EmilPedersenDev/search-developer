@@ -1,5 +1,14 @@
 # dev-qnect
 
+### Project Description
+Application for searching and connecting with developers. 
+
+### Live at
+https://emilpedersendev.github.io/search-developer-fe/#/
+
+### Backend repo at
+https://github.com/EmilPedersenDev/search-developer-be
+
 ## Project setup
 ```
 npm install
@@ -25,10 +34,5 @@ npm run test
 npm run lint
 ```
 
-### Live at
-https://emilpedersendev.github.io/search-developer-fe/#/
 
-
-### Backend repo at
-https://github.com/EmilPedersenDev/search-developer-be
 
